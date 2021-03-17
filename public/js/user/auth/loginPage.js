@@ -22,8 +22,6 @@ $(function () {
 });
 
 
-
-
 // Submit registration data
 let submitButton = $('#loginBtn');
 submitButton.on('click', async (e) => {

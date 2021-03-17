@@ -29,6 +29,7 @@ class UserAuthHandler {
       this.newUserRegistered = false;
     }
 
+    this.clearAllFields();
 
   }
 
@@ -96,6 +97,15 @@ class UserAuthHandler {
     });
   }
 
+  clearAllFields() {
+    $(document).on('click', '.clearRegisterInput', () => {
+      console.log('this: ', this);
+      $('#registerForm input').each(function () {
+        $(this).val('');
+      });
+    });
+  }
+
   checkIfLoginDataIsCorrect() {
 
     console.log('checking data');
@@ -116,6 +126,7 @@ class UserAuthHandler {
   }
 
   showRegisterError(data) {
+
     data.errors.forEach(error => {
       let errorField = error.param;
       $(`#${errorField}`).after(`<span class='errorHints'>${error.msg}</span>`);

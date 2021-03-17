@@ -47,7 +47,7 @@ block content
                 </div>
 
                 button#registerBtn(type="submit", value="") Register
-                button.clearRegisterInput(type="submit" title='清除所有欄位' value="" onclick="event.preventDefault(); clearForm();") Clear all fields
+                button.clearRegisterInput(type="submit" title='清除所有欄位' value="" onclick="event.preventDefault();") Clear all fields
 
             </form>
 
@@ -58,13 +58,6 @@ block content
         let passwordConfirmField = document.getElementById("passwordConf")
         let form = document.getElementById("registerForm")
 
-        function clearForm() {
-            let inputElements = Array.from(document.getElementsByClassName('registerInput'));
-            inputElements.forEach(e=>{
-                console.log( e );
-                e.value = "";
-            })        
-        }
 
         function validateForm() {
             if(passwordField.value != passwordConfirmField.value) {

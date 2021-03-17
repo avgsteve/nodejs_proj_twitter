@@ -1,0 +1,5 @@
+
+mixin createTab(tabName, uriForTabLink, isSelected = false)
+    - tabClass = isSelected ? "tab active" : "tab"
+    a(href=uriForTabLink, class=tabClass)
+        span #{tabName}

@@ -1,0 +1,24 @@
+extends ./../layouts/main-layout.pug
+
+block content
+    if !userProfileToView
+        span.errorMessage Please check if the user name or id is correct
+        input(type="hidden" class='optionOfFollowerPageTab' value='null')        
+    else  
+        input(type="hidden" class='optionOfFollowerPageTab' value=optionOfFollowerPageTab)
+        input(type="hidden" class='userProfileToView-id' value=userProfileToView._id)    
+        //- script.
+        //-     var profileUserId = '!{userProfileToView._id}';
+        //-     var optionOfFollowerPageTab = '!{optionOfFollowerPageTab}';
+            //- optionOfFollowerPageTab 變數可以讓
+            //- \public\js\profile\profilePageController.js 裡面的 renderPostsInProfilePage function 控制內容到頁面
+
+        .tabsContainer
+            include ./createContentSwitchTab            
+            +createTab("Following", `/profile/${userProfileToView.userName}/following`, optionOfFollowerPageTab === "following")
+            +createTab("Followers", `/profile/${userProfileToView.userName}/followers`, optionOfFollowerPageTab === "followers")
+
+        .resultsContainer
+
+block scripts
+    //- script(src="/js/followersAndFollowing.js")

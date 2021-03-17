@@ -1,0 +1,1232 @@
+:root {
+    --blue: #1FA2F1;
+    --blueLight: #9BD1F9;
+    /* --blueBackground: rgba(212, 237, 255, 0.6); */
+    --blueBackground: #5cbaf3;
+
+    --buttonHoverBg: #d4edff;
+    --lightGrey: rgb(230, 236, 240);
+    --spacing: 15px;
+    --greyText: rgb(101, 119, 134);
+    --greyButtonText: rgba(0, 0, 0, 0.34);
+    --red: rgb(226, 34, 94);
+    --redBackground: rgba(226, 34, 94, 0.1);
+    --green: rgb(23, 191, 99);
+    --greenBackground: rgba(23, 191, 99, 0.1);
+}
+
+html,
+body {
+    height: 100%;
+    min-height: 100%;
+    background-color: #fff;
+    font-weight: 300;
+    overflow: scroll;
+    overflow-y: hidden;
+
+}
+
+ul {
+    margin: 0;
+}
+
+* {
+    outline: none !important;
+}
+
+a {
+    color: inherit;
+}
+
+a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+h1 {
+    font-size: 19px;
+    font-weight: 800;
+    margin: 0;
+}
+
+nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    height: 100%;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .mobil-nav-align-center.active {
+        align-items: center !important;
+    }
+}
+
+nav .fixed-nav {
+    position: fixed;
+    top: 0;
+    height: 100%;
+}
+
+nav .fixed-nav .scrollable {
+    height: 100%;
+    overflow: scroll;
+    overflow-x: hidden;
+}
+
+/* 
+Make scroll var invisible
+https: //stackoverflow.com/questions/16670931/hide-scroll-bar-but-while-still-being-able-to-scroll
+ */
+.scrollable::-webkit-scrollbar {
+    width: 0;
+    /* Remove scrollbar space */
+    background: transparent;
+    /* Optional: just make scrollbar invisible */
+}
+
+/* Optional: show position indicator in red */
+.scrollable::-webkit-scrollbar-thumb {
+    background: #2f00ff;
+}
+
+nav a {
+    padding: 10px;
+    font-size: 30px;
+    width: 55px;
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #212529;
+    position: relative;
+}
+
+nav a.blue {
+    color: var(--blue);
+}
+
+nav a:hover {
+    background-color: var(--buttonHoverBg);
+    color: var(--blue);
+    border-radius: 50%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* 
+1)  讓 .row 的邊距為 0，就不會讓頁面 overflow
+2)  讓 整個頁面的 .wrapper 的第一個 .row 的 margin 變 0，
+    而不會影響到 其他元素裡面的 .row
+*/
+.wrapper>.row {
+    margin: 0;
+    height: 100%;
+    position: relative;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    color: var(--greyButtonText);
+}
+
+button i,
+button span {
+    pointer-events: none;
+}
+.mainSectionContainer {
+    padding: 0;
+    border-left: 1px solid var(--lightGrey);
+    border-right: 1px solid var(--lightGrey);
+    display: flex;
+    flex-direction: column;
+}
+
+.floatingMenuButtonContainer {
+    background-color: #7983ad14;
+    position: fixed;
+    right: 3rem;
+    bottom: 4rem;
+    height: 2.8rem;
+    width: 2.8rem;
+    display: none;
+    /* display: flex;     */
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0, .91, .41, .6);
+}
+
+.floatingMenuButtonContainer:hover {
+    height: 3.2rem;
+    width: 3.2rem;
+    background-color: #71799761;
+
+}
+
+.floatingMenuButtonContainer:hover .sideMenuToggleBtn {
+    color: #0084ff;
+
+}
+
+.floatingMenuButtonContainer.active {
+    display: flex;
+    border-radius: 100%;
+    box-shadow: 3px 5px 13px -9px rgba(0, 0, 0, 0.75);
+}
+
+.floatingMenuButtonContainer .sideMenuToggleBtn {
+    font-size: 1.5rem;
+    color: #21a4f375;
+}
+
+/* .sideMenuToggleBtn:active {
+    transform: translateY(2px);
+} */
+
+.floatingMenuButtonContainer:active {
+    box-shadow: 2px 2px 8px -9px rgba(0, 0, 0, 0.75);
+    transform: translateY(2px);
+}
+
+.titleContainer {
+    height: 53px;
+    padding: 0 var(--spacing);
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+
+.titleContainer h1 {
+    flex: 1;
+}
+
+.postFormContainer {
+    display: flex;
+    padding: var(--spacing);
+    border-bottom: 10px solid rgb(230, 236, 240);
+    flex-shrink: 0;
+}
+
+.modal .postFormContainer {
+    border: none;
+    padding: 0;
+    padding-top: var(--spacing);
+}
+
+.modal .post {
+    padding: 0 0 var(--spacing) 0;
+}
+
+.profileImageContainer {
+    width: 50px;
+    height: 50px;
+}
+
+.profileImageContainer img {
+    width: 100%;
+    border-radius: 50%;
+    background-color: white;
+}
+
+.textareaContainer {
+    flex: 1;
+    padding-left: var(--spacing);
+}
+
+.textareaContainer textarea {
+    width: 100%;
+    border: none;
+    resize: none;
+    font-size: 19px;
+}
+
+#submitPostButton {
+    background-color: var(--blue);
+    color: white;
+    border: none;
+    border-radius: 40px;
+    padding: 7px 15px;
+}
+
+#submitPostButton:disabled {
+    background-color: var(--blueLight);
+}
+
+.post {
+    display: flex;
+    flex-direction: column;
+    padding: var(--spacing);
+    cursor: pointer;
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+.postContentContainer {
+    padding-left: var(--spacing);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.username,
+.date {
+    color: var(--greyText)
+}
+
+.displayName {
+    font-weight: bold;
+}
+
+.postFooter {
+    display: flex;
+    align-items: center;
+}
+
+.postFooter .postButtonContainer {
+    flex: 1;
+    display: flex;
+}
+
+.postFooter .postButtonContainer button {
+    padding: 2px 5px;
+}
+
+.header a:hover {
+    text-decoration: underline;
+}
+
+.header a,
+.header span {
+    padding-right: 5px;
+}
+
+.postButtonContainer button:hover {
+    background-color: #d4edff;
+    color: var(--blue);
+    border-radius: 50%;
+}
+
+.postButtonContainer.red button.active {
+    color: var(--red);
+}
+
+.postButtonContainer.red button:hover {
+    color: var(--red);
+    background-color: var(--redBackground)
+}
+
+.postButtonContainer.green button.active {
+    color: var(--green);
+}
+
+.postButtonContainer.green button:hover {
+    color: var(--green);
+    background-color: var(--greenBackground)
+}
+
+.postActionContainer {
+    padding-left: 35px;
+    font-size: 13px;
+    color: var(--greyText);
+    margin-bottom: 5px;
+}
+
+.tag_replyingToPost {
+    margin-bottom: 5px;
+    color: #bbbbbbed;
+}
+
+.tag_replyingToPost a {
+    color: var(--blue);
+}
+
+.post.largeFont .postBody,
+.post.largeFont .postFooter {
+    font-size: 23px;
+}
+
+.postContentContainer .postHeader {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.postContentContainer .postHeader .date {
+    flex: 1;
+    min-width: fit-content;
+}
+
+.errorMessage {
+    padding: var(--spacing);
+    color: rgba(255, 92, 92, 0.993);
+}
+
+/* .coverPhotoSection 使用者欄位#1使用者頭像 */
+.profileHeaderContainer .coverPhotoSection {
+    height: 180px;
+    background-color: var(--blue);
+    position: relative;
+    /* 為了讓 子元素 profileImageContainer 可以做相對位置的移動 */
+}
+
+/* 使用者欄位#1-1 使用者頭像的背景 */
+.coverPhotoSection .coverPhotoContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+/*  使用者欄位#1-1 使用者頭像的背景圖片 */
+.coverPhotoSection .coverPhotoContainer img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+/* .profileImageContainer 使用者欄位#1-2 使用者頭像的圖片 */
+.coverPhotoSection .profileImageContainer {
+    width: 132px;
+    height: 132px;
+    margin-left: var(--spacing);
+
+    position: absolute;
+    bottom: -66px;
+    /*  bottom: -66px; 
+    相對於 coverPhotoSection 底部 Y軸 -66px的位置 
+    -66px 是相對本身的高度 height: 132px的一半;
+    ，會有讓相片往下位移一半的位置的感覺
+    */
+
+    /* 讓 .uploadProfileImageButton 置中 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* .profileImageContainer 使用者欄位#1-2 使用者頭像的圖片外框 */
+.profileHeaderContainer .profileImageContainer img {
+    /* 上半部是白色外框 */
+    border: 4px solid #fff;
+}
+
+/* .profileButtonsContainer 使用者欄位#3 按鈕功能 */
+.profileHeaderContainer .profileButtonsContainer {
+    text-align: right;
+    padding: var(--spacing);
+    min-height: 66px;
+}
+
+/* profile 按鈕 跟 追蹤按鈕 */
+.followButtonContainer {
+    display: flex;
+    justify-content: center;
+}
+
+.profileButton,
+.followButton {
+    border: 1px solid var(--blue);
+    color: var(--blue);
+    font-weight: bold;
+    padding: 5px 15px;
+    border-radius: 60px;
+    display: inline-block;
+    margin-left: var(--spacing);
+}
+
+#followUserButton {
+    min-width: 110px;
+}
+
+.profileButton:hover,
+.followButton:hover {
+    background-color: var(--blueBackground);
+}
+
+.followButton.following {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+/* 使用者欄位#4 使用者資訊 */
+.userDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--spacing);
+}
+
+.userDetailsContainer .followersContainer .followerCount {
+    color: var(--blue);
+    font-weight: 500;
+    margin-right: 5px;
+}
+
+.userDetailsContainer .followersContainer span:not(.followerCount) {
+    /* color: var(--greyText); */
+    color: rgb(90 165 228);
+}
+
+.userDetailsContainer .followersContainer a {
+    margin-right: 15px;
+}
+
+.userDetailsContainer .followersContainer a:hover {
+    border-bottom: 1px solid #000;
+}
+
+.tabsContainer {
+    display: flex;
+    border-bottom: 1px solid var(--lightGrey);
+    flex-shrink: 0;
+}
+
+.tab {
+    flex: 1;
+    height: 52px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--greyText);
+    font-weight: bold;
+}
+
+.tab.active {
+    color: var(--blue);
+    border-bottom: 2px solid var(--blue);
+}
+
+.tab:hover {
+    color: var(--blue);
+    background-color: var(--blueBackground);
+}
+
+.noResults {
+    /* padding: var(--spacing); */
+    font-weight: 600;
+    padding: 2rem;
+    text-align: center;
+    font-size: 1.5rem;
+    color: #1fa2f1;
+}
+
+.userSearchResultMessage {
+    display: none;
+    text-align: center;
+    font-size: 1.8rem;
+    margin: 1rem 1rem -3px;
+    color: grey;
+}
+
+.resultsContainer,
+.userSearchResultContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.resultsContainer .user,
+.userSearchResultContainer .user {
+    padding: var(--spacing);
+    display: flex;
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.resultsContainer .current-existing-chats-label {
+    text-align: center;
+    font-size: 1.8rem;
+    align-self: center;
+    margin: 2rem 0 0.5rem;
+    color: grey;
+    width: fit-content;
+}
+
+.user .userDetailsContainer {
+    flex: 1;
+    padding: 0 var(--spacing);
+    justify-content: center;
+}
+
+/* 讓背景跟頭像的上傳按鈕預設都是隱藏 */
+.profileImageContainer .uploadProfileImageButton,
+.coverPhotoContainer .uploadCoverPhotoButton {
+    position: absolute;
+    font-size: 50px;
+    color: rgba(0, 0, 0, 0.6);
+    display: none;
+}
+
+.profileImageContainer:hover .uploadProfileImageButton,
+.coverPhotoContainer:hover .uploadCoverPhotoButton {
+    display: block;
+}
+/* 
+https: //github.com/fengyuanchen/cropperjs/blob/master/README.md#example
+要針對選取影像檔案後，顯示在頁面上的 img element 做 CSS設定，才能讓 Croppers.JS 正確顯示
+ */
+img#imagePreview,
+img#coverPreview {
+    width: 100%;
+    display: block;
+
+    /* This rule is very important, please don't ignore this */
+    max-width: 100%;
+}
+
+.pinButton.active {
+    color: var(--blue);
+}
+
+.pinnedPostText {
+    font-size: 12px;
+    color: var(--greyText);
+}
+
+.pinnedPostContainer {
+    border-bottom: 10px solid rgb(230, 236, 240);
+}
+
+.searchBarContainer {
+    position: relative;
+    color: var(--greyText);
+    padding: 10px var(--spacing);
+}
+
+.searchBarContainer i.searchIcon {
+    position: absolute;
+    top: 20px;
+    left: 28px;
+}
+
+.searchBarContainer input#searchBox {
+    height: 36px;
+    width: 100%;
+    padding: 5px 15px 5px 40px;
+    border-radius: 50px;
+    background-color: var(--lightGrey);
+    border: none;
+    color: var(--greyText);
+}
+
+.chatPageContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    flex: 1;
+    flex-basis: 0;
+}
+
+.chatTitleBar {
+    border-bottom: 1px solid var(--lightGrey);
+    display: flex;
+    align-items: center;
+    min-height: 60px;
+    padding: 10px;
+}
+
+.chatTitleBar label {
+    margin: 0 10px 0 0;
+}
+
+#userSearchTextbox {
+    border: none;
+    flex: 1;
+    font-weight: 200;
+    min-width: 350px;
+}
+
+#createChatButton {
+    border: none;
+    background-color: var(--blue);
+    color: #fff;
+    padding: 7px 20px;
+    margin: 10px auto;
+    border-radius: 40px;
+}
+
+#createChatButton:disabled {
+    background-color: var(--lightGrey);
+    color: var(--greyText);
+}
+
+.selectedUser {
+    font-weight: 300;
+    background-color: #CBE5FE;
+    color: #0084ff;
+    padding: 5px;
+    border-radius: 3px;
+    margin: 5px 5px 0 0;
+    display: inline-block;
+}
+
+.resultListItem {
+    padding: 7px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--lightGrey);
+}
+
+.resultListItem:hover {
+    background-color: #F2F2F2;
+}
+
+.resultsDetailsContainer {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.resultsDetailsContainer .heading {
+    font-weight: 500;
+}
+
+.resultsDetailsContainer .subText {
+    color: var(--greyText);
+    font-size: 14px;
+}
+
+.resultListItem img {
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+}
+
+.resultsImageContainer {
+    height: 40px;
+    width: 40px;
+    position: relative;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    padding: 5px;
+}
+
+.groupChatImageContainer img {
+    height: 65%;
+    width: 65%;
+    position: absolute;
+    bottom: 0;
+    margin: 0;
+    border: 2px solid #fff;
+}
+
+.groupChatImageContainer img:first-of-type {
+    top: 0;
+    right: 0;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ===== ↓↓↓ Chat Room Page ↓↓↓ ====== */
+
+.chatRoomTitleContainer {
+    border-bottom: 1px solid var(--lightGrey);
+    display: flex;
+    align-items: center;
+    padding: var(--spacing);
+}
+
+/* ===== 聊天室標題圖片 ====== */
+
+.chatTitleImagesContainer {
+    /* height: 100%; */
+    margin-right: 10px;
+
+    display: flex;
+    flex-direction: row-reverse;
+    /* 讓第一張圖片 overlap 在第二張上面 */
+}
+
+.chatTitleImagesContainer img {
+    width: 40px;
+    height: 40px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+}
+
+.chatTitleImagesContainer .chatUsersCounter {
+    height: 40px;
+    width: 40px;
+    background-color: #f1f1f1;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    border: 2px solid #fff;
+}
+
+.chatTitleImagesContainer img:not(:last-child),
+.chatTitleImagesContainer .chatUsersCounter {
+    margin-left: -10px;
+}
+
+/* ===== 聊天室標題文字 ====== */
+
+span#titleOfChatRoomPage {
+    width: 100%;
+    border: 1px solid transparent;
+    padding: 0 5px;
+}
+
+span#titleOfChatRoomPage:hover {
+    border: 1px solid var(--lightGrey);
+    cursor: text;
+}
+
+/* (修改聊天室標題的modal) */
+input#changeChatTitleTextbox {
+    width: 100%;
+}
+
+/* 聊天室訊息的主要框架 */
+.chatRoomMainContainer {
+    flex: 1;
+    display: flex;
+    overflow-y: hidden;
+}
+
+/* 進入聊天室的訊息讀取動畫 */
+.chatRoomMainContainer .chatMessagePreloader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.chatRoomMainContainer .chatMessagePreloader img {
+    width: 50%;
+    max-width: 75px;
+}
+
+/*聊天室的訊息顯示區塊 .messagesContainer */
+.chatRoomMainContainer .messagesContainer {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+}
+
+ul.MessageArea {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    padding: var(--spacing);
+}
+
+ul.MessageArea .message {
+    padding-bottom: 2px;
+    list-style: none;
+    display: flex;
+    align-items: flex-end;
+    flex-shrink: 0;
+}
+
+
+ul.MessageArea .message .messageContainer {
+    display: flex;
+    flex-direction: column;
+    max-width: 55%;
+}
+
+ul.MessageArea .message.mine .messageContainer {
+    align-items: flex-end;
+}
+
+ul.MessageArea .message.theirs .messageContainer {
+    align-items: flex-start;
+}
+
+ul.MessageArea .message.mine {
+    flex-direction: row-reverse;
+}
+
+ul.MessageArea .message.mine .messageBody {
+    background-color: var(--blue);
+    color: #fff;
+}
+
+ul.MessageArea .message.mine.first .messageBody {
+    border-bottom-right-radius: 2px;
+}
+
+ul.MessageArea .message.mine:not(.first):not(.last) .messageBody {
+    border-bottom-right-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+ul.MessageArea .message.mine.last .messageBody {
+    border-bottom-right-radius: 18px;
+}
+
+ul.MessageArea .message.mine.last:not(.first) .messageBody {
+    border-top-right-radius: 2px;
+}
+
+ul.MessageArea .message.theirs.first .messageBody {
+    border-bottom-left-radius: 2px;
+}
+
+ul.MessageArea .message.theirs:not(.first):not(.last) .messageBody {
+    border-bottom-left-radius: 2px;
+    border-top-left-radius: 2px;
+}
+
+ul.MessageArea .message.theirs.last .messageBody {
+    border-bottom-left-radius: 18px;
+}
+
+ul.MessageArea .message.theirs.last:not(.first) .messageBody {
+    border-top-left-radius: 2px;
+}
+
+.senderName {
+    color: rgba(0, 0, 0, 0.4);
+}
+
+ul.MessageArea .imageContainer {
+    height: 31px;
+    width: 31px;
+    margin: 6px 7px 0px;
+}
+
+ul.MessageArea img {
+    height: 100%;
+    border-radius: 50%;
+    vertical-align: bottom;
+}
+
+ul.MessageArea .message.last {
+    margin-bottom: 7px;
+}
+
+.typingStatusGif img,
+ul.MessageArea .message .messageBody {
+    background-color: #f1f0f0;
+    padding: 6px 12px;
+    border-radius: 18px;
+    font-size: 14px;
+}
+
+.typingStatusGif img {
+    height: 35px;
+}
+
+.typingStatusGif {
+    padding: var(--spacing);
+    padding-bottom: 0;
+    display: none;
+}
+
+
+/* Chat Room : Message Input section */
+
+.messagesContainer .containerFooter {
+    display: flex;
+    padding: var(--spacing);
+    flex-shrink: 0px;
+}
+
+.containerFooter textarea.messageInput {
+    flex: 1;
+    resize: none;
+    background-color: rgba(0, 0, 0, 0.05);
+    border-radius: 18px;
+    border: none;
+    padding: 8px 12px;
+    height: 38px;
+}
+
+.containerFooter textarea.messageInput:focus {
+    background-color: #bdd0db !important;
+}
+
+.containerFooter .sendMessageButton {
+    background-color: transparent;
+    color: var(--blue);
+    font-size: 24px;
+}
+
+.sendMessageButton:hover {
+    color: yellowgreen !important;
+}
+
+/* Chat Room List */
+/* ToDo: 要把 resultListItem 改成 chatRoomListResults */
+
+.resultListItem.active {
+    background-color: var(--blueBackground);
+}
+#notificationBadge,
+#messagesBadge {
+    background-color: var(--red);
+    height: 25px;
+    width: 25px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: white;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    visibility: hidden;
+}
+
+#notificationBadge.active,
+#messagesBadge.active {
+    visibility: visible;
+}
+
+#markNotificationsAsRead i.fa-check-double {
+    color: #80808057;
+    pointer-events: none;
+    cursor: default;
+}
+
+#markNotificationsAsRead.active i.fa-check-double {
+    color: #ffa826;
+    cursor: pointer;
+    pointer-events: unset;
+}
+
+#popupNoticeContainer {
+    position: fixed;
+    top: 5px;
+    right: 5px;
+    width: 350px;
+    background-color: white;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+#popupNoticeContainer .active {
+    background-color: white;
+}
+/* reloader 的 CSS */
+
+.loader-container p {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 2rem;
+    font-weight: 400;
+    color: #808080ad;
+}
+
+/* 
+https://projects.lukehaas.me/css-loaders/
+Loader7
+ */
+.loader,
+.loader:before,
+.loader:after {
+    border-radius: 50%;
+    width: 2.5em;
+    height: 2.5em;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation: load7 1.8s infinite ease-in-out;
+    animation: load7 1.8s infinite ease-in-out;
+}
+
+.loader {
+    color: #1da1f2;
+    font-size: 10px;
+    margin: 80px auto;
+    position: relative;
+    text-indent: -9999em;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation-delay: -0.16s;
+    animation-delay: -0.16s;
+}
+
+.loader:before,
+.loader:after {
+    content: '';
+    position: absolute;
+    top: 0;
+}
+
+.loader:before {
+    left: -3.5em;
+    -webkit-animation-delay: -0.32s;
+    animation-delay: -0.32s;
+}
+
+.loader:after {
+    left: 3.5em;
+}
+
+@-webkit-keyframes load7 {
+
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 2.5em 0 -1.3em;
+    }
+
+    40% {
+        box-shadow: 0 2.5em 0 0;
+    }
+}
+
+@keyframes load7 {
+
+    0%,
+    80%,
+    100% {
+        box-shadow: 0 2.5em 0 -1.3em;
+    }
+
+    40% {
+        box-shadow: 0 2.5em 0 0;
+    }
+}
+/* Global Alert */
+
+:root {
+    --global-alert-top-position: 2rem;
+}
+
+/* @import url("https://fonts.googleapis.com/css?family=Quicksand&display=swap"); */
+
+/* .globalAlert * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+} */
+
+.globalAlert h3 {
+    /* font-family: Quicksand; */
+    color: #3b547af2;
+    text-align: center;
+}
+
+.globalAlert {
+    width: 50%;
+    /* width: 100%; */
+    margin: var(--global-alert-top-position) 0 0;
+    padding: 30px;
+    position: absolute;
+    left: 50vw;
+    transform: translateX(-50%);
+    border-radius: 5px;
+    box-shadow: 0 0 7px 3px #ccc;
+    z-index: 2000;
+}
+
+@media only screen and (max-width: 400px) {
+    .globalAlert {
+        width: 100%;
+    }
+}
+
+.globalAlert .close {
+    width: 30px;
+    height: 30px;
+    opacity: 0.5;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 50%;
+
+    position: absolute;
+    right: 15px;
+    top: 10px;
+
+    text-align: center;
+    font-size: 1.6em;
+    cursor: pointer;
+}
+
+.default-alert {
+    background-color: #ebebeb;
+    border-left: 5px solid #6c6c6c;
+}
+
+.default-alert .close {
+    border-color: #6c6c6c7c;
+    color: #6c6c6c;
+}
+
+.success-alert {
+    /* background-color: #a8f0c6d1;
+    border-left: 5px solid #16dd69; */
+    background-color: #91caec;
+    border-left: 5px solid #1fa2f1;
+}
+
+.success-alert .close {
+    border-color: #178344;
+    color: #178344;
+}
+
+.danger-alert {
+    /* background-color: #f7a7a3;
+    border-left: 5px solid #8f130c; */
+    background-color: #efb7b7fc;
+    border-left: 5px solid #e2225e;
+}
+
+.danger-alert .close {
+    border-color: #8f130c;
+    color: #8f130c;
+}
+
+.warning-alert {
+    background-color: #ffd48a;
+    border-left: 5px solid #8a5700;
+}
+
+.warning-alert .close {
+    border-color: #8a5700;
+    color: #8a5700;
+}
+
+.globalAlert.slide-in {
+    animation: slide-in 0.8s;
+}
+
+@keyframes slide-in {
+    from {
+        opacity: 0.2;
+        top: -20vh;
+    }
+
+    to {
+        opacity: 1;
+        top: 0;
+    }
+}
+
+.globalAlert.slide-out {
+    animation: slide-out 0.3s forwards;
+}
+
+@keyframes slide-out {
+    from {
+        opacity: 1;
+        top: 0;
+    }
+
+    to {
+        /* top: var(--global-alert-top-position); */
+        opacity: 0.2;
+        top: -100vh;
+    }
+}

@@ -1,0 +1,52 @@
+extends ./../../layouts/main-layout.pug
+
+block content   
+    
+    if errorMessage
+        span.errorMessage #{errorMessage}
+        //- input(type='hidden' class='debugging-check-chat-data' value='!{chat}')
+        script.
+            // PS: 沒有 chatId 的話 socket.io & jQuery 會拋出錯誤，因為 ChatRoomController 裡面的 event handler 需要用到這個變數
+            let chatId = null;        
+
+    else 
+        script.
+            let chatId = '!{chat._id}';
+
+        .chatPageContainer
+
+            //- 聊天室標題
+            .chatRoomTitleContainer
+
+                //- 將聊天室成員的頭像輸出在標題部分
+                include ./createChatImage
+                +createChatImage(chat, userLoggedIn)
+
+                //- 透過 ChatRoomView.js 輸出 title (chatName)
+                span#titleOfChatRoomPage(data-toggle="modal", data-target="#changeChatNameModal")
+            
+            //- 對話訊息 & loading動畫
+            .chatRoomMainContainer
+
+                .chatMessagePreloader
+                    img(src="/images/loadingSpinner.gif", alt="Loading spinner")
+                
+                .messagesContainer(style="visibility: hidden", data-room=chat._id)
+
+                    ul.MessageArea
+
+                    //- 有人輸入的時候的顯示輸入的動畫
+                    .typingStatusGif
+                        img(src="/images/dots.gif", alt="Typing dots")
+
+                    //- 輸入區塊跟送出按鈕
+                    .containerFooter
+                        textarea.messageInput(name="messageInput", placeholder="Type message here")
+                        button.sendMessageButton(title='Click to send message (or just hit Enter)')
+                            i.fas.fa-paper-plane
+
+        include ./createChangeChatNameModal
+        +createChangeChatNameModal(chat)
+
+block scripts
+    //- script(src="/js/chatPage.js")

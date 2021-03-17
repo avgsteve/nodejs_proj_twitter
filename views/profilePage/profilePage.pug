@@ -1,0 +1,120 @@
+extends ./../layouts/main-layout.pug
+
+block content
+    //- 1) 如果後端無法查到使用者，就顯示以下錯誤訊息，不顯示其他部分的網頁
+    //- 2) 變數: optionOfProfilePageTab 透過下面檔案的router controller 傳進 profilePage.pug
+    //-    nodejs_twitter\server\routes\frontendPages\profile\profilePageController.js
+    if !userProfileToView
+        span.errorMessage Please check if the user name or id is correct
+        input(type="hidden" class='optionOfProfilePageTab' value='null')
+        input(type="hidden" class='userLoggedIn-id' value=userProfileToView._id)        
+
+    else  
+        input(type="hidden" class='optionOfProfilePageTab' value=optionOfProfilePageTab)
+        input(type="hidden" class='userProfileToView-id' value=userProfileToView._id)
+        input(type="hidden" class='curr-userLoggedIn-id' value=userLoggedIn._id)
+
+        .profileHeaderContainer
+
+            //- .coverPhotoSection 使用者欄位#1使用者頭像 & 背景 */
+            .coverPhotoSection
+
+                //- 使用者欄位#1-1 使用者頭像的背景
+                .coverPhotoContainer
+                    if userProfileToView.coverPhoto
+                        img(src=userProfileToView.coverPhoto, alt="User's cover photo")
+
+                    if userProfileToView._id.toString() === userLoggedIn._id.toString()
+                        button.uploadCoverPhotoButton(data-toggle="modal", data-target="#coverPhotoUploadModal")
+                            i.fas.fa-camera
+
+                //- 使用者欄位#1-2 使用者頭像的圖片
+                .profileImageContainer
+                    img(src=userProfileToView.profilePic, alt="User profile image")
+
+                    //- 如果查看的使用者與登入使用者相同，就可以透過 button 啟動更換背景的 modal
+                    if userProfileToView._id.toString() === userLoggedIn._id.toString()
+                        button.uploadProfileImageButton(data-toggle="modal", data-target="#imageUploadModal")
+                            i.fas.fa-camera
+
+            //- .profileButtonsContainer 使用者欄位#3 按鈕功能
+            .profileButtonsContainer
+
+                //- Condition: 如果查看的使用者與目前登入使用者相同，就不顯示傳訊息和追蹤按鈕
+                if userProfileToView._id.toString() !== userLoggedIn._id.toString()
+                
+                    //- 傳訊按鈕
+                    a.profileButton(href=`/messages/${userProfileToView._id}`)
+                        i.fas.fa-envelope
+
+                    //- 追蹤按鈕
+                    include ./createFollowButton            
+                    input(type='hidden' id='check-userLoggedIn-following-array' value=userLoggedIn.following)
+                    - let profileUserId = userProfileToView._id.toString();
+
+                    //- 如果查看的使用者已經是在目前使用者的追蹤清單之中，按鈕的內容就顯示已追蹤 
+                    - if(userLoggedIn.following && userLoggedIn.following.includes(profileUserId.toString()))
+                        +createFollowButton(userProfileToView, true)
+                    - else
+                        +createFollowButton(userProfileToView, false)
+
+            //- 使用者欄位#4 使用者資訊
+            .userDetailsContainer
+                span.displayName #{userProfileToView.firstName} #{userProfileToView.lastName}
+                span.userName @#{userProfileToView.userName}
+                span.description #{userProfileToView.description}
+
+
+                .followersContainer
+                    //- 使用者追蹤的人數
+                    a(href=`/profile/${userProfileToView.userName}/following`)
+                        span.followerCount#followingNumber #{userProfileToView.following.length}
+                        span Following
+                    //- 追蹤使用者的人數
+                    a(href=`/profile/${userProfileToView.userName}/followers`)
+                        span.followerCount#followersNumber  #{userProfileToView.followers.length}
+                        span Followers
+
+
+        .tabsContainer    
+
+            //- 分頁按鈕 mixin: createTab(tabName, uriForTabLink, isSelected)            
+
+            //- 傳進 createTab 的變數中所使用:
+            //- 1) 使用 optionOfProfilePageTab != "replies" 決定 tab 的 class 是否為 active
+            //- 2) 透過 link 向 後端請求網頁，由 profilePageController.js 傳出變數 optionOfProfilePageTab 到 profilePage.pug
+
+            <!-- 檢查目前 optionOfProfilePageTab 的值 -->
+            input(type="hidden" class='currentValue_of_option_of_profilePageTab' value=optionOfProfilePageTab)
+
+
+            include ./createContentSwitchTab            
+
+            //- 第一個 Tab 按鈕
+            - postTabUri = `/profile/${userProfileToView.userName}`
+            - postTabIsSelected = optionOfProfilePageTab === "posts" ? true : false;
+            +createTab("Posts", postTabUri, postTabIsSelected)
+            
+            //- 第二個 Tab 按鈕
+            - replyTabUri = `/profile/${userProfileToView.userName}/replies`;
+            - replyTabIsSelected = optionOfProfilePageTab === "replies" ? true : false;
+            +createTab("Replies", replyTabUri , replyTabIsSelected)
+
+
+        //- 顯示置頂文章跟一般文章的區塊
+        .pinnedPostContainer
+        .postsContainer
+
+        include ./../postPage/postModals/createPostModals
+        +createPostModals(userLoggedIn)
+        
+        //- 輸出上傳使用者 "頭像" 的 modal
+        include ./createProfileImageUploadModal        
+        +createProfileImageUploadModal()
+        
+        //- 輸出上傳使用者 "頭像背景" 的 modal
+        include ./createCoverPhotoUploadModal                
+        +createCoverPhotoUploadModal()
+
+//- block scripts
+//-     script(src="/js/profile.js")

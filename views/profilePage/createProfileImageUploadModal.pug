@@ -1,0 +1,28 @@
+
+//- 
+mixin createProfileImageUploadModal()
+
+    //- 
+    #imageUploadModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='imageUploadModalLabel', aria-hidden='true')
+        .modal-dialog(role='document')
+            .modal-content
+
+                //- 
+                .modal-header
+                    h5#imageUploadModalLabel.modal-title Upload a new profile picture
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+
+                //- 
+                .modal-body
+
+                    //- 
+                    input#profileImageUploadInput(type="file", name="photoFile")
+
+                    .imagePreviewContainer
+                        img#imagePreview
+
+                //- 
+                .modal-footer
+                    button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+                    button#imageUploadButton.btn.btn-primary(type='button') Save

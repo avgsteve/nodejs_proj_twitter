@@ -1,0 +1,48 @@
+extends ../layouts/login-layout.pug
+
+block content
+    .loginContainer
+        h1 Register
+            span.bouncingNotice.bouncing(data-toggle="tooltip" data-placement="top" title="You can DELETE your account after registered ANY TIME!") *
+   
+        //- form#registerForm(method="post", onsubmit="event.preventDefault(); getRegisterData();")
+        form#registerForm(method="post", onsubmit="event.preventDefault()")
+
+
+            //- - let errorText = 'error';
+
+            //- p.errorMessage #{errorText}
+            p#errorMessage.errorMessage #{errorMessage}
+
+            input.registerInput#firstName(type="text", name="firstName", placeholder="First name", value=firstName title="姓" required autocomplete="given-name")
+            input.registerInput#lastName(type="text", name="lastName", placeholder="Last name" value=lastName title="名" required="" autocomplete="family-name")
+            input.registerInput#userName(type="text", name="username", placeholder="Username (length: 4 to 12 characters)", title="請輸入4到12字元長度使用者帳號",value=username required="" )
+            input.registerInput#email(type="email", name="email", placeholder="Email", value=email required="" autocomplete="email")
+            input#password.registerInput(type="password", name="password", placeholder="Password", required="" autocomplete="new-password")
+            input#passwordConf.registerInput(type="password", name="passwordConf", placeholder="Confirm password", required="" autocomplete="new-password")
+            button#registerBtn(type="submit", value="") Register
+            button.clearRegisterInput(type="submit" title='清除所有欄位' value="" onclick="event.preventDefault(); clearForm();") Clear all fields
+
+        a(href="/login") Already have an account? Login here.
+    
+    script.
+        let passwordField = document.getElementById("password")
+        let passwordConfirmField = document.getElementById("passwordConf")
+        let form = document.getElementById("registerForm")
+
+        function clearForm() {
+            let inputElements = Array.from(document.getElementsByClassName('registerInput'));
+            inputElements.forEach(e=>{
+                console.log( e );
+                e.value = "";
+            })        
+        }
+
+        function validateForm() {
+            if(passwordField.value != passwordConfirmField.value) {
+                alert("Passwords do not match. Please try again.")
+            }
+            else {
+                form.submit();
+            }
+        }

@@ -1,0 +1,17 @@
+mixin statistic(posts)
+  .fadeInContainer
+    .statisticContainer.lazyload
+      h2.highlighted(data-toggle="tooltip" data-placement="top" title=`last updated: ${lastUpdated.slice(0,19)} (UTC+0)`) Statistic 
+      h3.mt-2.statsHeading This project already has:
+      h2
+        span.highlighted.runningCounter.registeredUsers(data-number=`${totalRegisteredUsers}`) 0
+        |  registered users
+      h2 
+        span.highlighted.runningCounter(data-number=`${totalCreatedPosts}`) 0
+        |  created posts
+      h2 
+        span.highlighted.runningCounter(data-number=`${totalPostLikes}`) 0
+        |  likes
+      h2 
+        span.highlighted.runningCounter(data-number=`${totalPostRetweets}`) 0
+        |  retweets                          

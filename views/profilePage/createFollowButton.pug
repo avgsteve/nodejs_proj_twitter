@@ -1,0 +1,5 @@
+mixin createFollowButton(userProfileToView, isCurrentlyFollowing)
+    - buttonClass = isCurrentlyFollowing ? "followButton following" : "followButton"
+    - buttonTitle = isCurrentlyFollowing ? "Click to un-follow" : "Click to follow"
+    - buttonText = isCurrentlyFollowing ? "Following" : "Follow"
+    button(class=buttonClass, id='followUserButton', data-user=userProfileToView._id, title=buttonTitle) #{buttonText}

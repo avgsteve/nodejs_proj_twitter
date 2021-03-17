@@ -1,0 +1,20 @@
+extends ../layouts/login-layout.pug
+
+block content
+    .loginContainer
+        h1 Login
+        form(method="post")
+
+            p.errorMessage #{errorMessage}
+
+            //- input(type="text", name="logUsername", placeholder="Username or email", value=logUsername required="")
+            //- input(type="password", name="logPassword", placeholder="Password", required="")
+
+            input#loginAccount(type="text", name="logUsername", placeholder="Username or email", value="" required="" autocomplete="username")
+            input#loginPassword(type="password", name="logPassword", placeholder="Password", value="" required="" autocomplete="current-password")
+
+            button#loginBtn(type="submit", value="Login") Submit
+        a(href="/register") Need an account? Register here
+        span.bouncingNotice.bouncing &nbsp; *
+        span(data-toggle="tooltip" data-placement="top" title="Or you can use test account:  username: test1 pw:test1  (also available from test2 to test6)") note
+

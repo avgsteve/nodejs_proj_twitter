@@ -1,0 +1,8 @@
+//- 將 Post 相關的 Modal 放在 postModalMixins 裡面
+include ./postModalMixins
+
+mixin createPostModals(userLoggedIn)
+    +createReplyModal(userLoggedIn)
+    +createDeletePostModal()
+    +createPinnedPostModal()
+    +createUnpinPostModal()

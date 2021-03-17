@@ -1,0 +1,31 @@
+mixin createChatImage(chatData, userLoggedIn)
+    if(!chatData)
+        return
+
+    - let i = 0
+    - let maxImagesToShow = 3
+    - let numberOfUsersDontShowImage = chatData.usersInChat.length - maxImagesToShow
+    - numberOfUsersDontShowImage-- // Remove 1 since we won't show our own image
+
+
+    //- 輸出含有 <img> tag 的.chatImagesContainer區塊
+    .chatTitleImagesContainer
+
+        //- 如果剩餘沒有顯示頭像圖片的人的數量大於零才會顯示
+        if numberOfUsersDontShowImage > 0
+
+            //- Todo 之後再看一下 #210
+            .chatUsersCounter
+                span +#{numberOfUsersDontShowImage}
+
+        //- 輸出圖片
+        each user in chatData.usersInChat
+            //- 不用輸出目前登入使用者自己的頭像
+            if chatData.usersInChat.length != 1 && user._id === userLoggedIn._id
+                - continue
+            
+            else if i >= maxImagesToShow    
+                - break
+            
+            img(src=user.profilePic, alt="User's profile picture", title=user.firstName)
+            - i++

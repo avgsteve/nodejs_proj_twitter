@@ -1,0 +1,20 @@
+
+mixin createChangeChatNameModal(chat)
+
+    #changeChatNameModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='chatNameChangeModalLabel', aria-hidden='true')
+
+        .modal-dialog(role='document')
+
+            .modal-content
+
+                .modal-header
+                    h5#chatNameChangeModalLabel.modal-title Change the chat title
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+
+                .modal-body
+                    input#changeChatTitleTextbox(type="text", placeholder="Enter new title for this chat", value=chat.chatName)
+
+                .modal-footer
+                    button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+                    button#chatNameChangeButton.btn.btn-primary(type='button') Save

@@ -1,0 +1,26 @@
+extends ./../layouts/main-layout.pug
+
+block content    
+
+    <!--for debugging  ↓↓  -->
+    input(type="hidden", class='value-of-selectedTab-in-searchPage', value=selectedTab)
+
+    <!-- 搜尋區塊: position: relative  ↓↓  -->
+    .searchBarContainer
+        i.fas.fa-search.searchIcon
+        input#searchBox(type="text", name="searchBox", data-search_type=selectedTab, placeholder="Search for users or posts")
+
+    <!-- 分頁按鈕 container ↓↓  -->
+    .tabsContainer
+        include ./../profilePage/createContentSwitchTab
+        +createTab("Posts", `/search/posts`, selectedTab != "users")
+        +createTab("Users", `/search/users`, selectedTab === "users")
+
+    <!-- 搜尋結果 container ↓↓  -->
+    .resultsContainer
+
+    include ./../postPage/postModals/createPostModals
+    +createPostModals(userLoggedIn)
+
+block scripts
+    //- script(src="/js/search.js")

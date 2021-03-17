@@ -1,0 +1,14 @@
+extends ./../layouts/main-layout.pug
+include ./postModals/createPostModals
+
+block content    
+    script.
+        var postId = '!{postId}'
+
+    //- .postsContainer 的內容透過 ajax 來讀取內容並且顯示在頁面上
+    .postsContainer
+
+    +createPostModals(userLoggedIn)
+
+//- block scripts
+//-     script(src="/js/postPage.js")

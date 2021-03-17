@@ -5,23 +5,51 @@ block content
         h1 Register
             span.bouncingNotice.bouncing(data-toggle="tooltip" data-placement="top" title="You can DELETE your account after registered ANY TIME!") *
    
-        //- form#registerForm(method="post", onsubmit="event.preventDefault(); getRegisterData();")
-        form#registerForm(method="post", onsubmit="event.preventDefault()")
-
-
-            //- - let errorText = 'error';
-
-            //- p.errorMessage #{errorText}
+            //- form#registerForm(method="post", onsubmit="event.preventDefault(); getRegisterData();")
             p#errorMessage.errorMessage #{errorMessage}
 
-            input.registerInput#firstName(type="text", name="firstName", placeholder="First name", value=firstName title="姓" required autocomplete="given-name")
-            input.registerInput#lastName(type="text", name="lastName", placeholder="Last name" value=lastName title="名" required="" autocomplete="family-name")
-            input.registerInput#userName(type="text", name="username", placeholder="Username (length: 4 to 12 characters)", title="請輸入4到12字元長度使用者帳號",value=username required="" )
-            input.registerInput#email(type="email", name="email", placeholder="Email", value=email required="" autocomplete="email")
-            input#password.registerInput(type="password", name="password", placeholder="Password", required="" autocomplete="new-password")
-            input#passwordConf.registerInput(type="password", name="passwordConf", placeholder="Confirm password", required="" autocomplete="new-password")
-            button#registerBtn(type="submit", value="") Register
-            button.clearRegisterInput(type="submit" title='清除所有欄位' value="" onclick="event.preventDefault(); clearForm();") Clear all fields
+            <!-- Form-->
+            <form id="registerForm" class="needs-validation" method="post", onsubmit="event.preventDefault()">
+
+                <div class="form-row">
+                    <div class="col-md-6 ">
+                    <label for="firstName">First name</label>
+                    <input type="text" class="form-control nameFields1" id="firstName" value="" required autocomplete="firstname"/>
+                    </div>
+
+                    <div class="col-md-6 ">
+                    <label for="lastName">Last name</label>
+                    <input type="text" class="form-control nameFields2" id="lastName" value="" required autocomplete="lastname" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col-md-6 ">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" aria-describedby="emailHelp" required autocomplete="username" />
+                    </div>
+                    <div class="col-md-6 ">
+                        <label for="userName">User name</label>
+                        <input type="text" class="form-control" id="userName" aria-describedby="emailHelp" required autocomplete="email" />
+                    </div>
+                </div>
+
+
+                <div class="form-row">
+                    <div class="col-md-6 ">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" class="form-control passwordFields" aria-describedby="passwordHelpBlock" placeholder="type password" required autocomplete="password" />
+                    </div>
+                    <div class="col-md-6 ">
+                        <label for="passwordConf">Confirm Password</label>
+                        <input type="password" class="form-control passwordFields" id="passwordConf" placeholder="type password again" required autocomplete="password" />
+                    </div>
+                </div>
+
+                button#registerBtn(type="submit", value="") Register
+                button.clearRegisterInput(type="submit" title='清除所有欄位' value="" onclick="event.preventDefault(); clearForm();") Clear all fields
+
+            </form>
 
         a(href="/login") Already have an account? Login here.
     

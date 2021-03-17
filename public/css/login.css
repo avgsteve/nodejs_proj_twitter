@@ -45,16 +45,36 @@ body {
 	flex-direction: column;
 }
 
+.loginContainer .errorMessage {
+	color: red;
+	font-size: 1.3rem;
+}
+
+.loginContainer .errorHints {
+	position: absolute;
+	left: 6px;
+	top: 44px;
+	font-size: 0.5rem;
+	color: red;
+	padding-bottom: 5.4rem;
+}
+
+
+.loginContainer label {
+	font-size: 1.4rem;
+	color: rgba(167, 167, 167, 0.733);
+	margin-bottom: 1rem;
+}
+
 .loginContainer input[type="text"],
 .loginContainer input[type="email"],
 .loginContainer input[type="password"] {
 	margin-bottom: 20px;
 	padding: 5px 10px;
-	/* border-radius: ; */
 	border: none;
-	/* border: 1px solid #dedede; */
+	border: 1px solid #dedede;
 	border-bottom: 1px solid #dedede;
-	/* background-color: #f2f2f2;     */
+	background-color: #ffffff10;
 }
 
 .loginContainer input:focus {
@@ -73,11 +93,12 @@ body {
 
 .loginContainer button[type="submit"],
 .loginContainer button[type="submit"]:active {
-	height: 2rem;
+border-radius: 5px;
+padding: 0.5rem;
+font-size: 1.1rem;
 	background-color: #0099ff;
 	color: #fff;
 	border: none;
-	border-radius: 2px;
 	margin-bottom: 10px;
 	box-shadow: -2px 2px 7px -3px rgba(0, 0, 0, 0.75);
 }
@@ -242,9 +263,9 @@ span.highlighted.active {
 
 
 .link img {
-    height: 5rem;
-    width: 5rem;
-	}
+	height: 5rem;
+	width: 5rem;
+}
 
 
 .links .link:hover {

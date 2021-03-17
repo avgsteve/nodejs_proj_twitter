@@ -21,12 +21,14 @@ $(function () {
 
 });
 
-let submitButton = $('#loginBtn');
+
+
 
 // Submit registration data
+let submitButton = $('#loginBtn');
 submitButton.on('click', async (e) => {
-  e.preventDefault();
 
+  e.preventDefault();
   const loginHelper = new UserAuthHandler('login');
 
   // show loading animation in button and disable it
@@ -35,13 +37,17 @@ submitButton.on('click', async (e) => {
 
   const loginResult = await loginHelper.login();
 
-  if (loginResult) {
+  if (loginResult !== false) {
     return setTimeout(
       () => {
         location.assign('/');
       },
       1500);
   }
+
+  $('.errorMessage')
+    .text('login failed! Please check your username or password');
+
 
   // restore html in button
   submitButton.html(originalHtmlInBtn);
@@ -58,7 +64,7 @@ function callFunctionWithInterval(
 
 
   let timer = setInterval(() => {
-    console.log('current counter:', counter);
+    // console.log('current counter:', counter);
     functionsToCall[counter].call();
     counter++;
 
@@ -81,11 +87,9 @@ function fadeIn2() {
 
 function showRunningValue() {
   const objs = $('span.runningCounter');
-  console.log('objs', objs);
 
   setTimeout(() => {
     objs.each(function () {
-      console.log('this data: ', $(this).data('number'));
       animateValue(this, 0, $(this).data('number'), 900);
     });
   }, 1000);
@@ -103,9 +107,8 @@ function animateValue(obj, start, end, duration) {
   // const obj = document.getElementById("value");
   // animateValue(obj, 0, 100, 800);
 
-  console.clear();
   let startTimestamp = null;
-  let counter = 1;
+  // let counter = 1;
 
   const step = (timestamp) => {
     if (!startTimestamp) startTimestamp = timestamp;

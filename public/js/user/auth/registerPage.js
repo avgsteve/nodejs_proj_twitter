@@ -1,25 +1,23 @@
 
 let submitRegisterBtn = $('#registerBtn');
 
-submitRegisterBtn.on('click', async (e) => {
+$(document).on('click', '#registerBtn', async (e) => {
   e.preventDefault();
   const registerHelper = new UserAuthHandler('register');
-  const originalHtmlInBtn = registerHelper.showLoadingAnimationInButton(submitRegisterBtn);
+  registerHelper.showLoadingAnimationInButton(submitRegisterBtn);
   submitRegisterBtn.prop('disabled', true);
 
   const signupResult = await registerHelper.signupNewUser();
-
-  if (signupResult) {
+  if (signupResult === true) {
     return setTimeout(
       () => {
         location.assign('/');
       },
       1300);
-  }
-
-  // restore html in button
-  submitRegisterBtn.html(originalHtmlInBtn);
-  submitRegisterBtn.prop('disabled', false);
+  } 
+  
+  console.log('registration error:', signupResult);
+  registerHelper.showRegisterError(signupResult);
 
 });
 

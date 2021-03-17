@@ -1,3 +1,4 @@
+/// <reference path="./../../../../node_modules/@types/jquery/index.d.ts" />
 
 class UserAuthHandler {
 
@@ -33,33 +34,33 @@ class UserAuthHandler {
 
   async signupNewUser() {
 
-
     this.checkIfLoginDataIsCorrect();
 
     return new Promise((res, rej) => {
 
-      $.post({
+      try {
+
+        $.post({
         url: '/register',
         data: this.registerData,
-      }).done((data, textStatus, xhr) => {
-        console.log('註冊成功!');
-        console.log('data: ', data);
-        console.log('textStatus: ', textStatus);
-        console.log('xhr: ', xhr);
+        }).done((data, textStatus, xhr) => {
 
-        if (xhr.status === 201) {
-          res(true);
+          if (xhr.status === 201) {
+            return res(true);
         }
+          return res(false);
 
       }).fail((data, textStatus, xhr) => {
-
-        console.log('註冊失敗!');
+        console.log('register fail!');
         console.log('data: ', data);
-        console.log('textStatus: ', textStatus);
-        console.log('xhr.status: ', xhr.status);
-
-        rej(false);
+        return res(data.responseJSON);
       });
+        
+      } catch (error) {
+        console.log('error: ', error);
+        rej(error);
+      }
+
     });
 
   }
@@ -70,57 +71,63 @@ class UserAuthHandler {
 
     return new Promise((res, rej) => {
 
+      try {
+
+
       $.post({
         url: '/login',
         data: this.loginData,
       }).done((data, textStatus, xhr) => {
-        console.log('登入成功!');
-        console.log('data: ', data);
-        console.log('textStatus: ', textStatus);
-        console.log('xhr: ', xhr);
 
         if (xhr.status === 200) {
-          res(true);
+          return res(true);
         }
+        return res(false)
 
       }).fail((data, textStatus, xhr) => {
-
-        console.log('登入失敗!');
-        console.log('data: ', data);
-        console.log('textStatus: ', textStatus);
-        console.log('xhr.status: ', xhr.status);
-
-        rej(false);
+        console.log('login fail!');
+        // console.log('data: ', data);
+        return res(false)
       });
+      } catch (error) {
+        console.log('error: ', error);
+        rej(error);
+      }
     });
-
   }
 
   checkIfLoginDataIsCorrect() {
 
+    console.log('checking data');
     let dataToCheck = this.authType === "register" ? this.registerData : this.loginData
+    console.log('dataToCheck:', dataToCheck);
+    console.log(this);
 
     for (let key in dataToCheck) {
-      if (this[key] === null) {
+      if (dataToCheck[key] === null) {
+        $('.errorMessage').text('Please fill all fields');
         throw Error(`The value of property:${key} is null. Please check`);
       }
     }
+
+
+
+
   }
 
-  showErrorInUI(errorMessage = 'error') {
-    const element = (id) => document.getElementById(id);
+  showRegisterError(data) {
+    data.errors.forEach(error => {
+      let errorField = error.param;
+      $(`#${errorField}`).after(`<span class='errorHints'>${error.msg}</span>`);
+    });
 
-    // 檢查新密碼是否符合 & 透過UI提示密碼不符合
-    if (element('password').value !== element('passwordConf').value) {
-      let errorParagraph = element('errorMessage');
+    $('input').on('keydown', (e) => {
+      let input = $(e.target);
+      input.next('.errorHints').remove();
+    })
 
-      if (!errorParagraph) return;
-      let errorMessage = "Password don't match";
-
-      console.log(errorMessage);
-      errorParagraph.innerText = errorMessage;
-    }
   }
+
 
   showLoadingAnimationInButton(btn = $('#loginBtn'), message) {
 
@@ -128,16 +135,22 @@ class UserAuthHandler {
 
     let originalHtmlInBtn = btn.html();
     let loadingAnimation = `
-    <span class="submitStatusMessage">  ${messageToShow} </span>
-    <span
-      class="spinner-grow spinner-grow-sm" 
-      role="status" aria-hidden="true"
-    >
-    </span>
-    <span class="sr-only"> ${messageToShow}  </span>
-`;
+        <span class="submitStatusMessage">  ${messageToShow} </span>
+        <span
+          class="spinner-grow spinner-grow-sm" 
+          role="status" aria-hidden="true"
+        >
+        </span>
+        <span class="sr-only"> ${messageToShow}  </span>
+      `;
 
     btn.html(loadingAnimation);
+    submitRegisterBtn.prop('disabled', false);
+
+    setTimeout(() => {
+      btn.html(originalHtmlInBtn);
+      btn.prop('disabled', false);
+    }, 1500);
 
     return originalHtmlInBtn;
 

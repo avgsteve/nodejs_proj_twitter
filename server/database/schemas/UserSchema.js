@@ -15,7 +15,11 @@ const UserSchema = new Schema({
     email: {
         type: String, required: true, trim: true, unique: true
     },
-    password: { type: String, required: true },
+    password: {
+        type: String,
+        required: true,
+        select: false,
+    },
     profilePic: { type: String, default: "/images/profilePic.jpeg" },
     coverPhoto: {
         type: String
@@ -49,4 +53,7 @@ const UserSchema = new Schema({
 }, { timestamps: true });
 
 let User = mongoose.model('User', UserSchema);
+
+
+
 module.exports = User;

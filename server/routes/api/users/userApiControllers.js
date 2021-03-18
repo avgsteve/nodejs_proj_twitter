@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../../../database/schemas/UserSchema');
+const UserActivationSchema = require('../../../database/schemas/UserActivationSchema');
 const CustomError = require('../../errorHandlers/customError');
 const cookieHelper = require('./../auth/sendResWithToken');
 const Notification = require('../../../database/schemas/NotificationSchema');
@@ -8,6 +9,7 @@ const chalk = require('chalk');
 
 const path = require("path");
 const fs = require("fs");
+const populateUserOption = "_id userName firstName lastName profilePic";
 
 
 function sendUserExistedError(email, userName, userExisted, res) {
@@ -94,15 +96,26 @@ exports.register = async (req, res) => {
 
       if (!userExisted) {
 
+
+
         // console.log('帳號尚未註冊，開始新增使用者 registering new account');
         req.body.password = await bcrypt.hash(password, 10);
 
         User.create(req.body)
-          .then((createdNewUser) => {
+          .then(
+            async (newUser) => {
             // res.locals.user = createdNewUser;
-            console.log('使用者註冊成功: ', createdNewUser);
+              console.log('使用者註冊成功: ', newUser);
+
+              // Add activation doc to user's doc
+              let activationDoc =
+                await UserActivationSchema.createNewDoc(newUser._id, newUser.userName);
+              newUser.activation = activationDoc._id;
+              await newUser.save();
+              let newUserData = Object.assign(newUser);
+              delete newUserData.password
             // return cookieHelper.sendResponseWithToken(createdNewUser, 201, req, res);
-            res.status(201).send('OK')
+              res.status(201).send(newUserData)
           });
 
       } else {

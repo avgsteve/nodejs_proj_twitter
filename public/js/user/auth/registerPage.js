@@ -11,9 +11,9 @@ $(document).on('click', '#registerBtn', async (e) => {
   if (signupResult === true) {
     return setTimeout(
       () => {
-        location.assign('/');
+        location.assign('/activationSent');
       },
-      1300);
+      700);
   } 
   
   console.log('registration error:', signupResult);

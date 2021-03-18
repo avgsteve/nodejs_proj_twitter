@@ -72,4 +72,9 @@ router.get("/resendActivationCode", (req, res, next) => {
   res.status(200).render("authPage/resendActivation");
 });
 
+
+router.get("/activationSent", (req, res, next) => {
+  res.status(200).render("authPage/activationSent");
+});
+
 module.exports = router;

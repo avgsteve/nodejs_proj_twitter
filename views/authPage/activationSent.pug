@@ -1,0 +1,12 @@
+extends ../layouts/login-layout.pug
+
+block content
+    .loginContainer
+        h1 You have registered!
+        form(method="post")
+            p.errorMessage #{errorMessage}
+            h5 The activation code has been sent
+            h5 Please check your e-mail
+
+            a.mt-3(href="/activateAccount") Go to activation page
+

@@ -99,9 +99,10 @@ exports.register = async (req, res) => {
 
         User.create(req.body)
           .then((createdNewUser) => {
-            res.locals.user = createdNewUser;
-            // console.log('使用者註冊成功: ', user);
-            return cookieHelper.sendResponseWithToken(createdNewUser, 201, req, res);
+            // res.locals.user = createdNewUser;
+            console.log('使用者註冊成功: ', createdNewUser);
+            // return cookieHelper.sendResponseWithToken(createdNewUser, 201, req, res);
+            res.status(201).send('OK')
           });
 
       } else {

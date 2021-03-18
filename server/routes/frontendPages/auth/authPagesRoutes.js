@@ -64,4 +64,12 @@ router.get("/logout", (req, res, next) => {
   res.redirect('/login');
 });
 
+router.get("/activateAccount", (req, res, next) => {
+  res.status(200).render("authPage/activateAccount");
+});
+
+router.get("/resendActivationCode", (req, res, next) => {
+  res.status(200).render("authPage/resendActivation");
+});
+
 module.exports = router;

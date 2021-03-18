@@ -1,0 +1,14 @@
+extends ../layouts/login-layout.pug
+
+block content
+    .loginContainer
+        h1 Resend activation code
+        form(method="post")
+
+            p.errorMessage #{errorMessage}
+
+            input#loginAccount(type="text", name="logUsername", placeholder="Username or email", value="" required="" autocomplete="username")           
+
+            button#resendActivationBtn(type="submit", value="Login") Submit
+            a.mt-3(href="/login") Back to login page
+

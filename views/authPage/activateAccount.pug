@@ -1,0 +1,17 @@
+extends ../layouts/login-layout.pug
+
+block content
+    .loginContainer
+        h1 Login
+        form(method="post")
+
+            p.errorMessage #{errorMessage}
+
+            input#loginAccount(type="text", name="logUsername", placeholder="Username or email", value="" required="" autocomplete="username")
+            
+            input#activationCode(type="password", name="activationCode", placeholder="activation code", value="" required="" autocomplete="current-password")
+
+            button#activateAccBtn(type="submit", value="Login") Submit
+        a(href="/resendActivationCode") Haven't received activation code? 
+        span.bouncingNotice.bouncing &nbsp; *
+

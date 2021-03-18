@@ -31,12 +31,19 @@ exports.login = async (req, res) => {
       }
 
       let pwdVerified = await bcrypt.compare(password, userExisted.password,);
+
+
       if (pwdVerified === true) {
+
+        if (!userExisted.isActivated)
+          return sendLoginError(`Please activate account first!`, req, res);
+
         return cookieHelper.sendResponseWithToken(userExisted, 200, req, res);
       }
 
-      // 密碼錯誤
-      return sendLoginError(`incorrect account or password;`, req, res);
+
+      // 密碼 or 帳號錯誤
+      return sendLoginError(`incorrect account or password`, req, res);
 
     } catch (error) {
       console.log('登入錯誤: ', error);

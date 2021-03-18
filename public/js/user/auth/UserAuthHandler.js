@@ -13,7 +13,8 @@ class UserAuthHandler {
         firstName: registerData.firstName,
         lastName: registerData.lastName,
         userName: registerData.userName,
-        password: registerData.newPassword,
+        password: registerData.password,
+        passwordConf: registerData.passwordConf,
         email: registerData.email
       };
       this.newUserRegistered = false;
@@ -24,17 +25,16 @@ class UserAuthHandler {
       const loginData = this.getLoginData();
       this.loginData = {
         account: loginData.account,
-        password: loginData.password,
+        password: loginData.password,        
       };
       this.newUserRegistered = false;
     }
 
-    this.clearAllFields();
 
   }
 
   async signupNewUser() {
-
+    $('.errorHints').remove();
     this.checkIfLoginDataIsCorrect();
 
     return new Promise((res, rej) => {
@@ -42,21 +42,21 @@ class UserAuthHandler {
       try {
 
         $.post({
-        url: '/register',
-        data: this.registerData,
+          url: '/register',
+          data: this.registerData,
         }).done((data, textStatus, xhr) => {
 
           if (xhr.status === 201) {
             return res(true);
-        }
+          }
           return res(false);
 
-      }).fail((data, textStatus, xhr) => {
-        console.log('register fail!');
-        console.log('data: ', data);
-        return res(data.responseJSON);
-      });
-        
+        }).fail((data, textStatus, xhr) => {
+          console.log('register fail!');
+          console.log('data: ', data);
+          return res(data.responseJSON);
+        });
+
       } catch (error) {
         console.log('error: ', error);
         rej(error);
@@ -75,21 +75,21 @@ class UserAuthHandler {
       try {
 
 
-      $.post({
-        url: '/login',
-        data: this.loginData,
-      }).done((data, textStatus, xhr) => {
+        $.post({
+          url: '/login',
+          data: this.loginData,
+        }).done((data, textStatus, xhr) => {
 
-        if (xhr.status === 200) {
-          return res(true);
-        }
-        return res(false)
+          if (xhr.status === 200) {
+            return res(true);
+          }
+          return res(data.responseJSON);
 
-      }).fail((data, textStatus, xhr) => {
-        console.log('login fail!');
-        // console.log('data: ', data);
-        return res(false)
-      });
+        }).fail((data, textStatus, xhr) => {
+          console.log('login fail!');
+          console.log('data: ', data);
+          return res(data.responseJSON);
+        });
       } catch (error) {
         console.log('error: ', error);
         rej(error);
@@ -97,32 +97,44 @@ class UserAuthHandler {
     });
   }
 
-  clearAllFields() {
+  static clearAllFields() {
     $(document).on('click', '.clearRegisterInput', () => {
       console.log('this: ', this);
       $('#registerForm input').each(function () {
         $(this).val('');
       });
+      $('.errorHints').remove();
     });
   }
 
   checkIfLoginDataIsCorrect() {
 
-    console.log('checking data');
-    let dataToCheck = this.authType === "register" ? this.registerData : this.loginData
+    let dataToCheck = this.authType === "register" ? this.registerData : this.loginData;
+    let errorData = { errors: [] };
+
     console.log('dataToCheck:', dataToCheck);
-    console.log(this);
 
     for (let key in dataToCheck) {
       if (dataToCheck[key] === null) {
         $('.errorMessage').text('Please fill all fields');
-        throw Error(`The value of property:${key} is null. Please check`);
+        errorData.errors.push({ param: `${key}`, msg: 'Please fill this field' });
       }
     }
 
+    // Check if passwords match
+    if (
+      !dataToCheck.account // no need to check when it's login data
+      && dataToCheck.password !== dataToCheck.passwordConf) {
+      let errorMsg = `passwords don't match`;
+      let error = { errors: [{ param: 'password', msg: errorMsg }] };
+      this.showRegisterError(error);
+      throw Error(errorMsg);
+    }
 
-
-
+    if (errorData.errors.length !== 0) {
+      this.showRegisterError(errorData);
+      throw Error(`Need to complete all fields`);
+    }
   }
 
   showRegisterError(data) {
@@ -134,11 +146,39 @@ class UserAuthHandler {
 
     $('input').on('keydown', (e) => {
       let input = $(e.target);
+      $('.errorMessage').text('');
       input.next('.errorHints').remove();
-    })
+    });
 
   }
 
+  showLoginError(data) {
+
+    data.errors.forEach(error => {
+      let errorField = error.param; // Currently not used
+      
+      if (error.msg.includes("activate")) {
+        $('.errorMessage').after(`
+          <a href='/activateAccount'>
+            ${error.msg}
+            <p>(Click to activation page)</p>
+          </a>
+        `);
+        return
+      }
+
+      $('.errorMessage').text(`${error.msg}`);
+
+
+    });
+
+    $('input').on('keydown', (e) => {
+      let input = $(e.target);
+      $('.errorMessage').text('');
+      input.next('.errorHints').remove();
+    });
+
+  }
 
   showLoadingAnimationInButton(btn = $('#loginBtn'), message) {
 
@@ -171,24 +211,13 @@ class UserAuthHandler {
 
     const element = (id) => document.getElementById(id);
 
-    // 檢查新密碼是否符合 & 透過UI提示密碼不符合
-    if (element('password').value !== element('passwordConf').value) {
-      let errorParagraph = element('errorMessage');
-
-      if (!errorParagraph) return;
-      let errorMessage = "Password don't match";
-
-      console.log(errorMessage);
-      errorParagraph.innerText = errorMessage;
-    }
-
     const registerData = {
       firstName: element('firstName').value || null,
       lastName: element('lastName').value || null,
       userName: element('userName').value || null,
       email: element('email').value || null,
-      newPassword: element('password').value || null,
-      newPasswordConfirm: element('passwordConf').value || null,
+      password: element('password').value || null,
+      passwordConf: element('passwordConf').value || null,
     };
 
     return registerData;

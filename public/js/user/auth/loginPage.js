@@ -35,7 +35,7 @@ submitButton.on('click', async (e) => {
 
   const loginResult = await loginHelper.login();
 
-  if (loginResult !== false) {
+  if (loginResult === true) {
     return setTimeout(
       () => {
         location.assign('/');
@@ -43,8 +43,14 @@ submitButton.on('click', async (e) => {
       1500);
   }
 
-  $('.errorMessage')
-    .text('login failed! Please check your username or password');
+  // $('.errorMessage')
+  //   .text('Login failed! Please check your username or password');
+
+
+  console.log('loginResult: ', loginResult);
+
+  loginHelper.showLoginError(loginResult);
+
 
 
   // restore html in button

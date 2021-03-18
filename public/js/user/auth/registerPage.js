@@ -1,8 +1,8 @@
-const registerHelper = new UserAuthHandler('register');
-
+UserAuthHandler.clearAllFields()
 let submitRegisterBtn = $('#registerBtn');
 
 $(document).on('click', '#registerBtn', async (e) => {
+  const registerHelper = new UserAuthHandler('register');
   e.preventDefault();
   registerHelper.showLoadingAnimationInButton(submitRegisterBtn);
   submitRegisterBtn.prop('disabled', true);

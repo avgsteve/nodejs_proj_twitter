@@ -52,8 +52,8 @@ body {
 
 .loginContainer .errorHints {
 	position: absolute;
-	left: 6px;
-	top: 44px;
+	left: 7px;
+	bottom: 5px;
 	font-size: 0.5rem;
 	color: red;
 	/* padding-bottom: 5.4rem; */
@@ -93,9 +93,9 @@ body {
 
 .loginContainer button[type="submit"],
 .loginContainer button[type="submit"]:active {
-border-radius: 5px;
-padding: 0.5rem;
-font-size: 1.1rem;
+	border-radius: 5px;
+	padding: 0.5rem;
+	font-size: 1.1rem;
 	background-color: #0099ff;
 	color: #fff;
 	border: none;

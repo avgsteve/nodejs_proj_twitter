@@ -23,7 +23,8 @@ router.get("/login", (req, res, next) => {
     totalCreatedPosts,
     totalPostLikes,
     totalPostRetweets,
-    lastUpdated
+    lastUpdated,
+    pageTitle: 'Login'
   }
   );
 });
@@ -42,7 +43,8 @@ router.get("/register", (req, res, next) => {
     totalCreatedPosts,
     totalPostLikes,
     totalPostRetweets,
-    lastUpdated
+    lastUpdated,
+    pageTitle: 'Register'
   });
 });
 
@@ -65,16 +67,24 @@ router.get("/logout", (req, res, next) => {
 });
 
 router.get("/activateAccount", (req, res, next) => {
-  res.status(200).render("authPage/activateAccount");
+  res.status(200).render("authPage/activateAccount", {
+    pageTitle: 'Activate You Account'
+  });
 });
 
 router.get("/resendActivationCode", (req, res, next) => {
-  res.status(200).render("authPage/resendActivation");
+  res.status(200).render("authPage/resendActivation",
+    {
+      pageTitle: 'Resend Activation'
+    });
 });
 
 
 router.get("/activationSent", (req, res, next) => {
-  res.status(200).render("authPage/activationSent");
+  res.status(200).render("authPage/activationSent",
+    {
+      pageTitle: 'Activation has been sent'
+    });
 });
 
 module.exports = router;

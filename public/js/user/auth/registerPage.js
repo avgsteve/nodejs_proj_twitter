@@ -1,19 +1,28 @@
+/// <reference path="./../../../../node_modules/@types/jquery/index.d.ts" />
+
+
 UserAuthHandler.clearAllFields()
 let submitRegisterBtn = $('#registerBtn');
 
 $(document).on('click', '#registerBtn', async (e) => {
-  const registerHelper = new UserAuthHandler('register');
   e.preventDefault();
-  registerHelper.showLoadingAnimationInButton(submitRegisterBtn);
+
+  const registerHelper = new UserAuthHandler('register');
+
+  registerHelper.showLoadingAnimationInButton(
+    submitRegisterBtn, 'processing ...', 4000);
+
   submitRegisterBtn.prop('disabled', true);
 
   const signupResult = await registerHelper.signupNewUser();
+
   if (signupResult === true) {
+    // registerHelper.showRegisterSucceed();
     return setTimeout(
       () => {
         location.assign('/activationSent');
       },
-      700);
+      1500);
   } 
   
   console.log('registration error:', signupResult);

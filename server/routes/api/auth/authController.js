@@ -1,5 +1,4 @@
 const bcrypt = require('bcrypt');
-const catchAsync = require('../../utils/catchAsync');
 const User = require('./../../../database/schemas/UserSchema');
 const CustomError = require('./../../errorHandlers/customError');
 const jwt = require('jsonwebtoken');
@@ -9,7 +8,7 @@ require('dotenv').config();
 
 exports.login = async (req, res) => {
   let { account, password } = req.body;
-
+  console.log('login data:', req.body);
   if (!account || !password) {
     console.log('Login data error. req.body: ', req.body);
   }
@@ -23,25 +22,23 @@ exports.login = async (req, res) => {
           { userName: account },
           { email: account }
         ]
-      });
+      }).select('password isActivated _id');
 
       // 找不到帳號 (帳號不存在)
       if (!userExisted) {
         return sendLoginError(`incorrect account or password;`, req, res);
       }
 
-      let pwdVerified = await bcrypt.compare(password, userExisted.password,);
+      // console.log('userExisted: \n', userExisted);
 
+      if (!userExisted.isActivated)
+        return sendLoginError(`Please activate account first!`, req, res);
+
+      let pwdVerified = await bcrypt.compare(password, userExisted.password);
 
       if (pwdVerified === true) {
-
-        if (!userExisted.isActivated)
-          return sendLoginError(`Please activate account first!`, req, res);
-
         return cookieHelper.sendResponseWithToken(userExisted, 200, req, res);
       }
-
-
       // 密碼 or 帳號錯誤
       return sendLoginError(`incorrect account or password`, req, res);
 
@@ -86,22 +83,14 @@ exports.checkIfUserIsLoggedIn = async (req, res, next) => {
         return next();
       }
 
-      // if (currentUser.passwordChangedAfterTokenIAT(decodedDataFromToken.iat)) {
-      //   return next();
-      // }
-
       const processedUserData = currentUser.toObject();
       delete processedUserData.hashed_password;
       delete processedUserData.salt;
 
       res.locals.user = processedUserData;
 
-      // console.log('JWT 驗證OK ! res.locals.user: ', res.locals.user);
-
-      //ref for res.locals :  https://expressjs.com/en/api.html#res.locals
       return next();
     } catch (error) {
-      // MongoDB will throw Error if the connection to DB is not working
       console.log('error while getting and verifying cookie', error);
       return next();
     }
@@ -111,25 +100,34 @@ exports.checkIfUserIsLoggedIn = async (req, res, next) => {
 };
 
 
-exports.restrictToSignedInUser = catchAsync(async (req, res, next) => {
+exports.restrictToSignedInUser = async (req, res, next) => {
   // console.log('res.locals in restrictToSignedInUser: ', res.locals);
 
-  if (res.locals.user === undefined || !res.locals.user._id === undefined) {
-    let ip = (
-      req.ip || // for express only
-      req.headers['x-forwarded-for'] ||
-      req.connection.remoteAddress || "(can't get ip from current user)"
-    ).split(',')[0].trim();
-    console.log('unauthorized access from ip: ', ip);
-    console.log('req.headers: ', req.headers);
+  try {
 
-    if (req.originalUrl.includes('api'))
-      return res
-        .status(401)
-        .send(new CustomError("Please sign in to use this API", 401));
+    if (res.locals.user === undefined || !res.locals.user._id === undefined) {
+      let ip = (
+        req.ip || // for express only
+        req.headers['x-forwarded-for'] ||
+        req.connection.remoteAddress || "(can't get ip from current user)"
+      ).split(',')[0].trim();
+      console.log('unauthorized access from ip: ', ip);
+      console.log('req.headers: ', req.headers);
 
-    return res.redirect('/');
+      if (req.originalUrl.includes('api'))
+        return res
+          .status(401)
+          .send(new CustomError("Please sign in to use this API", 401));
 
+      return res.redirect('/');
+
+    }
+
+    // when all clear
+    next();
+
+  } catch (error) {
+    console.log('error in restrictToSignedInUser middleware:', error);
   }
-  next();
-});
+
+};

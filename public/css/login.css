@@ -46,8 +46,15 @@ body {
 }
 
 .loginContainer .errorMessage {
-	color: red;
-	font-size: 1.3rem;
+	padding: 0.5rem 3.5rem 0rem;
+	font-size: 1.2rem;
+	color: rgb(255 48 1);
+	}
+
+	.loginContainer .successMessage {
+		padding: 0rem 3.5rem;
+		font-size: 1.2rem;
+		color: rgba(86, 190, 72, 0.993);
 }
 
 .loginContainer .errorHints {

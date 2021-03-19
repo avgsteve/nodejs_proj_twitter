@@ -85,7 +85,7 @@ UserActivationSchema.methods = {
     // https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
     this.activationCode = activeCode;
     this.activationCodeCreatedAt = Date.now();
-    this.activationCodeExpiresAt = Date.now() + 1000 * 60 * 10; // 10 min
+    this.activationCodeExpiresAt = Date.now() + 1000 * 60 * 30; // 10 min
     this.activationCodeSent_count++;
 
     this.save();
@@ -107,6 +107,10 @@ UserActivationSchema.methods = {
   timeRemainToResend: function () {
     let resendTimeWindow = 1000 * 60 * 5; // 5 minutes
     return Date.parse(this.activationCodeCreatedAt) + resendTimeWindow - Date.now();
+  },
+  activationCodeIsCorrect: function (code) {
+    if (code === this.activationCode) return true;
+    return false;
   }
 
 };

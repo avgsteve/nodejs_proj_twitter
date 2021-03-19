@@ -30,7 +30,7 @@ class APIFeatures {
     return this; //makes APIfeatures.filter() has props and value of the whole updated Obj
   }
 
-  //APIfeatures.sort()
+  //API features.sort()
   sort() {
     // // 2) SORTING ( with mongoose Model.find().sort() )
     if (this.queryString.sort) {
@@ -63,7 +63,7 @@ class APIFeatures {
 
   }
 
-  //APIfeatures.limit()
+  //API features.limit()
   limitFields() {
     // 3) Field limiting (projecting) by using .select() method
     // (to send back only required key-value to reduce the size of requested data)
@@ -94,14 +94,14 @@ class APIFeatures {
 
     // Set default value of page from the .page property
     const page = +this.queryString.page || 1;
-    // To pre-define the limit of maximun number of results to be returned
+    // To pre-define the limit of maximum number of results to be returned
     const limit = +this.queryString.limit || 100;
     // how many documents to skip in the result, page 2 will skip the number of limit multiplied by the page before (which is page - 1)
     const skip = (page - 1) * limit;
 
     console.log(`\x1b[31m\nCurrent query output limit is : ${limit}\x1b[0m,\nCurrent page is #${page} and there are ${skip} of the results have been skipped`);
 
-    // Decide how many results to skip and the maximun number of results
+    // Decide how many results to skip and the maximum number of results
     // ex: page 2 is result #11 to #20 -->
     this.query = this.query.skip(skip).limit(limit);
     /* ref:

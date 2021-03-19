@@ -1,8 +1,3 @@
-/*jshint esversion: 6 */
-/*jshint esversion: 8 */
-/*jshint esversion: 9 */
-const AppError = require('./appError'); // appError.js
-
 
 //catchAsync
 
@@ -23,43 +18,3 @@ module.exports = fn => { //exported as catchAsync function
 
 };
 
-
-
-// ==== Block 2 to be tested and replied by course ====
-// module.exports = fn => {
-//   return (req, res, next) => {
-//     try {
-//       fn(req, res, next);
-//       // next();
-//       next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-//
-//     } catch (err) { // next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-//       next(err);
-//     }
-//   };
-// };
-
-
-// ==== Block 3 to be tested  ====
-
-// module.exports = fn => {
-//
-//   return (req, res, next) => {
-//
-//     try {
-//
-//       try {
-//         fn(req, res, next);
-//         next();
-//
-//       } catch (err) {
-//         // next();
-//         next(err);
-//       }
-//
-//     } catch (err) { // next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
-//       next(err);
-//     }
-//   };
-//
-// };

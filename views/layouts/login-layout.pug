@@ -3,7 +3,7 @@ html(lang="en")
     head
         meta(charset="UTF-8")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
-        title Login
+        title #{pageTitle}
 
         link(rel='stylesheet', href='https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css', integrity='sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh', crossorigin='anonymous')
         link(rel="stylesheet", href="/css/login.css")
@@ -23,7 +23,9 @@ html(lang="en")
 
         <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.3.0/lazysizes.min.js"></script>
         
-
         script(src='/js/user/auth/UserAuthHandler.js')
         script(src='/js/user/auth/loginPage.js')
         script(src='/js/user/auth/registerPage.js')
+
+        block scriptsInPage
+

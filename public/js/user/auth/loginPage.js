@@ -43,15 +43,9 @@ submitButton.on('click', async (e) => {
       1500);
   }
 
-  // $('.errorMessage')
-  //   .text('Login failed! Please check your username or password');
-
-
   console.log('loginResult: ', loginResult);
 
   loginHelper.showLoginError(loginResult);
-
-
 
   // restore html in button
   submitButton.html(originalHtmlInBtn);

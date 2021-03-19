@@ -97,6 +97,48 @@ class UserAuthHandler {
     });
   }
 
+  async sendActivationCode(data) {
+    return new Promise((res, rej) => {
+      console.log('data:', data);
+      $.ajax({
+        method: "POST",
+        url: "/activateUser",
+        data: data
+      }).done(function (data, textStatus, xhr) {
+        if (xhr.status === 200) {
+          console.log(data.responseJSON);
+          return res(true);
+        }
+        rej(data.responseJSON);
+      }).fail(function (data, textStatus, xhr) {
+        console.log('failed');
+        return res(data.responseJSON);
+      });
+    }
+    );
+  }
+
+  async reqToResendActivationCode(data) {
+    return new Promise((res, rej) => {
+      console.log('data:', data);
+      $.ajax({
+        method: "POST",
+        url: "/resendActivation",
+        data: data
+      }).done(function (data, textStatus, xhr) {
+        if (xhr.status === 200) {
+          console.log(data.responseJSON);
+          return res(true);
+        }
+        rej(data.responseJSON);
+      }).fail(function (data, textStatus, xhr) {
+        console.log('failed');
+        return res(data.responseJSON);
+      });
+    }
+    );
+  }
+
   static clearAllFields() {
     $(document).on('click', '.clearRegisterInput', () => {
       console.log('this: ', this);
@@ -152,24 +194,21 @@ class UserAuthHandler {
 
   }
 
+  showRegisterSucceed() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    $('p.successMessage')
+      .text('Success! Please check your email').fadeIn('1800')
+      .after(`<p class='successMessage two' style="display:none">Redirecting to activation page</p>`);
+    setTimeout(() => {
+      $('p.successMessage.two').fadeIn('4000');
+    }, 1000);
+  }
+
   showLoginError(data) {
 
     data.errors.forEach(error => {
       let errorField = error.param; // Currently not used
-      
-      if (error.msg.includes("activate")) {
-        $('.errorMessage').after(`
-          <a href='/activateAccount'>
-            ${error.msg}
-            <p>(Click to activation page)</p>
-          </a>
-        `);
-        return
-      }
-
       $('.errorMessage').text(`${error.msg}`);
-
-
     });
 
     $('input').on('keydown', (e) => {
@@ -180,7 +219,29 @@ class UserAuthHandler {
 
   }
 
-  showLoadingAnimationInButton(btn = $('#loginBtn'), message) {
+  showActivationError(errorMessage = 'error message') {
+
+    let errorP = $('p.errorMessage').text(errorMessage);
+
+    $('input#loginAccount, input#activationCode, input#loginAccount')
+      .on('keydown keyup', (e) => {
+        errorP.text('');
+      });
+
+  }
+
+  showActivationSucceed(currentPage = 'activation') {
+    let successMessage =
+      'Successful! ' +
+      `${currentPage === 'activation' ?
+        'Redirect to login page' :
+        'Please check email. Redirecting to activation page'}`;
+
+    console.log('successMessage:', successMessage);
+    $('.successMessage').text(successMessage);
+  }
+
+  showLoadingAnimationInButton(btn = $('#loginBtn'), message, timeout = 1000) {
 
     let messageToShow = message || 'processing ...';
 
@@ -201,7 +262,7 @@ class UserAuthHandler {
     setTimeout(() => {
       btn.html(originalHtmlInBtn);
       btn.prop('disabled', false);
-    }, 1500);
+    }, timeout);
 
     return originalHtmlInBtn;
 
@@ -232,4 +293,25 @@ class UserAuthHandler {
     console.log('取得的loginData: ', loginData);
     return loginData;
   };
+
+  getActivationData() {
+    let activationCode = $('#activationCode').val().trim();
+    let userName = $('#loginAccount').val().trim();
+
+    if (!activationCode || !userName)
+      return this.showActivationError('Please fill both fields!');
+
+    return { userName, activationCode };
+  }
+
+  getResendActivationData() {
+    let userName = $('#loginAccount').val().trim();
+    let captcha = $('#captcha').val().trim();
+
+    if (!userName || !captcha)
+      return this.showActivationError('Please fill both fields!');
+
+    return { userName, captcha };
+  }
+
 }

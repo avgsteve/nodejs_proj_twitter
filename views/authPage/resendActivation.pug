@@ -6,9 +6,12 @@ block content
         form(method="post")
 
             p.errorMessage #{errorMessage}
+            p.successMessage
 
             input#loginAccount(type="text", name="logUsername", placeholder="Username or email", value="" required="" autocomplete="username")           
 
-            button#resendActivationBtn(type="submit", value="Login") Submit
-            a.mt-3(href="/login") Back to login page
+            button#resendActivationBtn.resendActivationBtn(type="submit", value="Login") Submit
+            a.mt-3(href="/activateAccount") Back to activation page
 
+block scriptsInPage
+    script(src='/js/user/auth/accountActivationPage.js')

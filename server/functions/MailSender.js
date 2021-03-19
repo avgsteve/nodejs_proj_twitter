@@ -137,7 +137,7 @@ module.exports = class MailSender {
   async sendAccountActivation(activationCode) {
     await this.send(
       'accountActivation', // argument#1:  views/email/passwordReset.pug
-      'Your account activation code (valid for only 10 minutes)', // argument#2:  string as email subject
+      'Your account activation code (valid for only 30 minutes)', // argument#2:  string as email subject
       activationCode
     );
   }

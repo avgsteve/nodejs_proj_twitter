@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const User = require('../../../database/schemas/UserSchema');
 const UserActivation = require('../../../database/schemas/UserActivationSchema');
 const CustomError = require('../../errorHandlers/customError');
+const MailSender = require('./../../../functions/MailSender');
 const cookieHelper = require('./../auth/sendResWithToken');
 const Notification = require('../../../database/schemas/NotificationSchema');
 const { body } = require('express-validator');
@@ -107,11 +108,23 @@ exports.register = async (req, res) => {
                 await UserActivation.createNewDoc(newUser._id, newUser.userName);
               newUser.activation = activationDoc._id;
               await newUser.save();
-
               // Don't expose password to front-end even it's hashed
               newUser.password = '---encrypted---';
 
-              res.status(201).send(newUser);
+              const httpProtocol =
+                // process.env.NODE_ENV.toString().trim() === "development"
+                process.env.NODE_ENV === "development" ? "http" : "https";
+
+              const urlForActivation =
+                `${httpProtocol}://${req.get("host")}/activateAccount/`;
+
+              new MailSender(newUser, urlForActivation,)
+                .sendAccountActivation(activationDoc.activationCode)
+                .then((result) => {
+                  res.status(200).json(newUser);
+                });
+
+              // res.status(201).send(newUser);
             });
 
       } else {
@@ -257,7 +270,7 @@ exports.resendActivation = async (req, res) => {
   return res
     .status(400)
     .send(new CustomError(`user name is missing: ${JSON.stringify(req.body)}`, 400));
-}
+};
 
 // Url path: router.put("/api/users/:userIdToFollow/follow)
 exports.followUser = async (req, res, next) => {

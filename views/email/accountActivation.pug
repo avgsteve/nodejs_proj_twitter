@@ -1,0 +1,29 @@
+extends baseEmail
+
+//- 1) Use variable from pug.renderFile( ... in views/email.js
+
+//- 2) extend the file content from baseEmail.pug 
+//- and replace the "block content" section with the code below:
+block content
+  //- accountActivation pug
+  //- Use variable "firstName" from locals from email.js
+  p Hi #{firstName},
+  p To activate your account registered on: #{hostName} 
+  p Please copy the activation code
+  input(type='text', value=`${activationCode}`)
+  p And click the button to go the activation page to activate your account 
+  table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
+    tbody
+      tr
+        td(align='left')
+          table(role='presentation', border='0', cellpadding='0', cellspacing='0')
+            tbody
+              tr
+                td
+                  //-
+                  a(href=`${url}`, target='_blank' rel="noreferrer noopener") Activate Your Account
+  br        
+  p Or use the link: 
+  a(href=`${url}`) #{url}
+
+  p If you didn't register your account, please contact with us!

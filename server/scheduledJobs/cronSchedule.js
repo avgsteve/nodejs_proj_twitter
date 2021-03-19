@@ -2,6 +2,7 @@
 const fs = require('fs');
 const path = require('path');
 const cron = require('node-cron');
+const chalk = require('chalk')
 const UserDocument = require('../database/schemas/UserSchema');
 const dataAsObj = require('../database/statisticData');
 const db = require('./fetchStatsData');
@@ -44,7 +45,10 @@ exports.getStatisticFromDB = () => {
       async () => {
         let statsData = await db.fetchStatsData();
         db.writeJsonDataToFile(statsData);
-        console.log(`\n[${currentTime}] updated statistic dataObj: \n`, dataAsObj);
+        console.log(
+          chalk.yellow(`[Cron Job: getStatisticFromDB@${currentTime}]`),
+          `\n updated statistic dataObj: \n`,
+          dataAsObj);
       }
     );
   }

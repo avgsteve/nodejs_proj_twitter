@@ -26,6 +26,7 @@ const UserActivationSchema = new Schema({
   activationCodeExpiresAt: {
     type: Date
   },
+
   activationCodeSent_count: {
     type: Number,
     default: 1,
@@ -43,32 +44,27 @@ const UserActivationSchema = new Schema({
 
 UserActivationSchema.statics = {
 
-  createNewDoc: async (userId, userName) => {
-
+  createNewDoc: async function (userId, userName) {
 
     try {
 
-
-      let existingDoc = await UserActivation.find({
+      let existingDoc = await UserActivation.findOne({
         userName: userName
       });
 
-      console.log('existingDoc: ', existingDoc);
+      console.log('check existing user activation data: ', existingDoc);
 
-      if (existingDoc.length !== 0) {
-        existingDoc[0].generateActivationCode();
+      if (existingDoc) {
+        await existingDoc.generateActivationCode();
         return existingDoc;
       };
-
-      let created = await UserActivation.create({
+      
+      let newActivationDoc = await UserActivation.create({
         userId: userId,
         userName: userName
       });
-
-      await created.generateActivationCode();
-
-      return created;
-
+      await newActivationDoc.generateActivationCode();
+      return newActivationDoc;
 
     } catch (error) {
       console.log('error: ', error);
@@ -80,7 +76,7 @@ UserActivationSchema.statics = {
 
 UserActivationSchema.methods = {
 
-  generateActivationCode: function () {
+  generateActivationCode: async function () {
 
     console.log('generateActivationCode is called');
 
@@ -89,20 +85,28 @@ UserActivationSchema.methods = {
     // https://nodejs.org/api/crypto.html#crypto_crypto_randombytes_size_callback
     this.activationCode = activeCode;
     this.activationCodeCreatedAt = Date.now();
-    this.activationCodeExpiresAt = Date.now() + 1000 * 60 * 10;
+    this.activationCodeExpiresAt = Date.now() + 1000 * 60 * 10; // 10 min
+    this.activationCodeSent_count++;
+
     this.save();
-    return activeCode;
+    return this;
   },
-  codeIsValid: () => {
-    if (
-      this.activationCodeExpiresAt < Date.now() &&
-      this.isActivated === false
-    ) return true;
-    return false;
+  isExpired: function () {
+    // Convert UTC time to Epoch time 轉換 timestamp
+    let expiryTimeEpoch = Date.parse(this.activationCodeExpiresAt);
+    if (Date.now() > expiryTimeEpoch)
+      return true; // is expired 
+    return false;  // not expired
   },
-  makeActivate() {
+  makeActivate: async function () {
+    console.log('this in makeActivate: ', this);
     this.isActivated = true;
-    this.activatedAt = new Date().toISOString();
+    this.isActivatedAt = Date.now();
+    await this.save();
+  },
+  timeRemainToResend: function () {
+    let resendTimeWindow = 1000 * 60 * 5; // 5 minutes
+    return Date.parse(this.activationCodeCreatedAt) + resendTimeWindow - Date.now();
   }
 
 };

@@ -33,6 +33,27 @@ router.post("/register",
   userApiController.register
 );
 
+
+router.post("/activateUser",
+  [
+    body('userName')
+      .notEmpty().trim().withMessage('user name is required'),
+    body('activationCode')
+      .notEmpty().trim().withMessage('activation code is required'),
+  ],
+  checkReqBodyErrors,
+  userApiController.activateUser
+);
+
+router.post("/resendActivation",
+  [
+    body('userName')
+      .notEmpty().trim().withMessage('user name is required')
+  ],
+  checkReqBodyErrors,
+  userApiController.resendActivation
+);
+
 router.post("/logout", (req, res, next) => {
 
   if (res.locals.user) res.locals.user = null;

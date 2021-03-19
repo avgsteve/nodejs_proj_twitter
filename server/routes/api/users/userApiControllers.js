@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const User = require('../../../database/schemas/UserSchema');
-const UserActivationSchema = require('../../../database/schemas/UserActivationSchema');
+const UserActivation = require('../../../database/schemas/UserActivationSchema');
 const CustomError = require('../../errorHandlers/customError');
 const cookieHelper = require('./../auth/sendResWithToken');
 const Notification = require('../../../database/schemas/NotificationSchema');
@@ -72,7 +72,6 @@ exports.getUsersByQuery = async (req, res, next) => {
     });
 };
 
-
 exports.register = async (req, res) => {
 
   // console.log('req.body for sign up: ', req.body);
@@ -96,27 +95,24 @@ exports.register = async (req, res) => {
 
       if (!userExisted) {
 
-
-
         // console.log('帳號尚未註冊，開始新增使用者 registering new account');
         req.body.password = await bcrypt.hash(password, 10);
 
         User.create(req.body)
           .then(
             async (newUser) => {
-            // res.locals.user = createdNewUser;
-              console.log('使用者註冊成功: ', newUser);
 
               // Add activation doc to user's doc
               let activationDoc =
-                await UserActivationSchema.createNewDoc(newUser._id, newUser.userName);
+                await UserActivation.createNewDoc(newUser._id, newUser.userName);
               newUser.activation = activationDoc._id;
               await newUser.save();
-              let newUserData = Object.assign(newUser);
-              delete newUserData.password
-            // return cookieHelper.sendResponseWithToken(createdNewUser, 201, req, res);
-              res.status(201).send(newUserData)
-          });
+
+              // Don't expose password to front-end even it's hashed
+              newUser.password = '---encrypted---';
+
+              res.status(201).send(newUser);
+            });
 
       } else {
         // User found
@@ -129,6 +125,139 @@ exports.register = async (req, res) => {
     }
   }
 };
+
+function sendUserActivationError(res, errorMessage = 'error') {
+  return res
+    .status(400)
+    .send(new CustomError(
+      `${errorMessage}`, 400)
+    );
+}
+// post @root/activateUser
+exports.activateUser = async (req, res) => {
+
+  let { userName, activationCode } = req.body;
+  // let payload = req.body;
+
+  if (userName && activationCode) {
+
+    console.log(`start activation for user name: ${userName}`);
+
+    try {
+
+      let activationDoc = await UserActivation.findOne(
+        {
+          userName: userName,
+        });
+
+      if (!activationDoc)
+        return sendUserActivationError(
+          res, `Can't find user activation data. Please register`);
+
+      if (activationDoc.isExpired())
+        return sendUserActivationError(
+          res, `Activation code has expired. Please request a new one`);
+
+      // All clear:  Make activation and user document 'activated'
+      console.log('User account activated!');
+      await activationDoc.makeActivate();
+
+      // update user document after activationDoc is done
+      let activatedUser = await User.findOneAndUpdate(
+        { userName: userName },
+        { isActivated: true },
+        { new: true });
+      return res.send(activatedUser);
+
+    } catch (caughtError) {
+      let error = new CustomError(`Can't activate user`, 400);
+      console.log('error: ', error, caughtError);
+      return res
+        .status(400)
+        .send(error);
+    };
+
+  }
+
+  // Defensive programming: 
+  // In case the required fields are empty and not checked by previous middleware
+  // and either userName or activationCode is not provided
+  return sendUserActivationError(
+    res, `user name or activation code is missing: ${JSON.stringify(req.body)}`);
+};
+
+// post @root/activateUser
+exports.resendActivation = async (req, res) => {
+
+  console.log('req.body for activationCode: ', req.body);
+  let { userName } = req.body;
+
+  if (userName) {
+    try {
+      let userDoc = await User.findOne({
+        userName: userName,
+      });
+      // Don't resend if user account is not registered
+      if (!userDoc)
+        return res
+          .status(400)
+          .send(new CustomError(`No user data found. Please register`, 400));
+
+      // Don't resend if user account is not activated
+      if (userDoc.isActivated === true)
+        return res
+          .status(400)
+          .send(new CustomError(`User is already activated`, 400));
+
+      let activation = await UserActivation.findOne({ userName: userName });
+
+      // If no activation, create a new one
+      if (!activation) {
+        activation = await UserActivation.createNewDoc(userDoc._id, userName);
+        return res.send(activation);
+      }
+
+      // Don't resend if user account is not activated
+      if (activation.isActivated === true)
+        return res
+          .status(400)
+          .send(new CustomError(`Activation document is already activated`, 400));
+
+      // Don't resend if user account is not activated
+      if (activation.timeRemainToResend() > 0) {
+
+        let minutes = Math.floor(activation.timeRemainToResend() / 1000 / 60);
+        let seconds = Math.floor(activation.timeRemainToResend() / 1000 - minutes * 60);
+        let timeToResend = `Time to resend: ${minutes} minutes ${seconds} seconds`;
+        return res
+          .status(400)
+          .send(
+            new CustomError(
+              `Can't request new activation code within 5 minutes. ${timeToResend}`
+              , 400)
+          );
+      }
+
+      // update user document after activationDoc is done
+      let updatedActivation = await activation.generateActivationCode();
+
+      return res.send(updatedActivation);
+
+    } catch (caughtError) {
+      let error = new CustomError(`Can't resend activation`, 400);
+      console.log('error: ', error, caughtError);
+      return res
+        .status(400)
+        .send(error);
+    };
+
+  };
+
+  // if either of userName && activationCode is not provided
+  return res
+    .status(400)
+    .send(new CustomError(`user name is missing: ${JSON.stringify(req.body)}`, 400));
+}
 
 // Url path: router.put("/api/users/:userIdToFollow/follow)
 exports.followUser = async (req, res, next) => {
@@ -145,7 +274,7 @@ exports.followUser = async (req, res, next) => {
   let hasFollowedTargetUser =
     targetUser.followers &&
     targetUser.followers.includes(res.locals.user._id);
-  
+
   let updateOption = hasFollowedTargetUser ? "$pull" : "$addToSet";
 
   console.log(
@@ -250,7 +379,7 @@ exports.uploadProfilePhoto = async (req, res, next) => {
   );
   console.log('檔案路徑', {
     dirName, dirName2, pathOfSavedFile, filePathForProfileLink,
-    localFilePath, newLocalFilePathWithExt, 
+    localFilePath, newLocalFilePathWithExt,
   });
 
   // 將沒有副檔名的檔案名稱 變更為 有副檔名的檔案名稱

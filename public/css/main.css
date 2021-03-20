@@ -1232,17 +1232,11 @@ For Me Page
 */
 
 .functionsContainer {
+    width: 100%;
     justify-content: center;
-    padding: 1rem 2rem 2rem;
-
+    display: flex;
+    flex-direction: column;
 }
-
-/* @media only screen and (max-width: 600px) {
-    .functionsContainer {
-        padding: 1rem 2rem 2rem;
-    }
-} */
-
 .functionTabsContainer {
     width: 100%;
 }
@@ -1287,7 +1281,11 @@ For Me Page
 }
 
 .functionsContainer .function_item {
-    display: none;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: 1rem auto;
+    align-items: center;
 }
 
 .functionsContainer .function_item.active {
@@ -1295,11 +1293,75 @@ For Me Page
     justify-content: center;
     }
 
-    .function_item.detail form {
+    .functionsItem_detail form {
         width: 100%;
-    }
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+}
 
-    .function_item.detail form .no-border {
+    .functionsItem_detail form .no-border {
         border: 0px solid #ced4da;
         background-color: transparent;
+}
+/* 
+
+container for cover image and profile image 
+*/
+.functionsItem_detail .userImageContainer {
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+.userImageContainer .userCoverImgBackground,
+.userImageContainer .userProfileImageBackground {
+    max-width: 100%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.userImageContainer .userCoverImgBackground {
+    max-width: 100%;
+}
+
+.userCoverImgBackground img.coverImg {
+    height: auto;
+    max-width: 100%;
+}
+
+.userImageContainer .userProfileImageBackground {
+    background-color: transparent;
+    max-width: 400px;
+    width: 50%;
+    max-height: 200px;
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+}
+
+@media only screen and (max-width: 600px) {
+
+    .userImageContainer .userProfileImageBackground {
+        min-width: 100px;
+    }
+}
+
+
+.userProfileImageBackground img.profileImg {
+    border-radius: 50%;
+    border: 3px white solid;
+    width: 95%;
+    height: auto;
+}
+
+
+.userImageContainer .userImageLowerBlank {
+    margin: 4rem;
+    position: relative;
 }

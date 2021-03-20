@@ -21,9 +21,6 @@ body {
     min-height: 100%;
     background-color: #fff;
     font-weight: 300;
-    overflow: scroll;
-    overflow-y: hidden;
-    overflow-x: hidden;
 }
 
 ul {

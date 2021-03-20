@@ -1,0 +1,34 @@
+extends ./../layouts/main-layout.pug
+
+block content
+
+    .functionTabsContainer
+      .btn-group(role="group" aria-label="Basic example")
+        button.btn.btn-secondary(type="button" data-target='detail') Detail
+        button.btn.btn-secondary(type="button" data-target='password') Password
+        button.btn.btn-secondary(type="button" data-target='deleteMyAccount') Other
+
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" class="btn btn-secondary dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Dropdown            
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" href="#">Dropdown link</a>
+            <a class="dropdown-item" href="#">Dropdown link</a>
+          </div>
+        </div>
+
+
+    .functionsContainer
+
+      .functionsItem_detail.function_item.detail
+        p Detail
+
+      .functionsItem_password.function_item.password
+        p Password
+
+      .functionsItem_deleteMyAccount.function_item.delete
+        p Delete
+
+
+//- block scripts
+//-     script(src="/js/profile.js")

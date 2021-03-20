@@ -1230,3 +1230,48 @@ Loader7
         top: -100vh;
     }
 }
+/* For Me Page */
+
+
+.functionTabsContainer {
+    width: 100%;
+    /* display: flex;
+    justify-content: center;
+    align-items: center; */
+}
+
+.functionTabsContainer .btn-group {
+    margin: 0.5rem auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+}
+
+.functionTabsContainer .btn-group button {
+    color: black;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    flex: 1 1 auto;
+}
+
+.functionTabsContainer .btn-group button.active {
+    bottom: 1px solid red;
+}
+
+.functionTabsContainer .btn-group button:active,
+.functionTabsContainer .btn-group button:focus {
+    background-color: rgb(31 162 241) !important;
+    border: none !important;
+    box-shadow: unset;
+
+}
+
+.functionsContainer .function_item {
+    display: none;
+}
+
+.functionsContainer .function_item.active {
+    display: flex;
+}

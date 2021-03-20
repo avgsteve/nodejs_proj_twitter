@@ -73,6 +73,7 @@ app.use("/uploads", require(`${pagePath}/upload/uploadPageRoutes`));
 app.use("/search", require(`${pagePath}/search/searchPageRoutes`));
 app.use("/messages", require(`${pagePath}/message/messagesPageRoutes`));
 app.use("/notifications", require(`${pagePath}/notification/notificationPageRoutes`));
+app.use("/me", require(`${pagePath}/me/mePageRoutes`));
 
 
 // ==== ↓↓↓ Backend/Api routes ↓↓↓ ====

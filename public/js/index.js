@@ -27,6 +27,8 @@ import ImageUploader from './../js/image-uploader/imageUploadController';
 
 import NotificationController from './../js/notification/NotificationController';
 
+import MePageController from './../js/mePage/mePageController'
+
 
 $(async () => {
 
@@ -101,6 +103,12 @@ $(async () => {
       profileContentController.renderProfilePage();
     }
   }
+
+  // === Me Page ===
+  if (currentPagePath.match(/me/g)) {
+    let ePageController = new MePageController();
+  }
+
 
 
 });

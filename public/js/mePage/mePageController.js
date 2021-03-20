@@ -19,7 +19,14 @@ export default class MePageController {
 
   clickFunctionTabEvent() {
     $('.functionTabsContainer button').on('click', function (e) {
+
+      $('.functionTabsContainer button').removeClass('active');
+
+      let clickedBtn = $(e.target);
       let tabName = $(e.target).data('target');
+
+      clickedBtn.addClass('active');
+
       console.log('data: ', tabName);
       MePageView.showFunctionTab(tabName);
     });

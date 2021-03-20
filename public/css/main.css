@@ -23,7 +23,7 @@ body {
     font-weight: 300;
     overflow: scroll;
     overflow-y: hidden;
-
+    overflow-x: hidden;
 }
 
 ul {
@@ -1230,14 +1230,24 @@ Loader7
         top: -100vh;
     }
 }
-/* For Me Page */
+/* 
+For Me Page 
+*/
 
+.functionsContainer {
+    justify-content: center;
+    padding: 1rem 2rem 2rem;
+
+}
+
+/* @media only screen and (max-width: 600px) {
+    .functionsContainer {
+        padding: 1rem 2rem 2rem;
+    }
+} */
 
 .functionTabsContainer {
     width: 100%;
-    /* display: flex;
-    justify-content: center;
-    align-items: center; */
 }
 
 .functionTabsContainer .btn-group {
@@ -1246,6 +1256,13 @@ Loader7
     justify-content: center;
     align-items: center;
     width: 100%;
+}
+
+@media only screen and (max-width: 400px) {
+    .functionTabsContainer .btn-group {
+        overflow: scroll;
+        overflow-x: hidden;
+    }
 }
 
 .functionTabsContainer .btn-group button {
@@ -1267,8 +1284,8 @@ Loader7
     }
 
     .btn-group button.active {
-        background-color: #cfebfcbd;
-        border-bottom: 3px solid #1fa2f1;
+        background-color: transparent;
+        border-bottom: 3px solid #16a6ff;
 
 }
 
@@ -1278,4 +1295,14 @@ Loader7
 
 .functionsContainer .function_item.active {
     display: flex;
+    justify-content: center;
+    }
+
+    .function_item.detail form {
+        width: 100%;
+    }
+
+    .function_item.detail form .no-border {
+        border: 0px solid #ced4da;
+        background-color: transparent;
 }

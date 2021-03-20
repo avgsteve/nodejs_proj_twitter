@@ -18,16 +18,66 @@ block content
         </div>
 
 
-    .functionsContainer
+    .functionsContainer.row.pt-3
 
-      .functionsItem_detail.function_item.detail
-        p Detail
+        .functionsItem_detail.function_item.detail.col-lg-8.col-md-10.col
 
-      .functionsItem_password.function_item.password
-        p Password
+            //- https://getbootstrap.com/docs/4.0/components/forms/#horizontal-form
+            form
 
-      .functionsItem_deleteMyAccount.function_item.delete
-        p Delete
+              .form-group.row
+                label.col-sm-2.col-form-label(for='inputEmail3') Email
+                .col-sm-10
+                  input#inputEmail3.form-control.no-border(type='email' placeholder='Email')
+
+              .form-group.row
+                  label.col-sm-2.col-form-label(for='inputEmail3') Email
+                  .col-sm-10
+                    input#inputEmail3.form-control.no-border(type='email' placeholder='Email' disabled)
+
+
+              .form-group.row
+                label.col-sm-2.col-form-label(for='inputPassword3') Password
+                .col-sm-10
+                  input#inputPassword3.form-control.no-border(type='password' placeholder='Password')
+
+              //- ↓↓↓ Save it for later
+
+              //- fieldset.form-group
+              //-   .row
+              //-     legend.col-form-label.col-sm-2.pt-0 Radios
+              //-     .col-sm-10
+              //-       .form-check
+              //-         input#gridRadios1.form-check-input(type='radio' name='gridRadios' value='option1' checked='')
+              //-         label.form-check-label(for='gridRadios1')
+              //-           | First radio
+              //-       .form-check
+              //-         input#gridRadios2.form-check-input(type='radio' name='gridRadios' value='option2')
+              //-         label.form-check-label(for='gridRadios2')
+              //-           | Second radio
+              //-       .form-check.disabled
+              //-         input#gridRadios3.form-check-input(type='radio' name='gridRadios' value='option3' disabled='')
+              //-         label.form-check-label(for='gridRadios3')
+              //-           | Third disabled radio
+            
+              //- .form-group.row
+              //-   .col-sm-2 Checkbox
+              //-   .col-sm-10
+              //-     .form-check
+              //-       input#gridCheck1.form-check-input(type='checkbox')
+              //-       label.form-check-label(for='gridCheck1')
+              //-         | Example checkbox
+
+              .form-group.row
+                .col-sm-10
+                  button.btn.btn-primary.submitUpdatedMeInfo(type='submit') Update
+
+
+        .functionsItem_password.function_item.password.col-lg-8.col-md-10.col
+            p Password
+
+        .functionsItem_deleteMyAccount.function_item.delete.col-lg-8.col-md-10.col
+            p Delete
 
 
 //- block scripts

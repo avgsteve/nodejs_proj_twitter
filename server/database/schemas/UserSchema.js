@@ -20,6 +20,11 @@ const UserSchema = new Schema({
         required: true,
         select: false,
     },
+    role: {
+        type: String,
+        enum: ['user', 'test_account', 'admin', 'super-admin'],
+        default: 'user'
+    },
     profilePic: { type: String, default: "/images/profilePic.jpeg" },
     coverPhoto: {
         type: String

@@ -143,7 +143,7 @@ block content
                 input#passwordForDeleteAcc(type='password' placeholder='Enter Password To Proceed' autocomplete='no')                
               .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                button#confirmDeleteAccBtn.btn.btn-primary(type='button') Confirm
+                button#confirmDeleteAccBtn.btn.btn-primary(type='button' disabled) Confirm
 
 
         .modal#cannotDeleteAccModal.fade(tabindex='-1' role='dialog' aria-labelledby="cannotDeleteAccModalLabel" aria-hidden="true")
@@ -158,7 +158,7 @@ block content
                     span.text-primary #{userLoggedIn.role}
               .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                button#confirmDeleteAccBtn.btn.btn-primary(type='button') Confirm
+                button#confirmDeleteAccBtn.btn.btn-primary(type='button' disabled) Confirm
 
 
 //- block scripts

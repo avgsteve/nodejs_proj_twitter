@@ -16,18 +16,47 @@ export default class MePageView {
     itemToShow.addClass('active');
   }
 
-  static showDeleteRequestSuccessful(timeToReloadPage = 3000) {
+  static showDeleteRequestResult(isSuccessful, errorMessage = "", timeToReloadPage = 3000) {
 
-    GlobalView.showAlert({
-      styleOption: 1,
-      message: 'Delete request sent! Reloading page now',
-      timeToDisappear: timeToReloadPage - 1000,
-      slideIn: true,
-    });
+    if (isSuccessful === true) {
+      GlobalView.showAlert({
+        styleOption: 1,
+        message:
+          'Delete request sent! Reloading page now',
+        timeToDisappear: timeToReloadPage - 1000,
+        slideIn: true,
+      });
 
-    setTimeout(() => {
-      location.reload();
-    }, timeToReloadPage);
+      return setTimeout(() => {
+        location.reload();
+      }, timeToReloadPage);
+    }
+
+    if (isSuccessful === false) {
+      GlobalView.showAlert({
+        styleOption: 3,
+        message: `Error: ${errorMessage}`,
+        timeToDisappear: timeToReloadPage,
+        slideIn: true,
+      });
+    }
 
   }
+
+  static toggleConfirmDeleteAccBtn(active) {
+    if (active === true) {
+      $('#confirmDeleteAccBtn')
+        .attr('disabled', false)
+        .attr('title', 'Click button to proceed')
+        .addClass('active');
+    } else {
+      $('#confirmDeleteAccBtn')
+        .attr('disabled', true)
+        .attr('title', 'Enter correct password to proceed')
+        .removeClass('active');
+    }
+  }
+
+
+
 }

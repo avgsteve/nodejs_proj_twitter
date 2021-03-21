@@ -26662,20 +26662,41 @@ var MePageView = /*#__PURE__*/function () {
       itemToShow.addClass('active');
     }
   }, {
-    key: "showDeleteRequestSuccessful",
-    value: function showDeleteRequestSuccessful() {
-      var timeToReloadPage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3000;
+    key: "showDeleteRequestResult",
+    value: function showDeleteRequestResult(isSuccessful) {
+      var errorMessage = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
+      var timeToReloadPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 3000;
 
-      _GlobalView.default.showAlert({
-        styleOption: 1,
-        message: 'Delete request sent! Reloading page now',
-        timeToDisappear: timeToReloadPage - 1000,
-        slideIn: true
-      });
+      if (isSuccessful === true) {
+        _GlobalView.default.showAlert({
+          styleOption: 1,
+          message: 'Delete request sent! Reloading page now',
+          timeToDisappear: timeToReloadPage - 1000,
+          slideIn: true
+        });
 
-      setTimeout(function () {
-        location.reload();
-      }, timeToReloadPage);
+        return setTimeout(function () {
+          location.reload();
+        }, timeToReloadPage);
+      }
+
+      if (isSuccessful === false) {
+        _GlobalView.default.showAlert({
+          styleOption: 3,
+          message: "Error: ".concat(errorMessage),
+          timeToDisappear: timeToReloadPage,
+          slideIn: true
+        });
+      }
+    }
+  }, {
+    key: "toggleConfirmDeleteAccBtn",
+    value: function toggleConfirmDeleteAccBtn(active) {
+      if (active === true) {
+        $('#confirmDeleteAccBtn').attr('disabled', false).attr('title', 'Click button to proceed').addClass('active');
+      } else {
+        $('#confirmDeleteAccBtn').attr('disabled', true).attr('title', 'Enter correct password to proceed').removeClass('active');
+      }
     }
   }]);
 
@@ -26683,6 +26704,75 @@ var MePageView = /*#__PURE__*/function () {
 }();
 
 exports.default = MePageView;
+},{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js"}],"mePage/mePageModel.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _GlobalView = _interopRequireDefault(require("../GlobalControl/GlobalView"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var MePageModel = /*#__PURE__*/function () {
+  function MePageModel() {
+    _classCallCheck(this, MePageModel);
+  }
+
+  _createClass(MePageModel, null, [{
+    key: "sendDeleteAccountRequest",
+    value: function sendDeleteAccountRequest(userIdToDelete, password) {
+      if (!userIdToDelete) throw Error('need to pass in parameter: userIdToDelete');
+      if (!password) throw Error('need to pass in parameter: password');
+      return new Promise(function (res, rej) {
+        $.ajax({
+          url: "/api/me/".concat(userIdToDelete, "/delete"),
+          type: "POST",
+          data: {
+            password: password
+          }
+        }).then(null, function (responseData) {
+          console.log('response data for delete request', responseData);
+          if (responseData.status === 200) return res(true);
+          res(responseData.responseJSON.errors[0]);
+        }).fail(function (data) {
+          console.log('reject data: ', data);
+          rej(data);
+        });
+      });
+    }
+  }, {
+    key: "getPasswordFromDeleteModal",
+    value: function getPasswordFromDeleteModal() {
+      var inputField = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : $('input#passwordForDeleteAcc');
+
+      if (!inputField.val() || inputField.val().length < 5) {
+        _GlobalView.default.showAlert({
+          styleOption: 2,
+          message: 'Need to enter correct password',
+          timeToDisappear: 2000,
+          slideIn: true
+        });
+
+        return;
+      }
+
+      return inputField.val();
+    }
+  }]);
+
+  return MePageModel;
+}();
+
+exports.default = MePageModel;
 },{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js"}],"mePage/mePageController.js":[function(require,module,exports) {
 "use strict";
 
@@ -26695,7 +26785,13 @@ var _GlobalView = _interopRequireDefault(require("../GlobalControl/GlobalView"))
 
 var _mePageView = _interopRequireDefault(require("./mePageView"));
 
+var _mePageModel = _interopRequireDefault(require("./mePageModel"));
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -26718,6 +26814,7 @@ var MePageController = /*#__PURE__*/function () {
     value: function eventListeners() {
       this.event_clickFunctionTabBtn();
       this.event_clickDeleteAccBtn();
+      this.event_disableConfirmDeleteBtn();
     }
   }, {
     key: "event_clickFunctionTabBtn",
@@ -26726,22 +26823,68 @@ var MePageController = /*#__PURE__*/function () {
         $('.functionTabsContainer button').removeClass('active');
         var clickedBtn = $(e.target);
         var tabName = $(e.target).data('target');
-        clickedBtn.addClass('active');
-        console.log('data: ', tabName);
+        clickedBtn.addClass('active'); // console.log('data: ', tabName);
 
         _mePageView.default.showFunctionTab(tabName);
       });
     }
   }, {
+    key: "event_disableConfirmDeleteBtn",
+    value: function event_disableConfirmDeleteBtn() {
+      var accDeletePassword = $('input#passwordForDeleteAcc');
+      if (accDeletePassword.length < 1) return;
+      $(function () {
+        accDeletePassword.on('keyup keydown', function () {
+          console.log('run');
+          var password = accDeletePassword.val();
+
+          if (password.length < 5) {
+            _mePageView.default.toggleConfirmDeleteAccBtn(false);
+          } else {
+            _mePageView.default.toggleConfirmDeleteAccBtn(true);
+          }
+        });
+      });
+    }
+  }, {
     key: "event_clickDeleteAccBtn",
     value: function event_clickDeleteAccBtn() {
-      $('#confirmDeleteAccBtn').on('click', function () {
-        _GlobalView.default.showPreloadInButton($(this));
+      $('#confirmDeleteAccBtn').on('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        var passwordInput, originalBtn, result;
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                // 1) get input
+                passwordInput = $('input#passwordForDeleteAcc').val(); // 2) update btn UI
 
-        $(this).attr('disabled', true);
+                originalBtn = _GlobalView.default.showPreloadInButton($(this)); // 3) Send request
 
-        _mePageView.default.showDeleteRequestSuccessful();
-      });
+                _context.next = 4;
+                return _mePageModel.default.sendDeleteAccountRequest(userLoggedIn._id, passwordInput);
+
+              case 4:
+                result = _context.sent;
+
+                if (!(result === true)) {
+                  _context.next = 7;
+                  break;
+                }
+
+                return _context.abrupt("return", _mePageView.default.showDeleteRequestResult(true));
+
+              case 7:
+                _mePageView.default.showDeleteRequestResult(false, result.msg);
+
+                $(this).html(originalBtn); // restore btn style and html
+
+              case 9:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      })));
     }
   }]);
 
@@ -26749,7 +26892,7 @@ var MePageController = /*#__PURE__*/function () {
 }();
 
 exports.default = MePageController;
-},{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js","./mePageView":"mePage/mePageView.js"}],"index.js":[function(require,module,exports) {
+},{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js","./mePageView":"mePage/mePageView.js","./mePageModel":"mePage/mePageModel.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("core-js/modules/es6.array.copy-within.js");

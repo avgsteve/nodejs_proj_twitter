@@ -1414,3 +1414,14 @@ container for cover image and profile image
 #cannotDeleteAccModal .modal-body {
     text-align: center;
 }
+button#confirmDeleteAccBtn {
+    color: #fff;
+    background-color: #0054af;
+    cursor: not-allowed;
+}
+
+button#confirmDeleteAccBtn.active {
+    color: #fff;
+    background-color: #0071e9;
+    cursor: pointer;
+}

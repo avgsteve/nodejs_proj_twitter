@@ -1411,3 +1411,6 @@ container for cover image and profile image
     font-size: 1rem;
     font-weight: 500;
 }
+#cannotDeleteAccModal .modal-body {
+    text-align: center;
+}

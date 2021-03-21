@@ -114,9 +114,13 @@ block content
         .function_item.functionsItem_accountSetting.col.col-12
             h4 Account setting
 
+        if (userLoggedIn.role !== 'user')
+            .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
+                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#cannotDeleteAccModal") Delete My Account              
+        else
+            .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
+                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#deleteAccConfirmModal") Delete My Account
 
-        .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
-            button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#deleteAccConfirmModal") Delete My Account
 
 
         .modal#deleteAccConfirmModal.fade(tabindex='-1' role='dialog' aria-labelledby="deleteAccModeLabel" aria-hidden="true")
@@ -132,10 +136,26 @@ block content
                   span.noticeText "Confirm"
                     | button
                 h4 Your account will be marked as 'toBeDeleted' in database and then will be deleted by system in 10 minutes
-                h5 You can cancel this operation within 10 minutes. 
+                h5 This operation 
+                  span.noticeText can be canceled within 10 minutes. 
                 h5 You can use the same user name to register again if it's not taken
                 label
                 input#passwordForDeleteAcc(type='password' placeholder='Enter Password To Proceed' autocomplete='no')                
+              .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                button#confirmDeleteAccBtn.btn.btn-primary(type='button') Confirm
+
+
+        .modal#cannotDeleteAccModal.fade(tabindex='-1' role='dialog' aria-labelledby="cannotDeleteAccModalLabel" aria-hidden="true")
+          .modal-dialog
+            .modal-content
+              .modal-header
+                h5.modal-title#cannotDeleteAccModalLabel Ooops! 😓
+                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              .modal-body
+                h3 Only normal user can delete account!
+                h3 Current Role: 
+                    span.text-primary #{userLoggedIn.role}
               .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                 button#confirmDeleteAccBtn.btn.btn-primary(type='button') Confirm

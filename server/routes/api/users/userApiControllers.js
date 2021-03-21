@@ -291,7 +291,6 @@ exports.followUser = async (req, res, next) => {
 
 	console.log('Prepare to follow user. User Id: ', userIdToFollow);
 
-
 	if (targetUser === null) return res.sendStatus(404);
 
 
@@ -342,7 +341,9 @@ exports.followUser = async (req, res, next) => {
 
 exports.deleteUser = async (req, res, next) => {
 
-	if (!req.body.password || !req.body.userIdToDelete)
+	console.log('req.body: ', req.body);
+
+	if (!req.body.password)
 		throw Error('Need password to perform delete action');
 
 	let currentUserDoc = await User.findOne({
@@ -350,25 +351,21 @@ exports.deleteUser = async (req, res, next) => {
 	}).select('password role _id userName');
 
 	// Check request user's id in case some malicious users use this api to delete other user's account
-	if (res.locals.user._id !== req.body.userIdToDelete) {
-
+	if (res.locals.user._id.toString() !== req.params.userIdToDelete) {
 		console.log(
 			chalk.red(
-				`[Current user: ${res.locals.user._id} (${res.locals.user.userName}) is trying to delete other user's id: ${req.body.userIdToDelete}]`
+				`[Current user: ${res.locals.user._id} (${res.locals.user.userName}) is trying to delete other user's id: ${req.params.userIdToDelete}]`
 			)
 		);
-
-		// TODO : Add a function to log this behaviour?
 
 		return res.status(400).send(new CustomError(
 			'User can only his/her own account. Current logged-in user is not the user for this request'
 		));
 	}
-
 	// Check user role
 	if (currentUserDoc.role !== 'user')
 		return res.status(400).send(new CustomError(
-			'Only normal user can delete account'
+			'Only normal user can delete his/her own account'
 		));
 
 	// Check password
@@ -378,10 +375,53 @@ exports.deleteUser = async (req, res, next) => {
 		return res.status(400).send(new CustomError('Password is incorrect'));
 
 	let deleteDoc = await UserAccDelete.createNewDoc(
-		newUser._id,
-		newUser.userName // name field is just for record
+		currentUserDoc._id,
+		currentUserDoc.userName // name field is just for record
 	);
 
+	res.send(deleteDoc);
+
+};
+
+exports.cancelDeleteUser = async (req, res, next) => {
+
+	if (!req.body.password)
+		throw Error('Need password to perform action to cancel delete ');
+
+	let currentUserDoc = await User.findOne({
+		_id: res.locals.user._id
+	}).select('password role _id userName');
+
+	// Check request user's id in case some malicious users use this api to delete other user's account
+	if (res.locals.user._id.toString() !== req.params.userIdToDelete) {
+		console.log(
+			chalk.red(
+				`[Current user: ${res.locals.user._id} (${res.locals.user.userName}) is trying to cancel delete other user's id: ${req.params.userIdToDelete}]`
+			)
+		);
+
+		return res.status(400).send(new CustomError(
+			'User can only his/her own account. Current logged-in user is not the user for this request'
+		));
+	}
+	// Check user role
+	if (currentUserDoc.role !== 'user')
+		return res.status(400).send(new CustomError(
+			'Only normal user can cancel delete'
+		));
+
+	// Check password
+	let pwdVerified = await bcrypt.compare(
+		req.body.password, currentUserDoc.password);
+	if (!pwdVerified)
+		return res.status(400).send(new CustomError('Password is incorrect'));
+
+	let deleteDoc = await UserAccDelete.findOne({
+		userIdToDelete: res.locals.user._id
+	});
+
+	deleteDoc.set({ isCanceled: true });
+	await deleteDoc.save();
 	res.send(deleteDoc);
 
 }

@@ -1,4 +1,5 @@
 const User = require('./../../../database/schemas/UserSchema')
+const userApiController = require('./../../api/users/userApiControllers')
 const express = require('express');
 const router = express.Router();
 
@@ -28,5 +29,6 @@ router.get("/", (req, res, next) => {
         }
     );
 });
+
 
 module.exports = router;

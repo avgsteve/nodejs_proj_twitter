@@ -10,6 +10,9 @@ const UserAccDeleteSchema = new Schema({
   userName: {
     type: String // just for record
   },
+  timeToDelete: {
+    type: Date
+  },
   isCanceled: {
     type: Boolean,
     default: false
@@ -32,14 +35,37 @@ const UserAccDeleteSchema = new Schema({
 UserAccDeleteSchema.pre('save', async function (next) {
 
   let fieldsUpdate = this.modifiedPaths();
-  // Conditionally do stuff by check fieldsUpdate
   console.log('fieldsUpdate in UserAccDelete: \n', fieldsUpdate);
-  this.cancelRequestTime = Date.now();
 
-  console.log('Updated cancelRequestTime: \n', this.cancelRequestTime);
+  // Conditionally do stuff by checking which field is being updated
+  // if ( this.isModified('fieldName') ) {...}
 
-  await this.save();
+  if (
+    this.isCanceled === true
+  ) {
 
+    // Only update cancelRequestTime when it's a new request for cancelling the delete action
+    if (this.isModified('isCanceled')) {
+      console.log("this.isModified('isCanceled') is true");
+      this.cancelRequestTime = Date.now();
+    }
+
+    // or just don't update cancelRequestTime if the document is not updated
+    // In case there are multiple or duplicated cancel requests
+    return next();
+  }
+
+  if (
+    this.isCanceled === false ||        // make delete request again
+    this.userIdToDelete !== undefined   // make new delete document
+  ) {
+    // Make cancel document active again
+    this.timeToDelete = Date.now() + 1000 * 60 * 10;
+    this.isCanceled === false;
+    this.cancelRequestTime = null;
+    return next();
+  }
+  
   next();
 });
 

@@ -6,6 +6,7 @@ const upload = multer({ dest: "public/images/user" });
 const { checkReqBodyErrors } = require('../../errorHandlers/checkReqValidationErrors');
 const authController = require('../auth/authController');
 const meApiControllers = require('./meApiControllers');
+const userApiController = require('./../users/userApiControllers')
 
 
 router.use(authController.restrictToSignedInUser);
@@ -16,5 +17,7 @@ router.use(authController.restrictToSignedInUser);
 // Get current logged-in user data
 router.get("/", meApiControllers.getCurrentLoggedInUser);
 
+router.post("/:userIdToDelete/delete", userApiController.deleteUser);
+router.post("/:userIdToDelete/delete/cancel", userApiController.cancelDeleteUser);
 
 module.exports = router;

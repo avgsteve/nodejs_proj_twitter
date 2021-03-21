@@ -52,7 +52,12 @@ const UserSchema = new Schema({
         type: Schema.Types.ObjectId, ref: 'UserActivation'
     },
     toBeDeleted: {
-        type: Boolean, default: false
+        type: Boolean, default: false,
+        select: false
+    },
+    isDeleted: {
+        type: Boolean, default: false,
+        select: false
     },
 
 }, { timestamps: true });

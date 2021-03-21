@@ -53,11 +53,11 @@ const UserSchema = new Schema({
     },
     toBeDeleted: {
         type: Boolean, default: false,
-        select: false
+        // select: false
     },
     toBeDeletedAt: {
         type: Date,
-        select: false
+        // select: false
     },
     isDeleted: {
         type: Boolean, default: false,

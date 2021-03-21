@@ -19,7 +19,9 @@ router.get("/", (req, res, next) => {
         if (!keysNotToCopy.includes(key))
             updatedUserObj[key] = res.locals.user[key];
     }
-    
+
+    console.log('utc time', Date.now());
+
     res.status(200).render(
         "mePage/mePage",
         {

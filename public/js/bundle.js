@@ -19220,7 +19220,7 @@ var PostModel = /*#__PURE__*/function () {
           url: "/api/posts/".concat(postId),
           type: 'GET',
           success: function success(data, status, xhr) {
-            if (xhr.status != 200) {
+            if (xhr.status !== 200) {
               console.log('can not get post by post id');
               rej(null);
             }
@@ -26692,11 +26692,32 @@ var MePageView = /*#__PURE__*/function () {
   }, {
     key: "toggleConfirmDeleteAccBtn",
     value: function toggleConfirmDeleteAccBtn(active) {
+      var buttons = $('#confirmDeleteAccBtn, #confirmCancelDeleteAccBtn');
+
       if (active === true) {
-        $('#confirmDeleteAccBtn').attr('disabled', false).attr('title', 'Click button to proceed').addClass('active');
+        buttons.attr('disabled', false).attr('title', 'Click button to proceed').addClass('active');
       } else {
-        $('#confirmDeleteAccBtn').attr('disabled', true).attr('title', 'Enter correct password to proceed').removeClass('active');
+        buttons.attr('disabled', true).attr('title', 'Enter correct password to proceed').removeClass('active');
       }
+    }
+  }, {
+    key: "renderCountDownTimer",
+    value: function renderCountDownTimer() {
+      var timerElement = $('.accountDeleteCountDown .timer');
+      var timeToDelete = Date.parse(userLoggedIn.toBeDeletedAt);
+      var counterDownTimer = setInterval(function () {
+        var currentTime = Date.now();
+        var timeDiff = timeToDelete - currentTime;
+        var convertedTime = convertEpochTimeToMinSec(timeDiff, false);
+
+        if (parseInt(convertedTime.seconds) <= 0) {
+          console.log("time's up!");
+          clearInterval(counterDownTimer);
+          location.reload();
+        }
+
+        timerElement.html("\n        ".concat(convertedTime.minutes, " minutes and \n        ").concat(convertedTime.seconds, " seconds\n    ")); // console.log('convertedTime: ', convertedTime);
+      }, 1000);
     }
   }]);
 
@@ -26704,6 +26725,36 @@ var MePageView = /*#__PURE__*/function () {
 }();
 
 exports.default = MePageView;
+
+function convertEpochTimeToMinSec(epochTime) // will return minus time if true, otherwise will return 0
+{
+  var addZeroToLastSingleDigit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+  var convertToMinusTime = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+  var epochSeconds = epochTime / 1000;
+  var minutes, seconds;
+  var prefixZero = addZeroToLastSingleDigit === true ? "0" : ""; // ex: 1 -> 01
+
+  minutes = parseInt(epochSeconds / 60, 10);
+  seconds = parseInt(epochSeconds % 60, 10);
+  minutes = minutes < 10 ? prefixZero + minutes : minutes;
+  seconds = seconds < 10 ? prefixZero + seconds : seconds;
+
+  if (epochTime < 0 && convertToMinusTime === true) {
+    minutes = minutes.slice(1, minutes.length);
+    seconds = seconds.slice(1, seconds.length);
+  }
+
+  if (epochTime < 0 && convertToMinusTime === false) {
+    minutes = 0;
+    seconds = 0;
+  } // console.log('converted time: ', { minutes, seconds });
+
+
+  return {
+    minutes: minutes,
+    seconds: seconds
+  };
+}
 },{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js"}],"mePage/mePageModel.js":[function(require,module,exports) {
 "use strict";
 
@@ -26730,22 +26781,33 @@ var MePageModel = /*#__PURE__*/function () {
   _createClass(MePageModel, null, [{
     key: "sendDeleteAccountRequest",
     value: function sendDeleteAccountRequest(userIdToDelete, password) {
+      var isForCancelDelete = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
       if (!userIdToDelete) throw Error('need to pass in parameter: userIdToDelete');
       if (!password) throw Error('need to pass in parameter: password');
+      var url = isForCancelDelete === true ? "/api/me/".concat(userIdToDelete, "/delete/cancel") : "/api/me/".concat(userIdToDelete, "/delete");
       return new Promise(function (res, rej) {
         $.ajax({
-          url: "/api/me/".concat(userIdToDelete, "/delete"),
+          url: url,
           type: "POST",
           data: {
             password: password
+          },
+          success: function success(responseData, textStatus, xhr) {
+            console.log('xhr: ', xhr);
+            console.log('status: ', textStatus);
+            console.log('responseData: ', responseData);
+
+            if (xhr.status !== 200) {
+              return rej(responseData.responseJSON.errors[0]);
+            }
+
+            if (xhr.status === 200) {
+              return res(true);
+            }
           }
-        }).then(null, function (responseData) {
-          console.log('response data for delete request', responseData);
-          if (responseData.status === 200) return res(true);
-          res(responseData.responseJSON.errors[0]);
         }).fail(function (data) {
           console.log('reject data: ', data);
-          rej(data);
+          return res(data.responseJSON.errors[0]);
         });
       });
     }
@@ -26815,6 +26877,8 @@ var MePageController = /*#__PURE__*/function () {
       this.event_clickFunctionTabBtn();
       this.event_clickDeleteAccBtn();
       this.event_disableConfirmDeleteBtn();
+      this.event_renderDeleteCountDownTimer();
+      this.event_clickOnCountDownTimer(); // jump to cancel delete btn
     }
   }, {
     key: "event_clickFunctionTabBtn",
@@ -26831,12 +26895,11 @@ var MePageController = /*#__PURE__*/function () {
   }, {
     key: "event_disableConfirmDeleteBtn",
     value: function event_disableConfirmDeleteBtn() {
-      var accDeletePassword = $('input#passwordForDeleteAcc');
-      if (accDeletePassword.length < 1) return;
+      var pwdInput = $('.functionsContainer .passwordInput');
+      if (pwdInput.length < 1) throw Error("Can't find .passwordInput element");
       $(function () {
-        accDeletePassword.on('keyup keydown', function () {
-          console.log('run');
-          var password = accDeletePassword.val();
+        pwdInput.on('keyup keydown', function (e) {
+          var password = $(e.target).val();
 
           if (password.length < 5) {
             _mePageView.default.toggleConfirmDeleteAccBtn(false);
@@ -26849,42 +26912,90 @@ var MePageController = /*#__PURE__*/function () {
   }, {
     key: "event_clickDeleteAccBtn",
     value: function event_clickDeleteAccBtn() {
-      $('#confirmDeleteAccBtn').on('click', /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
-        var passwordInput, originalBtn, result;
-        return regeneratorRuntime.wrap(function _callee$(_context) {
+      $('#confirmDeleteAccBtn, #confirmCancelDeleteAccBtn').on('click', /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+          var isForCancelDelete, btn, passwordInput, originalBtn, result;
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  isForCancelDelete = e.target.className.includes('cancelBtn');
+                  btn = $(e.target); // 1) get input
+
+                  passwordInput = btn.closest('.modal-content').find('input').val(); // 2) update btn UI
+
+                  originalBtn = _GlobalView.default.showPreloadInButton(btn); // 3) Send request
+
+                  _context.next = 6;
+                  return _mePageModel.default.sendDeleteAccountRequest(userLoggedIn._id, passwordInput, isForCancelDelete);
+
+                case 6:
+                  result = _context.sent;
+                  console.log('result:', result); // 4 reload page if successful
+
+                  if (!(result === true)) {
+                    _context.next = 10;
+                    break;
+                  }
+
+                  return _context.abrupt("return", _mePageView.default.showDeleteRequestResult(true));
+
+                case 10:
+                  _mePageView.default.showDeleteRequestResult(false, result.msg);
+
+                  $(this).html(originalBtn); // restore btn style and html
+
+                case 12:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee, this);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
+    }
+  }, {
+    key: "event_renderDeleteCountDownTimer",
+    value: function event_renderDeleteCountDownTimer() {
+      $( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+        var countDownDiv;
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
           while (1) {
-            switch (_context.prev = _context.next) {
+            switch (_context2.prev = _context2.next) {
               case 0:
-                // 1) get input
-                passwordInput = $('input#passwordForDeleteAcc').val(); // 2) update btn UI
+                countDownDiv = $('.accountDeleteCountDown');
 
-                originalBtn = _GlobalView.default.showPreloadInButton($(this)); // 3) Send request
-
-                _context.next = 4;
-                return _mePageModel.default.sendDeleteAccountRequest(userLoggedIn._id, passwordInput);
-
-              case 4:
-                result = _context.sent;
-
-                if (!(result === true)) {
-                  _context.next = 7;
+                if (!(countDownDiv.length === 0)) {
+                  _context2.next = 3;
                   break;
                 }
 
-                return _context.abrupt("return", _mePageView.default.showDeleteRequestResult(true));
+                return _context2.abrupt("return");
 
-              case 7:
-                _mePageView.default.showDeleteRequestResult(false, result.msg);
+              case 3:
+                _mePageView.default.renderCountDownTimer();
 
-                $(this).html(originalBtn); // restore btn style and html
-
-              case 9:
+              case 4:
               case "end":
-                return _context.stop();
+                return _context2.stop();
             }
           }
-        }, _callee, this);
+        }, _callee2);
       })));
+    } // jump to cancel delete btn
+
+  }, {
+    key: "event_clickOnCountDownTimer",
+    value: function event_clickOnCountDownTimer() {
+      $('.accountDeleteCountDown').on('click', function () {
+        $('.functionTabsContainer .btn').removeClass('active');
+        $('.function_item').removeClass('active');
+        $('.function_item.functionsItem_deleteMyAccount').addClass('active');
+      });
     }
   }]);
 

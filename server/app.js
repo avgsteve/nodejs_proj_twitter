@@ -61,7 +61,9 @@ app.use(express.urlencoded({
 // include /login , /register and /login
 app.use("/", require('./routes/frontendPages/auth/authPagesRoutes'));
 app.use("/", require('./routes/api/auth/authRoutes'));
-
+app.get("/time", (req, res) => {
+    res.send({ epoch: Date.now(), utc: new Date(Date.now()).toISOString() });
+})
 //   # Private Routes for front-end pages need to check user identity
 const authController = require('./routes/api/auth/authController');
 app.use(authController.checkIfUserIsLoggedIn);

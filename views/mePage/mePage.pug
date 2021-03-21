@@ -1,7 +1,6 @@
 extends ./../layouts/main-layout.pug
 
 block content
-
     .functionTabsContainer
       .btn-group(role="group" aria-label="Basic example")
         button.active.btn(type="button" data-target='detail') Detail
@@ -17,6 +16,11 @@ block content
           </div>
         </div>
 
+    if userLoggedIn.toBeDeleted === true
+      <!-- Rendered by mePage.pug -->
+      .accountDeleteCountDown
+          p Time to delete account:
+          p.timer
 
     .functionsContainer
 
@@ -114,16 +118,23 @@ block content
         .function_item.functionsItem_accountSetting.col.col-12
             h4 Account setting
 
-        if (userLoggedIn.role !== 'user')
+        <!-- Rendered by mePage.pug -->
+
+        if userLoggedIn.role === 'user' && userLoggedIn.toBeDeleted === true
             .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
-                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#cannotDeleteAccModal") Delete My Account              
+                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#cancelDeleteModal") Cancel Delete 
+
+        else if userLoggedIn.role === 'user'
+            .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
+                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#deleteAccConfirmModal") Delete My Account 
+
         else
             .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
-                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#deleteAccConfirmModal") Delete My Account
+                button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="" title="only normal user can delete his/her" disabled) Delete Account
 
 
 
-        .modal#deleteAccConfirmModal.fade(tabindex='-1' role='dialog' aria-labelledby="deleteAccModeLabel" aria-hidden="true")
+        .modal#deleteAccConfirmModal.fade.deleteAccount(tabindex='-1' role='dialog' aria-labelledby="deleteAccModeLabel" aria-hidden="true")
           .modal-dialog
             .modal-content
               .modal-header
@@ -139,26 +150,27 @@ block content
                 h5 This operation 
                   span.noticeText can be canceled within 10 minutes. 
                 h5 You can use the same user name to register again if it's not taken
-                label
-                input#passwordForDeleteAcc(type='password' placeholder='Enter Password To Proceed' autocomplete='no')                
+                form
+                  label
+                  input#passwordForDeleteAcc.passwordInput(type='password' placeholder='Enter Password To Proceed' autocomplete='no')                
               .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
                 button#confirmDeleteAccBtn.btn.btn-primary(type='button' disabled) Confirm
 
 
-        .modal#cannotDeleteAccModal.fade(tabindex='-1' role='dialog' aria-labelledby="cannotDeleteAccModalLabel" aria-hidden="true")
+        .modal#cancelDeleteModal.fade.deleteAccount(tabindex='-1' role='dialog' aria-labelledby="cancelDeleteModalLabel" aria-hidden="true")
           .modal-dialog
             .modal-content
               .modal-header
-                h5.modal-title#cannotDeleteAccModalLabel Ooops! 😓
+                h5.modal-title#cancelDeleteModalLabel Please enter password to cancel delete
                 button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
               .modal-body
-                h3 Only normal user can delete account!
-                h3 Current Role: 
-                    span.text-primary #{userLoggedIn.role}
+                form
+                  label
+                  input#passwordForCancelDeleteAcc.passwordInput(type='password' placeholder='Enter Password To Proceed' autocomplete='no')                
               .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                button#confirmDeleteAccBtn.btn.btn-primary(type='button' disabled) Confirm
+                button#confirmCancelDeleteAccBtn.cancelBtn.btn.btn-primary(type='button' disabled) Confirm
 
 
 //- block scripts

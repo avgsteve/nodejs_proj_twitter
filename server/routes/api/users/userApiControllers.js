@@ -407,7 +407,7 @@ exports.cancelDeleteUser = async (req, res, next) => {
 		);
 
 		return res.status(400).send(new CustomError(
-			'User can only his/her own account. Current logged-in user is not the user for this request'
+			'User can only cancel delete his/her own account. Current logged-in user is not the user for this request'
 		));
 	}
 	// Check user role
@@ -428,6 +428,12 @@ exports.cancelDeleteUser = async (req, res, next) => {
 
 	deleteDoc.set({ isCanceled: true });
 	await deleteDoc.save();
+
+	// Use updated delete document to update user document
+	currentUserDoc.toBeDeleted = false;
+	currentUserDoc.toBeDeletedAt = "";
+	await currentUserDoc.save();
+
 	res.send(deleteDoc);
 
 }

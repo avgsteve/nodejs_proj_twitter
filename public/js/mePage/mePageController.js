@@ -4,6 +4,7 @@ import GlobalView from '../GlobalControl/GlobalView';
 import MePageView from './mePageView';
 import MePageModel from './mePageModel';
 
+
 const currentPagePath = window.location.pathname;
 
 export default class MePageController {
@@ -19,6 +20,8 @@ export default class MePageController {
     this.event_clickFunctionTabBtn();
     this.event_clickDeleteAccBtn();
     this.event_disableConfirmDeleteBtn();
+    this.event_renderDeleteCountDownTimer();
+    this.event_clickOnCountDownTimer(); // jump to cancel delete btn
   }
 
   event_clickFunctionTabBtn() {
@@ -38,13 +41,13 @@ export default class MePageController {
 
   event_disableConfirmDeleteBtn() {
 
-    let accDeletePassword = $('input#passwordForDeleteAcc');
-    if (accDeletePassword.length < 1) return;
+    let pwdInput = $('.functionsContainer .passwordInput');
+    if (pwdInput.length < 1) throw Error(`Can't find .passwordInput element`);
 
     $(() => {
-      accDeletePassword.on('keyup keydown', function () {
-        console.log('run');
-        let password = accDeletePassword.val();
+      pwdInput.on('keyup keydown', function (e) {
+
+        let password = $(e.target).val();
         if (password.length < 5) {
           MePageView.toggleConfirmDeleteAccBtn(false);
         } else {
@@ -56,16 +59,24 @@ export default class MePageController {
 
   event_clickDeleteAccBtn() {
 
-    $('#confirmDeleteAccBtn').on('click', async function () {
+    $('#confirmDeleteAccBtn, #confirmCancelDeleteAccBtn').on('click',
+      async function (e) {
+
+        let isForCancelDelete = e.target.className.includes('cancelBtn');
+
+        let btn = $(e.target);
 
       // 1) get input
-      let passwordInput = $('input#passwordForDeleteAcc').val();
+        let passwordInput = btn.closest('.modal-content').find('input').val();
 
       // 2) update btn UI
-      let originalBtn = GlobalView.showPreloadInButton($(this));
+        let originalBtn = GlobalView.showPreloadInButton(btn);
 
       // 3) Send request
-      let result = await MePageModel.sendDeleteAccountRequest(userLoggedIn._id, passwordInput);
+        let result = await MePageModel.sendDeleteAccountRequest(
+          userLoggedIn._id, passwordInput, isForCancelDelete);
+
+        console.log('result:', result);
 
       // 4 reload page if successful
       if (result === true) {
@@ -75,6 +86,26 @@ export default class MePageController {
       MePageView.showDeleteRequestResult(false, result.msg);
       $(this).html(originalBtn); // restore btn style and html
 
+    });
+  }
+
+  event_renderDeleteCountDownTimer() {
+    $(async () => {
+
+      let countDownDiv = $('.accountDeleteCountDown');
+      if (countDownDiv.length === 0) return;
+      MePageView.renderCountDownTimer();
+
+    });
+
+  }
+
+  // jump to cancel delete btn
+  event_clickOnCountDownTimer() {
+    $('.accountDeleteCountDown').on('click', () => {
+      $('.functionTabsContainer .btn').removeClass('active');
+      $('.function_item').removeClass('active');
+      $('.function_item.functionsItem_deleteMyAccount').addClass('active');
     });
   }
 

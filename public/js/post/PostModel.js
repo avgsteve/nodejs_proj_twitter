@@ -13,7 +13,7 @@ export default class PostModel {
         url: `/api/posts/${postId}`,
         type: 'GET',
         success: (data, status, xhr) => {
-          if (xhr.status != 200) {
+          if (xhr.status !== 200) {
             console.log('can not get post by post id');
             rej(null)
           }

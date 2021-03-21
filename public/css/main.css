@@ -1425,3 +1425,18 @@ button#confirmDeleteAccBtn.active {
     background-color: #0071e9;
     cursor: pointer;
 }
+.accountDeleteCountDown {
+    background-color: #ff7600ad;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.accountDeleteCountDown p {
+    padding: 0;
+    margin: 0;
+}

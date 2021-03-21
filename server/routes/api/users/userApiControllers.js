@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const User = require('../../../database/schemas/UserSchema');
 const UserActivation = require('../../../database/schemas/UserActivationSchema');
+const UserAccDelete = require('../../../database/schemas/UserAccDeleteSchema');
 const CustomError = require('../../errorHandlers/customError');
 const sendActivationMail = require('./sendActivationMail');
 const cookieHelper = require('./../auth/sendResWithToken');
@@ -339,7 +340,51 @@ exports.followUser = async (req, res, next) => {
 	res.status(200).send(res.locals.user);
 };
 
+exports.deleteUser = async (req, res, next) => {
 
+	if (!req.body.password || !req.body.userIdToDelete)
+		throw Error('Need password to perform delete action');
+
+	let currentUserDoc = await User.findOne({
+		_id: res.locals.user._id
+	}).select('password role _id userName');
+
+	// Check request user's id in case some malicious users use this api to delete other user's account
+	if (res.locals.user._id !== req.body.userIdToDelete) {
+
+		console.log(
+			chalk.red(
+				`[Current user: ${res.locals.user._id} (${res.locals.user.userName}) is trying to delete other user's id: ${req.body.userIdToDelete}]`
+			)
+		);
+
+		// TODO : Add a function to log this behaviour?
+
+		return res.status(400).send(new CustomError(
+			'User can only his/her own account. Current logged-in user is not the user for this request'
+		));
+	}
+
+	// Check user role
+	if (currentUserDoc.role !== 'user')
+		return res.status(400).send(new CustomError(
+			'Only normal user can delete account'
+		));
+
+	// Check password
+	let pwdVerified = await bcrypt.compare(
+		req.body.password, currentUserDoc.password);
+	if (!pwdVerified)
+		return res.status(400).send(new CustomError('Password is incorrect'));
+
+	let deleteDoc = await UserAccDelete.createNewDoc(
+		newUser._id,
+		newUser.userName // name field is just for record
+	);
+
+	res.send(deleteDoc);
+
+}
 
 exports.getFollowingUsers = async (req, res, next) => {
 
@@ -365,7 +410,6 @@ exports.getFollowersUsers = async (req, res, next) => {
 			res.sendStatus(400);
 		});
 };
-
 
 exports.uploadProfilePhoto = async (req, res, next) => {
 
@@ -423,7 +467,6 @@ exports.uploadProfilePhoto = async (req, res, next) => {
 	});
 
 };
-
 
 exports.uploadCoverPhoto = async (req, res, next) => {
 	if (!req.file) {

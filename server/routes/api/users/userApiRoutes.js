@@ -7,22 +7,25 @@ const { checkReqBodyErrors } = require('../../errorHandlers/checkReqValidationEr
 const userApiController = require('./userApiControllers');
 const authController = require('./../auth/authController')
 
-// Public route: root/register
-// Method: POST
-// 讓使用者註冊
-router.post("/register",
-    userApiController.registerFieldsToCheck,
-    checkReqBodyErrors, // 確認前一個 middleware 是否檢查出錯誤
-    userApiController.register
-);
 
 router.use(authController.restrictToSignedInUser);
 // === 限制下列↓↓↓路徑只能讓登入的使用者使用 (logged in user only) ===
 
 // Private route: root/api/users/
 // Method: GET
+// Get all users data (super-admin only)
+router.get("/all",
+    function (req, res, next) {
+        if (res.locals.user.role !== 'super-admin')
+            return res.status(400).send("only super admin can get all user's data");
+        next();
+    }
+    , userApiController.getUsersByQuery);
+
+// Private route: root/api/users/:userId/
+// Method: DELETE
 // 取得登入使用者資料
-router.get("/", userApiController.getUsersByQuery);
+router.delete("/:userIdToDelete", userApiController.deleteUser);
 
 // 追蹤使用者 (put更新document)
 // Method: PUT

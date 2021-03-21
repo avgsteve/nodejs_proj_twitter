@@ -85,6 +85,11 @@ app.use("/api/statistic",
     require(`${apiPath}/statistic/statisticApiRoutes`));
 
 // ==== ↓↓↓ Protected Api routes: ↓↓↓ ====
+
+app.use("/api/me",
+    authController.restrictToSignedInUser,
+    require(`${apiPath}/me/meApiRoutes`));
+
 app.use("/api/chats",
     authController.restrictToSignedInUser,
     require(`${apiPath}/chats/chatsApiRoutes`));

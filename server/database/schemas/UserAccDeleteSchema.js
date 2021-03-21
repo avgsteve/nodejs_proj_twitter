@@ -7,6 +7,9 @@ const UserAccDeleteSchema = new Schema({
     type: Schema.Types.ObjectId, ref: 'User',
     required: true
   },
+  userName: {
+    type: String // just for record
+  },
   isCanceled: {
     type: Boolean,
     default: false
@@ -16,7 +19,11 @@ const UserAccDeleteSchema = new Schema({
   }
 },
   {
-    timestamps: true,
+    timestamps: {
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
+    }
+
   });
 
 
@@ -35,6 +42,40 @@ UserAccDeleteSchema.pre('save', async function (next) {
 
   next();
 });
+
+
+UserAccDeleteSchema;
+
+UserAccDeleteSchema.statics = {
+
+  createNewDoc: async function (userId, userName) {
+
+    try {
+
+      let existingDoc = await UserAccDelete.findOne({
+        userIdToDelete: userId,
+      });
+
+      console.log('check existing user activation data: ', existingDoc);
+
+      if (existingDoc) {
+        existingDoc.isCanceled = false;
+        await existingDoc.save();
+        return existingDoc;
+      };
+
+      let newDeleteDoc = await UserAccDelete.create({
+        userIdToDelete: userId,
+        userName: userName
+      });
+      return newDeleteDoc;
+
+    } catch (error) {
+      console.log('error: ', error);
+    }
+
+  },
+};
 
 let UserAccDelete = mongoose.model('UserAccDelete', UserAccDeleteSchema);
 

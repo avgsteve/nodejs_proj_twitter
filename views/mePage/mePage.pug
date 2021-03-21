@@ -4,23 +4,23 @@ block content
 
     .functionTabsContainer
       .btn-group(role="group" aria-label="Basic example")
-        button.btn(type="button" data-target='detail') Detail
+        button.active.btn(type="button" data-target='detail') Detail
         button.btn(type="button" data-target='password') Password
-        button.btn(type="button" data-target='deleteMyAccount') Other
+        button.btn(type="button" data-target='theme') Theme
 
         <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" class="btn btn-secondary dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Dropdown            
+          <button id="btnGroupDrop1" class="btn dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-target='accountSetting'> Account            
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" href="#">Dropdown link</a>
-            <a class="dropdown-item" href="#">Dropdown link</a>
+            //- <a class="dropdown-item" href="#">Dropdown link</a>
+            <button class="dropdown-item" href="#" data-target='deleteMyAccount'>Delete Account</button>
           </div>
         </div>
 
 
     .functionsContainer
 
-        .function_item.functionsItem_detail.row
+        .function_item.functionsItem_detail.row.active
 
             .userImageContainer
                 .userCoverImgBackground
@@ -32,21 +32,26 @@ block content
 
             //- https://getbootstrap.com/docs/4.0/components/forms/#horizontal-form
             form
-                .form-group.row
-                    label.col-sm-2.col-form-label(for='myEmail') Email
-                    .col-sm-10
-                      input#myEmail.form-control.no-border(type='email' placeholder='Email')
+                .form-group.row.col-sm-10.col-md-9.col-lg-9
+                    label.col-sm-2.col-md-3.col-lg-3.col-form-label(for='myEmail') Email
+                    .inputField.col-sm-10.col-md-8.col-lg-8
+                        input#myEmail.form-control.no-border(type='email' placeholder='user name' value=`${userLoggedIn.email}` disabled)
 
-                .form-group.row
-                    label.col-sm-2.col-form-label(for='myUserName') Email
-                    .col-sm-10
-                      input#myUserName.form-control.no-border(type='email' placeholder='Email' disabled)
+                .form-group.row.col-sm-10.col-md-9.col-lg-9
+                    label.col-sm-2.col-md-3.col-lg-3.col-form-label(for='myUserName' ) User Name
+                    .inputField.col-sm-10.col-md-8.col-lg-8
+                        input#myUserName.form-control.no-border(type='text' placeholder='' value=`${userLoggedIn.userName}` disabled)
 
+                .form-group.row.col-sm-10.col-md-9.col-lg-9
+                    label.col-sm-2.col-md-3.col-lg-3.col-form-label(for='myRole') Role
+                    .inputField.col-sm-10.col-md-8.col-lg-8
+                        input#myRole.form-control.no-border(type='email' placeholder='user role' value=`${userLoggedIn.role}` disabled)
 
-                .form-group.row
-                  label.col-sm-2.col-form-label(for='inputPassword3') Password
-                  .col-sm-10
-                    input#inputPassword3.form-control.no-border(type='password' placeholder='Password')
+                .form-group.row.col-sm-10.col-md-9.col-lg-9
+                    label.col-sm-2.col-md-3.col-lg-3.col-form-label(for='myRegisterDate' ) Register Date
+                    .inputField.col-sm-10.col-md-8.col-lg-8
+                        input#myRegisterDate.form-control.no-border(type='text' placeholder='' value=`${userLoggedIn.createdAt}` disabled)
+
 
                 //- ↓↓↓ Save it for later
 
@@ -80,11 +85,55 @@ block content
                     button.btn.btn-primary.submitUpdatedMeInfo(type='submit') Update
 
 
-        .function_item.functionsItem_password.col-lg-8.col-md-10.col
-            p Password
+        .function_item.functionsItem_password.col.col-12
+            form
+                .form-group.row.col.col-12
+                    label.col-4.col-form-label(for='myCurrentPassword') Current Password
+                    .inputField.col.col-8
+                        input#myCurrentPassword.form-control.no-border(type='password' placeholder='')
+
+                .form-group.row.col.col-12
+                    label.col.col-4.col-form-label(for='myNewPassword') New Password
+                    .inputField.col.col-8
+                        input#myNewPassword.form-control.no-border(type='password' placeholder='new password between 5 to 20 characters')
+
+
+                .form-group.row.col.col-12
+                    label.col.col-4.col-form-label(for='myNewPasswordConfirm' ) Confirm Password
+                    .inputField.col.col-8
+                        input#myNewPasswordConfirm.form-control.no-border(type='password' placeholder='type your new password again')
+
+                button.btn.btn-primary Update My Password
+
+
+        .function_item.functionsItem_theme.col.col-12
+            form
+                button.btn.btn-secondary(disabled) Under development
+
+
+        .function_item.functionsItem_accountSetting.col.col-12
+            h4 Account setting
+
 
         .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
-            p Delete
+            button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#deleteAccConfirmModal") Delete My Account
+
+
+        .modal#deleteAccConfirmModal.fade(tabindex='-1' role='dialog' aria-labelledby="deleteAccModeLabel" aria-hidden="true")
+          .modal-dialog
+            .modal-content
+              .modal-header
+                h5.modal-title#deletePostModalLabel Confirm before you delete your account
+                button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
+              .modal-body
+                p By entering current password and clicking
+                  span.text-danger  "Confirm"
+                    | button
+                h4 Your account will be marked as 'isDeleted' in database and then will be deleted by system in one hour
+                h5 You can cancel this operation within one hour. You can use the same userName or email to register again if it's not taken
+              .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Close
+                button.btn.btn-primary(type='button') Confirm
 
 
 //- block scripts

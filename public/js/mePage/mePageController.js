@@ -14,10 +14,11 @@ export default class MePageController {
   }
 
   eventListeners() {
-    this.clickFunctionTabEvent();
+    this.event_clickFunctionTabBtn();
+    this.event_clickFunctionTabBtn();
   }
 
-  clickFunctionTabEvent() {
+  event_clickFunctionTabBtn() {
     $('.functionTabsContainer button').on('click', function (e) {
 
       $('.functionTabsContainer button').removeClass('active');
@@ -30,6 +31,9 @@ export default class MePageController {
       console.log('data: ', tabName);
       MePageView.showFunctionTab(tabName);
     });
+  }
+
+  event_clickDeleteAccBtn() {
   }
 
 

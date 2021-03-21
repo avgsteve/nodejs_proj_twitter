@@ -1281,7 +1281,7 @@ For Me Page
 }
 
 .functionsContainer .function_item {
-    display: flex;
+    display: none;
     flex-direction: column;
     width: 100%;
     margin: 1rem auto;
@@ -1293,17 +1293,43 @@ For Me Page
     justify-content: center;
     }
 
-    .functionsItem_detail form {
+    .functionsContainer form {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
 }
 
-    .functionsItem_detail form .no-border {
-        border: 0px solid #ced4da;
-        background-color: transparent;
-}
+    .functionsContainer form .no-border {
+        /* border: 0px solid #ced4da;
+        background-color: transparent; */
+    }
+
+    .functionsContainer label {
+        display: flex;
+        align-items: center;
+        text-align: right;
+        justify-content: flex-end;
+    }
+
+    @media only screen and (max-width: 576px) {
+        .functionsContainer label {
+            text-align: left;
+
+            justify-content: flex-start;
+        }
+    }
+
+    .functionsContainer input {
+        width: 100%;
+        font-size: 1.2rem;
+    }
+
+    .functionsContainer .inputField {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+    }
 /* 
 
 container for cover image and profile image 
@@ -1364,4 +1390,18 @@ container for cover image and profile image
 .userImageContainer .userImageLowerBlank {
     margin: 4rem;
     position: relative;
+}
+
+.functionsItem_deleteMyAccount .deleteMyAccountBtn:hover,
+.functionsItem_deleteMyAccount .deleteMyAccountBtn:active,
+.functionsItem_deleteMyAccount .deleteMyAccountBtn:focus {
+    color: #fff;
+    background-color: #ff0000;
+    border-color: #ff0000;
+}
+
+.deleteMyAccountBtn.btn-primary:not(:disabled):not(.disabled):active {
+    color: #fff;
+    background-color: #ffa600;
+    border-color: #ffa600;
 }

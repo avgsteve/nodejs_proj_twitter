@@ -26697,11 +26697,12 @@ var MePageController = /*#__PURE__*/function () {
   _createClass(MePageController, [{
     key: "eventListeners",
     value: function eventListeners() {
-      this.clickFunctionTabEvent();
+      this.event_clickFunctionTabBtn();
+      this.event_clickFunctionTabBtn();
     }
   }, {
-    key: "clickFunctionTabEvent",
-    value: function clickFunctionTabEvent() {
+    key: "event_clickFunctionTabBtn",
+    value: function event_clickFunctionTabBtn() {
       $('.functionTabsContainer button').on('click', function (e) {
         $('.functionTabsContainer button').removeClass('active');
         var clickedBtn = $(e.target);
@@ -26712,6 +26713,9 @@ var MePageController = /*#__PURE__*/function () {
         _mePageView.default.showFunctionTab(tabName);
       });
     }
+  }, {
+    key: "event_clickDeleteAccBtn",
+    value: function event_clickDeleteAccBtn() {}
   }]);
 
   return MePageController;

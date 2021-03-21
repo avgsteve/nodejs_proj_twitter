@@ -26635,13 +26635,16 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = void 0;
 
+var _GlobalView = _interopRequireDefault(require("../GlobalControl/GlobalView"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-/// <reference path="./../../../node_modules/@types/jquery/index.d.ts" />
 var MePageView = /*#__PURE__*/function () {
   function MePageView() {
     _classCallCheck(this, MePageView);
@@ -26658,13 +26661,29 @@ var MePageView = /*#__PURE__*/function () {
       allItems.removeClass('active');
       itemToShow.addClass('active');
     }
+  }, {
+    key: "showDeleteRequestSuccessful",
+    value: function showDeleteRequestSuccessful() {
+      var timeToReloadPage = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 3000;
+
+      _GlobalView.default.showAlert({
+        styleOption: 1,
+        message: 'Delete request sent! Reloading page now',
+        timeToDisappear: timeToReloadPage - 1000,
+        slideIn: true
+      });
+
+      setTimeout(function () {
+        location.reload();
+      }, timeToReloadPage);
+    }
   }]);
 
   return MePageView;
 }();
 
 exports.default = MePageView;
-},{}],"mePage/mePageController.js":[function(require,module,exports) {
+},{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js"}],"mePage/mePageController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26698,7 +26717,7 @@ var MePageController = /*#__PURE__*/function () {
     key: "eventListeners",
     value: function eventListeners() {
       this.event_clickFunctionTabBtn();
-      this.event_clickFunctionTabBtn();
+      this.event_clickDeleteAccBtn();
     }
   }, {
     key: "event_clickFunctionTabBtn",
@@ -26715,7 +26734,15 @@ var MePageController = /*#__PURE__*/function () {
     }
   }, {
     key: "event_clickDeleteAccBtn",
-    value: function event_clickDeleteAccBtn() {}
+    value: function event_clickDeleteAccBtn() {
+      $('#confirmDeleteAccBtn').on('click', function () {
+        _GlobalView.default.showPreloadInButton($(this));
+
+        $(this).attr('disabled', true);
+
+        _mePageView.default.showDeleteRequestSuccessful();
+      });
+    }
   }]);
 
   return MePageController;

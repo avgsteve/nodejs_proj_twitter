@@ -15,7 +15,7 @@ export default class MePageController {
 
   eventListeners() {
     this.event_clickFunctionTabBtn();
-    this.event_clickFunctionTabBtn();
+    this.event_clickDeleteAccBtn();
   }
 
   event_clickFunctionTabBtn() {
@@ -34,8 +34,10 @@ export default class MePageController {
   }
 
   event_clickDeleteAccBtn() {
+    $('#confirmDeleteAccBtn').on('click', function () {
+      GlobalView.showPreloadInButton($(this));
+      $(this).attr('disabled', true);
+      MePageView.showDeleteRequestSuccessful();
+    })
   }
-
-
-
 }

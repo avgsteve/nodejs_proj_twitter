@@ -90,18 +90,18 @@ block content
                 .form-group.row.col.col-12
                     label.col-4.col-form-label(for='myCurrentPassword') Current Password
                     .inputField.col.col-8
-                        input#myCurrentPassword.form-control.no-border(type='password' placeholder='')
+                        input#myCurrentPassword.form-control.no-border(type='password' placeholder='' autocomplete='no')
 
                 .form-group.row.col.col-12
                     label.col.col-4.col-form-label(for='myNewPassword') New Password
                     .inputField.col.col-8
-                        input#myNewPassword.form-control.no-border(type='password' placeholder='new password between 5 to 20 characters')
+                        input#myNewPassword.form-control.no-border(type='password' placeholder='new password between 5 to 20 characters' autocomplete='password')
 
 
                 .form-group.row.col.col-12
                     label.col.col-4.col-form-label(for='myNewPasswordConfirm' ) Confirm Password
                     .inputField.col.col-8
-                        input#myNewPasswordConfirm.form-control.no-border(type='password' placeholder='type your new password again')
+                        input#myNewPasswordConfirm.form-control.no-border(type='password' placeholder='type your new password again' autocomplete='password')
 
                 button.btn.btn-primary Update My Password
 
@@ -123,17 +123,22 @@ block content
           .modal-dialog
             .modal-content
               .modal-header
-                h5.modal-title#deletePostModalLabel Confirm before you delete your account
+                h5.modal-title#deletePostModalLabel Please read before delete account
                 button.btn-close(type='button' data-bs-dismiss='modal' aria-label='Close')
               .modal-body
-                p By entering current password and clicking
-                  span.text-danger  "Confirm"
+                p By entering 
+                  span.noticeText current password and
+                  span clicking
+                  span.noticeText "Confirm"
                     | button
-                h4 Your account will be marked as 'isDeleted' in database and then will be deleted by system in one hour
-                h5 You can cancel this operation within one hour. You can use the same userName or email to register again if it's not taken
+                h4 Your account will be marked as 'toBeDeleted' in database and then will be deleted by system in 10 minutes
+                h5 You can cancel this operation within 10 minutes. 
+                h5 You can use the same user name to register again if it's not taken
+                label
+                input#passwordForDeleteAcc(type='password' placeholder='Enter Password To Proceed' autocomplete='no')                
               .modal-footer
                 button.btn.btn-secondary(type='button' data-dismiss='modal') Close
-                button.btn.btn-primary(type='button') Confirm
+                button#confirmDeleteAccBtn.btn.btn-primary(type='button') Confirm
 
 
 //- block scripts

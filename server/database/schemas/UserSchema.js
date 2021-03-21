@@ -51,7 +51,7 @@ const UserSchema = new Schema({
     activation: {
         type: Schema.Types.ObjectId, ref: 'UserActivation'
     },
-    isDeleted: {
+    toBeDeleted: {
         type: Boolean, default: false
     },
 

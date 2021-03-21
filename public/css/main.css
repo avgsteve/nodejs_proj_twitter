@@ -1405,3 +1405,9 @@ container for cover image and profile image
     background-color: #ffa600;
     border-color: #ffa600;
 }
+
+#deleteAccConfirmModal .noticeText {
+    color: #dc3545;
+    font-size: 1rem;
+    font-weight: 500;
+}

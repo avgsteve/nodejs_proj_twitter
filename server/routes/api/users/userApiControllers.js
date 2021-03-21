@@ -374,10 +374,16 @@ exports.deleteUser = async (req, res, next) => {
 	if (!pwdVerified)
 		return res.status(400).send(new CustomError('Password is incorrect'));
 
+	// Update delete document
 	let deleteDoc = await UserAccDelete.createNewDoc(
 		currentUserDoc._id,
 		currentUserDoc.userName // name field is just for record
 	);
+
+	// Use updated delete document to update user document
+	currentUserDoc.toBeDeleted = true;
+	currentUserDoc.toBeDeletedAt = deleteDoc.timeToDelete;
+	await currentUserDoc.save();
 
 	res.send(deleteDoc);
 

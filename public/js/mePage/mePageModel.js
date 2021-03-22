@@ -20,9 +20,9 @@ export default class MePageModel {
         type: "POST",
         data: { password: password },
         success: function (responseData, textStatus, xhr) {
-          console.log('xhr: ', xhr);
-          console.log('status: ', textStatus);
-          console.log('responseData: ', responseData);
+          // console.log('xhr: ', xhr);
+          // console.log('status: ', textStatus);
+          // console.log('responseData: ', responseData);
 
           if (xhr.status !== 200) {
             return rej(responseData.responseJSON.errors[0]);

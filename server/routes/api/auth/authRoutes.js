@@ -76,4 +76,16 @@ router.post("/logout", (req, res, next) => {
   });
 });
 
+router.use(authController.checkIfUserIsLoggedIn);
+
+router.post("/resetPassword",
+  [
+    body('email')
+      .notEmpty().trim().withMessage('email field is required')
+  ],
+  checkReqBodyErrors,
+  userApiController.resetPassword
+);
+
+
 module.exports = router;

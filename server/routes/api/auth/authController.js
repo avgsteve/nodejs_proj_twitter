@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
           { userName: account },
           { email: account }
         ]
-      }).select('password isActivated _id');
+      }).select('hashed_password isActivated _id');
 
       // 找不到帳號 (帳號不存在)
       if (!userExisted) {
@@ -34,9 +34,9 @@ exports.login = async (req, res) => {
       if (!userExisted.isActivated)
         return sendLoginError(`Please activate account first!`, req, res);
 
-      let pwdVerified = await bcrypt.compare(password, userExisted.password);
 
-      if (pwdVerified === true) {
+      if ((await userExisted.verifyPassword(password)) === true) {
+        userExisted.hashed_password = '---encrypted---';
         return cookieHelper.sendResponseWithToken(userExisted, 200, req, res);
       }
       // 密碼 or 帳號錯誤
@@ -92,6 +92,7 @@ exports.checkIfUserIsLoggedIn = async (req, res, next) => {
       return next();
     } catch (error) {
       console.log('error while getting and verifying cookie', error);
+      res.locals.user = "";
       return next();
     }
   }

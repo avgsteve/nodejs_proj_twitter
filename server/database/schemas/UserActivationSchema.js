@@ -132,7 +132,7 @@ UserActivationSchema.methods = {
 // }
 
 
-let UserActivation = mongoose.model('UserActivation', UserActivationSchema);
+let UserActivation = mongoose.model('User_activation', UserActivationSchema);
 
 
 

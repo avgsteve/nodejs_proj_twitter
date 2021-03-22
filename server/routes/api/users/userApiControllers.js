@@ -2,8 +2,11 @@ const bcrypt = require('bcrypt');
 const User = require('../../../database/schemas/UserSchema');
 const UserActivation = require('../../../database/schemas/UserActivationSchema');
 const UserAccDelete = require('../../../database/schemas/UserAccDeleteSchema');
+const UserPasswordReset = require('../../../database/schemas/UserPwdResetSchema');
+
 const CustomError = require('../../errorHandlers/customError');
 const sendActivationMail = require('./sendActivationMail');
+const sendPwdResetTokenMail = require('./sendPwdResetTokenMail')
 const cookieHelper = require('./../auth/sendResWithToken');
 const Notification = require('../../../database/schemas/NotificationSchema');
 const { body } = require('express-validator');
@@ -201,7 +204,126 @@ exports.activateUser = async (req, res) => {
 		res, `user name or activation code is missing: ${JSON.stringify(req.body)}`);
 };
 
+function send400ResWithError(errMsg, res) {
+	if (!errMsg || !res) throw Error('need errMsg and res');
+	let error = new CustomError(errMsg, 400);
+	res.status(400).send(error);
+}
 
+function checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPassword, res }) {
+
+	if (!newPassword || !confirmPassword) {
+		throw Error(`Need to provide newPassword and confirmPassword:`);
+	}
+
+	if (newPassword !== confirmPassword) {
+		return send400ResWithError(
+			`new password and confirm password don't match`, res);
+		return false;
+	}
+
+	if (newPassword === currentPassword) {
+		send400ResWithError(
+			`new password can't be the same as current password`, res);
+		return false;
+	}
+	return true;
+}
+
+//
+exports.changePassword = async (req, res) => {
+	const { currentPassword, newPassword, confirmPassword } = req.body;
+
+	let checkResult =
+		checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPassword, res });
+	if (!checkResult) return;
+
+	let userDoc = await User.findOne({ _id: res.locals.user._id });
+
+	if (!userDoc)
+		return send400ResWithError(`User document is not found`, res);
+
+	// Current password must be correct
+	if (!(await userDoc.verifyPassword(currentPassword)))
+		return send400ResWithError(
+			`Current password is incorrect`, res
+		);
+
+	res.send(await userDoc.updatePassword(newPassword));
+
+};
+
+function checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPassword, res }) {
+
+	if (!newPassword || !confirmPassword) {
+		throw Error(`Need to provide newPassword and confirmPassword:`);
+	}
+
+	if (newPassword !== confirmPassword) {
+		return send400ResWithError(
+			`new password and confirm password don't match`, res);
+		return false;
+	}
+
+	if (newPassword === currentPassword) {
+		send400ResWithError(
+			`new password can't be the same as current password`, res);
+		return false;
+	}
+	return true;
+}
+
+// POST@root/resetPassword   
+// Function: To request a token to reset password
+exports.resetPassword = async (req, res) => {
+	const { email } = req.body;
+
+	// TODO: Let super-admin to send reset request user's account
+	try {
+
+		let userDoc = await User.findOne({ email });
+
+		if (!userDoc)
+			return send400ResWithError(`User document is not found`, res); // borrow function : send400ResWithError
+
+		let resetDoc = await UserPasswordReset.findOne({
+			userId: userDoc._id
+		});
+
+
+		if (!resetDoc) {
+
+			resetDoc = await UserPasswordReset.create({
+				userId: userDoc._id, email: userDoc.email
+			});
+			resetDoc = await resetDoc.setNewResetToken();
+			console.log('new password reset request created: ', resetDoc);
+			await sendPwdResetTokenMail(resetDoc, req);
+			return res.send('OK');
+		}
+
+		console.log('resetDoc.canBeResent: ', resetDoc.canBeResent());
+
+		if (resetDoc && !resetDoc.canBeResent()) {
+			let minutes = Math.floor(resetDoc.timeRemainToResend() / 1000 / 60);
+			let seconds = Math.floor(resetDoc.timeRemainToResend() / 1000 - minutes * 60);
+			let timeToResend = `Time to resend: ${minutes} minutes ${seconds} seconds`;
+			return send400ResWithError(timeToResend, res);
+		}
+
+		if (resetDoc && resetDoc.canBeResent()) {
+			resetDoc = await resetDoc.setNewResetToken();
+			await sendPwdResetTokenMail(resetDoc, req);
+		}
+
+		res.send('OK');
+
+	} catch (error) {
+		console.log('error in request password function:', error);
+	}
+	// res.send(resetDoc); // Don't expose token to front-end
+
+}
 
 // post @root/activateUser
 exports.resendActivation = async (req, res) => {

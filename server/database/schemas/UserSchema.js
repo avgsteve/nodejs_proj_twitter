@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 
 const Schema = mongoose.Schema;
 
@@ -15,9 +16,22 @@ const UserSchema = new Schema({
     email: {
         type: String, required: true, trim: true, unique: true
     },
-    password: {
+    // password: {
+    //     type: String,
+    //     required: true,
+    //     select: false,
+    // },
+    hashed_password: {
         type: String,
-        required: true,
+        // required: true,
+    },
+    passwordLastUpdated: {
+        type: Date,
+        // required: true,
+        select: false,
+    },
+    salt: {
+        type: String,
         select: false,
     },
     role: {
@@ -65,6 +79,43 @@ const UserSchema = new Schema({
     },
 
 }, { timestamps: true });
+
+UserSchema.virtual('password')
+    .set(async function (password) {
+        const saltRound = 10;
+        this.hashed_password = await bcrypt.hash(password, saltRound);
+        this.passwordLastUpdated = new Date();
+        await this.save();
+    })
+    .get(function () {
+        return this.hashed_password;
+    });
+
+// methods (for virtual schema: 'password' )
+UserSchema.methods = {
+    verifyPassword: function (password) {
+
+        console.log('password:', password);
+        console.log('this: ', this);
+        console.log('this.hashed_password:', this.password);
+
+        return bcrypt.compare(password, this.hashed_password);
+    },
+    updatePassword: function (password) {
+        let document = this;
+        console.log('document: ', document);
+        return new Promise(async (res, rej) => {
+            const saltRound = 10;
+            document.hashed_password = await bcrypt.hash(password, saltRound);
+            document.passwordLastUpdated = new Date();
+            let updatedDocument = await document.save();
+            res(updatedDocument);
+            rej(undefined);
+        }
+        );
+    }
+};
+
 
 let User = mongoose.model('User', UserSchema);
 

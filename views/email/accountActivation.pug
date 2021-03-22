@@ -10,7 +10,7 @@ block content
   p Hi #{firstName},
   p To activate your account registered on: #{hostName} 
   p Please copy the activation code
-  input(type='text', value=`${activationCode}`)
+  input(type='text', value=`${data.activationCode}`)
   p And click the button to go the activation page to activate your account 
   table.btn.btn-primary(role='presentation', border='0', cellpadding='0', cellspacing='0')
     tbody

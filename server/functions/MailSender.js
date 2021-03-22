@@ -69,7 +69,7 @@ module.exports = class MailSender {
 
 
   // Send the actual mail in HTML format with 'pug'
-  async send(pugTemplate, emailSubject, accountActivationCode) {
+  async send(pugTemplate, emailSubject, data) {
 
     console.log(`\nSending mail with NodeMailer now...`);
 
@@ -80,6 +80,8 @@ module.exports = class MailSender {
     const pugFilePath = path.join(__dirname, `./../../views/email/${pugTemplate}.pug`);
 
     console.log('path and file for pug: ', pugFilePath);
+    
+    console.log('data:', data);
 
     const htmlByPug = pug.renderFile(
       // => ref:  https://pugjs./api/reference.html#pugrenderfilepath-optioorgns-callback
@@ -92,7 +94,7 @@ module.exports = class MailSender {
         firstName: this.firstName,
         url: this.url,
         subject: emailSubject,
-        activationCode: accountActivationCode || '', // Optional. For activation email only
+        data: data || '', // Optional. For activation email only
         hostName: this.hostName
       },
       //third arguments: (optional) callback function
@@ -127,10 +129,12 @@ module.exports = class MailSender {
   }
 
 
-  async sendPasswordResetRequest() {
+  async sendPasswordResetRequest(passwordResetToken) {
+    if (!passwordResetToken) throw Error('Need token for sending reset email')
     await this.send(
       'passwordReset', // argument#1:  views/email/passwordReset.pug
-      'Your password reset token (valid for only 10 minutes)' // argument#2:  string as email subject
+      'Your password reset token (valid for only 10 minutes)', // argument#2:  string as email subject
+      { passwordResetToken }
     );
   }
 
@@ -138,7 +142,7 @@ module.exports = class MailSender {
     await this.send(
       'accountActivation', // argument#1:  views/email/passwordReset.pug
       'Your account activation code (valid for only 30 minutes)', // argument#2:  string as email subject
-      activationCode
+      { activationCode }
     );
   }
 

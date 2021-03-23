@@ -34,7 +34,6 @@ exports.login = async (req, res) => {
       if (!userExisted.isActivated)
         return sendLoginError(`Please activate account first!`, req, res);
 
-
       if ((await userExisted.verifyPassword(password)) === true) {
         userExisted.hashed_password = '---encrypted---';
         return cookieHelper.sendResponseWithToken(userExisted, 200, req, res);

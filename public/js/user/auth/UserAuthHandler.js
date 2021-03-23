@@ -139,6 +139,36 @@ class UserAuthHandler {
     );
   }
 
+  async sendPasswordResetReq(data, isForgotPwdPage = false) {
+
+    // return console.log('calling sendPasswordResetReq');
+
+    let url = isForgotPwdPage === true ?
+      '/requestPasswordResetToken' : '/setPasswordWithToken';
+
+    return new Promise((res, rej) => {
+      $.ajax({
+        method: "POST",
+        url: url,
+        data: data
+      }).done(function (data, textStatus, xhr) {
+        if (xhr.status === 200) {
+          console.log(data);
+          console.log(data.responseJSON);
+          console.log('textStatus:', textStatus);
+          console.log('xhr:', xhr);
+
+          return res(true);
+        }
+        res(data.responseJSON);
+      }).fail(function (data, textStatus, xhr) {
+        console.log('failed');
+        rej(data.responseJSON);
+      });
+    }
+    );
+  }
+
   static clearAllFields() {
     $(document).on('click', '.clearRegisterInput', () => {
       console.log('this: ', this);
@@ -219,14 +249,17 @@ class UserAuthHandler {
 
   }
 
-  showActivationError(errorMessage = 'error message') {
+  showErrorMessage(errorMessage = 'error message') {
+    console.log('show error message: ', errorMessage);
 
-    let errorP = $('p.errorMessage').text(errorMessage);
+    let errorElement = $('p.errorMessage').text(errorMessage);
 
     $('input#loginAccount, input#activationCode, input#loginAccount')
       .on('keydown keyup', (e) => {
-        errorP.text('');
+        errorElement.text('');
       });
+    
+
 
   }
 
@@ -237,9 +270,16 @@ class UserAuthHandler {
         'Redirect to login page' :
         'Please check email. Redirecting to activation page'}`;
 
-    console.log('successMessage:', successMessage);
     $('.successMessage').text(successMessage);
   }
+
+  showRequestSucceed(isShowing = true, message = "Request successful") {
+    if (!isShowing) return $('.resetPassword .successMessage').hide();
+    let successMessage = message;
+    $('.resetPassword .successMessage').text(successMessage);
+    $('.resetPassword .successMessage').show(500);
+  }
+
 
   showLoadingAnimationInButton(btn = $('#loginBtn'), message, timeout = 1000) {
 
@@ -266,6 +306,55 @@ class UserAuthHandler {
 
     return originalHtmlInBtn;
 
+  }
+
+  showWholePagePreloader(text = 'PLEASE WAIT', keepDisplay = true) {
+    $('.pagePreloader').html(`
+      <div
+        class="text-center preloader";
+        style =
+        "
+          width: 100%;
+          height: 100%;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          color: #ffe4c47a;
+        "
+      >
+      <div
+        class="spinner-border"
+        role="status"
+        style="               
+                  display: inline-block;
+                  width: 6rem;
+                  height: 6rem;
+                  margin: 0 auto;
+                  vertical-align: text-bottom;
+                  border: .25em solid currentColor;
+                  border-right-color: transparent;
+                  border-radius: 50%;
+                  animation: spinner-border .75s linear infinite;
+              "
+      >
+        <span
+          class="sr-only"
+          style="
+                  position: absolute;
+                  width: 1px;
+                  height: 1px;
+                  padding: 0;
+                  margin: -1px;
+                  overflow: hidden;
+                  clip: rect(0,0,0,0);
+                  white-space: nowrap;
+                  border: 0;
+              "
+        >Loading...</span>
+      </div>
+      </ >
+`); $('.pagePreloader').fadeIn(500);
+    if (!keepDisplay) return $('.pagePreloader').fadeOut(1400);
   }
 
   getRegisterData() {
@@ -299,7 +388,7 @@ class UserAuthHandler {
     let userName = $('#loginAccount').val().trim();
 
     if (!activationCode || !userName)
-      return this.showActivationError('Please fill both fields!');
+      return this.showErrorMessage('Please fill both fields!');
 
     return { userName, activationCode };
   }
@@ -309,9 +398,56 @@ class UserAuthHandler {
     let captcha = $('#captcha').val().trim();
 
     if (!userName || !captcha)
-      return this.showActivationError('Please fill both fields!');
+      return this.showErrorMessage('Please fill both fields!');
 
     return { userName, captcha };
+  }
+
+  getResetPasswordData(type) {
+
+    $(document).on('keyup keydown',
+      '.resetPasswordForm input, .reqResetPasswordForm input',
+      function () {
+        $('.errorMessage').text("");
+      }
+    );
+
+    console.log('type:', type);
+
+    // For getting data for reset password with new one
+    if (type === ('resetPassword')) {
+
+      let newPassword = $('#newPassword').val();
+      let confirmPassword = $('#confirmPassword').val();
+      let captcha = $('#captcha').val();
+      let token = window.location.pathname.split('/')[2];
+
+      if (!newPassword || !confirmPassword) {
+        $('.errorMessage').text("Please fill all fields");
+        return null;
+      }
+      if (newPassword !== confirmPassword) {
+        $('.errorMessage').text("Passwords don't match!");
+        return null;
+      }
+
+      return { newPassword, confirmPassword, token, captcha };
+    }
+
+    // For getting data for requesting reset token (path: /forgotPassword )
+    let email = $('#emailForResetPwd').val();
+    let captcha = $('#captcha').val();
+    if (!email) {
+      $('.errorMessage').text("Please enter email");
+      return null;
+    }
+
+    return { email, captcha };
+
+
+
+
+
   }
 
 }

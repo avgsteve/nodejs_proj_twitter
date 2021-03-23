@@ -8,13 +8,17 @@ let sgTransport = require('nodemailer-sendgrid-transport');
 
 module.exports = class MailSender {
 
-  constructor(userData, urlInEmail) {
+  constructor(doc, urlInEmail) {
+
+    console.log('doc in MailSender:', doc);
+    if (!doc || !doc.email || !doc.firstName)
+      throw Error(`argument "doc" is incorrect`);
 
     let sender_dev = 'steve.leng.dev@gmail.com';
     let send_production = 'steve.leng@gmail.com';
 
-    this.to = userData.email;
-    this.firstName = userData.firstName;
+    this.to = doc.email;
+    this.firstName = doc.firstName;
     this.url = urlInEmail;
     this.hostName = urlInEmail.split('/')[2];
 

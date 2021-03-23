@@ -79,11 +79,32 @@ router.get("/resendActivationCode", (req, res, next) => {
     });
 });
 
-
 router.get("/activationSent", (req, res, next) => {
   res.status(200).render("authPage/activationSent",
     {
       pageTitle: 'Activation has been sent'
+    });
+});
+
+router.get("/resetPassword/:resetToken", (req, res, next) => {
+  res.status(200).render("authPage/resetPassword",
+    {
+      pageTitle: 'Reset Password'
+    });
+});
+
+
+router.get("/forgotPassword", (req, res, next) => {
+  res.status(200).render("authPage/forgotPassword",
+    {
+      pageTitle: 'Request Password Reset Token'
+    });
+});
+
+router.get("/resetTokenSent", (req, res, next) => {
+  res.status(200).render("authPage/resetTokenSent",
+    {
+      pageTitle: 'Password reset token has been sent'
     });
 });
 

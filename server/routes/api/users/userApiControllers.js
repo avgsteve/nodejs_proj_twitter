@@ -273,28 +273,33 @@ function checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPasswo
 	return true;
 }
 
-// POST@root/resetPassword   
+// POST@root/requestPasswordResetToken   
+// Used by authRoutes.js
 // Function: To request a token to reset password
-exports.resetPassword = async (req, res) => {
+exports.requestPasswordResetToken = async (req, res) => {
 	const { email } = req.body;
 
 	// TODO: Let super-admin to send reset request user's account
 	try {
 
-		let userDoc = await User.findOne({ email });
+		let userDoc = await User.findOne({ email }).select('_id email firstName');
+
 
 		if (!userDoc)
 			return send400ResWithError(`User document is not found`, res); // borrow function : send400ResWithError
 
+		// Checking if any previous reset document was created
 		let resetDoc = await UserPasswordReset.findOne({
 			userId: userDoc._id
 		});
 
-
+		// Creating a new reset document
 		if (!resetDoc) {
 
 			resetDoc = await UserPasswordReset.create({
-				userId: userDoc._id, email: userDoc.email
+				userId: userDoc._id,
+				email: userDoc.email,
+				firstName: userDoc.firstName
 			});
 			resetDoc = await resetDoc.setNewResetToken();
 			console.log('new password reset request created: ', resetDoc);
@@ -304,6 +309,7 @@ exports.resetPassword = async (req, res) => {
 
 		console.log('resetDoc.canBeResent: ', resetDoc.canBeResent());
 
+		// If there is a reset doc created before, check if it's OK to resend
 		if (resetDoc && !resetDoc.canBeResent()) {
 			let minutes = Math.floor(resetDoc.timeRemainToResend() / 1000 / 60);
 			let seconds = Math.floor(resetDoc.timeRemainToResend() / 1000 - minutes * 60);
@@ -322,6 +328,36 @@ exports.resetPassword = async (req, res) => {
 		console.log('error in request password function:', error);
 	}
 	// res.send(resetDoc); // Don't expose token to front-end
+
+}
+
+// Set new password with RESET TOKEN @path: /setPasswordWithToken
+exports.setPasswordWithToken = async (req, res) => {
+
+	let { token, newPassword, confirmPassword, captcha } = req.body;
+
+	// Checking if any previous reset document was created
+	let resetDoc = await UserPasswordReset.findOne({
+		resetToken: token
+	});
+
+	// Creating a new reset document
+	if (!resetDoc) return send400ResWithError(`Reset document is not found`, res); // borrow function : send400ResWithError
+
+	console.log('resetDoc.isExpired: ', resetDoc.isExpired());
+
+	if (resetDoc.isExpired()) return send400ResWithError(`Token has expired. Please request a new one`, res); // borrow function : send400ResWithError
+
+	let userDoc = await User.findOne({
+		_id: resetDoc.userId
+	});
+
+	console.log('userDoc after change password: ', userDoc);
+
+	let updatedUser = await userDoc.updatePassword(newPassword);
+	updatedUser.hashed_password = "---encrypted---";
+	res.send(updatedUser);
+
 
 }
 

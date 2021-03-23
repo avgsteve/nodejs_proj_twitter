@@ -94,11 +94,6 @@ UserSchema.virtual('password')
 // methods (for virtual schema: 'password' )
 UserSchema.methods = {
     verifyPassword: function (password) {
-
-        console.log('password:', password);
-        console.log('this: ', this);
-        console.log('this.hashed_password:', this.password);
-
         return bcrypt.compare(password, this.hashed_password);
     },
     updatePassword: function (password) {
@@ -106,11 +101,15 @@ UserSchema.methods = {
         console.log('document: ', document);
         return new Promise(async (res, rej) => {
             const saltRound = 10;
+            try {
             document.hashed_password = await bcrypt.hash(password, saltRound);
             document.passwordLastUpdated = new Date();
             let updatedDocument = await document.save();
             res(updatedDocument);
-            rej(undefined);
+            } catch (error) {
+                console.trace('error: ', error);
+                rej(undefined);
+            }
         }
         );
     }

@@ -26793,10 +26793,9 @@ var MePageModel = /*#__PURE__*/function () {
             password: password
           },
           success: function success(responseData, textStatus, xhr) {
-            console.log('xhr: ', xhr);
-            console.log('status: ', textStatus);
-            console.log('responseData: ', responseData);
-
+            // console.log('xhr: ', xhr);
+            // console.log('status: ', textStatus);
+            // console.log('responseData: ', responseData);
             if (xhr.status !== 200) {
               return rej(responseData.responseJSON.errors[0]);
             }

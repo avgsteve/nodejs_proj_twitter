@@ -18,7 +18,7 @@ $(document).on('click',
 
     if (currentPage === 'resendActivation') {
       let userName = $('#loginAccount').val();
-      if (!userName) return helper.showActivationError('Please enter username or email');
+      if (!userName) return helper.showErrorMessage('Please enter username or email');
       helper.showLoadingAnimationInButton($(btn));
       result = await helper.reqToResendActivationCode({ userName });
     }
@@ -31,6 +31,6 @@ $(document).on('click',
     }
 
     // if result is not true, means something went wrong
-    helper.showActivationError(result.errorMessage || '');
+    helper.showErrorMessage(result.errorMessage || '');
   });
 

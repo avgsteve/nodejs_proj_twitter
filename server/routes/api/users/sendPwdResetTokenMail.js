@@ -10,7 +10,7 @@ module.exports = function (resetTokenDoc, req) {
   if (!req) throw Error('Need valid express request obj');
 
   const urlForToken =
-    `${httpProtocol}://${req.get("host")}/resetPassword/`;
+    `${httpProtocol}://${req.get("host")}/setPasswordWithToken/${resetTokenDoc.resetToken}`;
 
   // will return a Promise obj
   return new MailSender(resetTokenDoc, urlForToken,).sendPasswordResetRequest(resetTokenDoc.resetToken);

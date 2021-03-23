@@ -3,6 +3,21 @@ body {
 	font-size: 14px;
 }
 
+.pagePreloader {
+	position: absolute;
+	text-align: center;
+	font-size: 3rem;
+	display: none;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 9999;
+	background-repeat: no-repeat;
+	background-color: rgb(70 70 70 / 54%);
+	background-position: center;
+}
+
 @media only screen and (min-width: 600px) {
 
 	html,
@@ -306,4 +321,43 @@ span.highlighted.active {
 	60% {
 		transform: translateY(-6px);
 	}
+}
+.row.resetPassword {
+	width: 100%;
+}
+
+.resetPasswordContainer,
+.resetPasswordContainer form {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 0 auto;
+}
+
+.resetPasswordContainer *,
+.resetPasswordContainer form * {
+	width: 100%;
+	margin: 1rem 0;
+}
+
+.resetPasswordContainer .setNewPassword {}
+
+.resetPasswordContainer {
+	padding: 0 1.5rem;
+}
+
+.resetPasswordContainer input {
+	text-align: center;
+}
+
+.resetPasswordContainer .errorMessage {
+	color: rgb(255 221 1);
+	font-size: 1.7rem;
+}
+
+.resetPasswordContainer .successMessage {
+	display: none;
+	color: rgb(255, 189, 8);
+	font-size: 1.7rem;
 }

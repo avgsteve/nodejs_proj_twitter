@@ -9,6 +9,10 @@ const UserPwdResetSchema = new Schema({
     type: Schema.Types.ObjectId, ref: 'User',
     required: true
   },
+  firstName: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     required: true
@@ -38,7 +42,7 @@ const UserPwdResetSchema = new Schema({
 
 UserPwdResetSchema.methods = {
   isExpired: function () {
-    if (Date.now() > Date.parse(this.is))
+    if (Date.now() > Date.parse(this.validUntil))
       return true;
     return false;
 

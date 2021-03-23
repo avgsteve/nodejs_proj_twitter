@@ -78,14 +78,29 @@ router.post("/logout", (req, res, next) => {
 
 router.use(authController.checkIfUserIsLoggedIn);
 
-router.post("/resetPassword",
+router.post("/requestPasswordResetToken",
   [
     body('email')
       .notEmpty().trim().withMessage('email field is required')
   ],
   checkReqBodyErrors,
-  userApiController.resetPassword
+  userApiController.requestPasswordResetToken
 );
+
+router.post("/setPasswordWithToken",
+  [
+    body('token').notEmpty().trim().withMessage('token is required'),
+    body('newPassword').trim()
+      .isLength({ min: 4, max: 20 })
+      .withMessage('Password must be between 4 and 20 characters'),
+    body('confirmPassword').trim()
+      .isLength({ min: 4, max: 20 })
+      .withMessage('Password must be between 4 and 20 characters'),
+  ],
+  checkReqBodyErrors,
+  userApiController.setPasswordWithToken
+);
+
 
 
 module.exports = router;

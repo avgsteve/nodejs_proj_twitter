@@ -23,15 +23,15 @@ $(function () {
 
 
 // Submit registration data
-let submitButton = $('#loginBtn');
-submitButton.on('click', async (e) => {
+let loginButton = $('#loginBtn');
+loginButton.on('click', async (e) => {
 
   e.preventDefault();
   const loginHelper = new UserAuthHandler('login');
 
   // show loading animation in button and disable it
-  const originalHtmlInBtn = loginHelper.showLoadingAnimationInButton(submitButton, 'processing');
-  submitButton.prop('disabled', true);
+  const originalHtmlInBtn = loginHelper.showLoadingAnimationInButton(loginButton, 'processing');
+  loginButton.prop('disabled', true);
 
   const loginResult = await loginHelper.login();
 
@@ -44,12 +44,10 @@ submitButton.on('click', async (e) => {
   }
 
   console.log('loginResult: ', loginResult);
-
   loginHelper.showLoginError(loginResult);
-
   // restore html in button
-  submitButton.html(originalHtmlInBtn);
-  submitButton.prop('disabled', false);
+  loginButton.html(originalHtmlInBtn);
+  loginButton.prop('disabled', false);
 
 });
 

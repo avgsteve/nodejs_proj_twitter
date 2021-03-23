@@ -22,6 +22,7 @@ export default class MePageController {
     this.event_disableConfirmDeleteBtn();
     this.event_renderDeleteCountDownTimer();
     this.event_clickOnCountDownTimer(); // jump to cancel delete btn
+    this.event_updatePassword();
   }
 
   event_clickFunctionTabBtn() {
@@ -36,6 +37,38 @@ export default class MePageController {
 
       // console.log('data: ', tabName);
       MePageView.showFunctionTab(tabName);
+    });
+  }
+
+  event_updatePassword() {
+    let updatePwdBtn = $('#updatePwdBtn');
+    let btnHtml, data, result;
+    updatePwdBtn.on('click', async function (e) {
+      e.preventDefault();
+      btnHtml = GlobalView.showPreloadInButton(updatePwdBtn);
+      data = MePageModel.getDataForUpdatePassword();
+
+      if (!data) {
+        updatePwdBtn.html(btnHtml);
+        return;
+      }
+
+      updatePwdBtn.attr('disabled', 'true');
+      result = await MePageModel.sendUpdatePasswordReq(data);
+
+      if (result === true) {
+        MePageView.showMsg('Succeed! Reloading now', 1);
+        // return setTimeout(() => {
+        //   location.reload();
+        // }, 1500);
+      }
+
+      MePageView.showMsg(result, 2);
+      updatePwdBtn.html(btnHtml);
+      updatePwdBtn.attr('disabled', false);
+
+      return;
+
     });
   }
 
@@ -108,6 +141,7 @@ export default class MePageController {
       $('.function_item.functionsItem_deleteMyAccount').addClass('active');
     });
   }
+
 
 }
 

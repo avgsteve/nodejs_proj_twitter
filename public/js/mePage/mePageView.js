@@ -90,6 +90,20 @@ export default class MePageView {
 
   }
 
+
+  static showMsg(message, style = 2) {
+
+    return GlobalView.showAlert(
+      {
+        styleOption: style,
+        message: message,
+        elementToShowAlert: $('body'),
+        timeToDisappear: 2000,
+        slideIn: true,
+      });
+
+  }
+
 }
 
 function convertEpochTimeToMinSec(epochTime,

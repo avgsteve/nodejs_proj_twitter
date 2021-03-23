@@ -88,10 +88,21 @@ class UserAuthHandler {
         }).fail((data, textStatus, xhr) => {
           console.log('login fail!');
           console.log('data: ', data);
+
+          if (data.status === 0) {
+            $('.errorMessage').text('');
+            return $('.errorMessage').text(`Can't not establish connection with server`);
+          }
+
           return res(data.responseJSON);
         });
+
+
       } catch (error) {
+
         console.log('error: ', error);
+        if (error.status === 0)
+          error.errors[error].msg === `Can't not establish connection with server`
         rej(error);
       }
     });

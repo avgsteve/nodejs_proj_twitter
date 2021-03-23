@@ -18344,6 +18344,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 var globalViewModel = new _GlobalViewModel.default();
+var alertTimer;
 
 var GlobalView = /*#__PURE__*/function () {
   function GlobalView() {
@@ -18426,6 +18427,12 @@ var GlobalView = /*#__PURE__*/function () {
           _ref$removeElementOnC = _ref.removeElementOnClose,
           removeElementOnClose = _ref$removeElementOnC === void 0 ? true : _ref$removeElementOnC;
 
+      // In case there's multiple call of this alert function, clear any existing alert first;
+      if ($('.globalAlert').length !== 0) {
+        $('.globalAlert').remove();
+        clearTimeout(alertTimer);
+      }
+
       if (typeof styleOption !== 'number' || parseInt(styleOption) > 3) styleOption = 0; // default
 
       var alertStyle = ['default', 'success', 'danger', 'warning'][styleOption];
@@ -18436,11 +18443,14 @@ var GlobalView = /*#__PURE__*/function () {
         $(this).parent(".alert").fadeOut();
         if (removeElementOnClose) $(this).parent(".alert").remove();
       });
-      if (!closeManually) setTimeout(function () {
-        // $('.globalAlert').css('display', 'none');
-        $('.globalAlert') // .removeClass('slide-in')
-        .addClass('slide-out');
-      }, timeToDisappear || 1200);
+
+      if (!closeManually) {
+        alertTimer = setTimeout(function () {
+          // $('.globalAlert').css('display', 'none');
+          $('.globalAlert') // .removeClass('slide-in')
+          .addClass('slide-out');
+        }, timeToDisappear || 1500);
+      }
     }
   }, {
     key: "refreshMessagesBadge",
@@ -26719,6 +26729,18 @@ var MePageView = /*#__PURE__*/function () {
         timerElement.html("\n        ".concat(convertedTime.minutes, " minutes and \n        ").concat(convertedTime.seconds, " seconds\n    ")); // console.log('convertedTime: ', convertedTime);
       }, 1000);
     }
+  }, {
+    key: "showMsg",
+    value: function showMsg(message) {
+      var style = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 2;
+      return _GlobalView.default.showAlert({
+        styleOption: style,
+        message: message,
+        elementToShowAlert: $('body'),
+        timeToDisappear: 2000,
+        slideIn: true
+      });
+    }
   }]);
 
   return MePageView;
@@ -26764,6 +26786,8 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _GlobalView = _interopRequireDefault(require("../GlobalControl/GlobalView"));
+
+var _mePageView = _interopRequireDefault(require("./mePageView"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -26828,13 +26852,65 @@ var MePageModel = /*#__PURE__*/function () {
 
       return inputField.val();
     }
+  }, {
+    key: "getDataForUpdatePassword",
+    value: function getDataForUpdatePassword() {
+      var currentPassword = $('#myCurrentPassword').val();
+      var newPassword = $('#myNewPassword').val();
+      var confirmPassword = $('#myNewPasswordConfirm').val();
+
+      if (!newPassword || !confirmPassword || !currentPassword) {
+        _mePageView.default.showMsg('Please fill all field');
+
+        return null;
+      }
+
+      if (newPassword !== confirmPassword) {
+        _mePageView.default.showMsg("Passwords don't match");
+
+        return null;
+      }
+
+      return {
+        currentPassword: currentPassword,
+        newPassword: newPassword,
+        confirmPassword: confirmPassword
+      };
+    }
+  }, {
+    key: "sendUpdatePasswordReq",
+    value: function sendUpdatePasswordReq(data) {
+      return new Promise(function (res, rej) {
+        $.ajax({
+          url: 'api/me/updatePassword',
+          type: "PUT",
+          data: data,
+          success: function success(responseData, textStatus, xhr) {
+            console.log('xhr: ', xhr);
+            console.log('status: ', textStatus);
+            console.log('responseData: ', responseData);
+
+            if (xhr.status === 200) {
+              return res(true);
+            }
+
+            if (xhr.status !== 200) {
+              return res(responseData.errorMessage);
+            }
+          }
+        }).fail(function (responseData, textStatus, xhr) {
+          console.log('reject data: ', responseData);
+          return res(responseData.responseJSON.errors[0].msg);
+        });
+      });
+    }
   }]);
 
   return MePageModel;
 }();
 
 exports.default = MePageModel;
-},{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js"}],"mePage/mePageController.js":[function(require,module,exports) {
+},{"../GlobalControl/GlobalView":"GlobalControl/GlobalView.js","./mePageView":"mePage/mePageView.js"}],"mePage/mePageController.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -26878,6 +26954,8 @@ var MePageController = /*#__PURE__*/function () {
       this.event_disableConfirmDeleteBtn();
       this.event_renderDeleteCountDownTimer();
       this.event_clickOnCountDownTimer(); // jump to cancel delete btn
+
+      this.event_updatePassword();
     }
   }, {
     key: "event_clickFunctionTabBtn",
@@ -26890,6 +26968,63 @@ var MePageController = /*#__PURE__*/function () {
 
         _mePageView.default.showFunctionTab(tabName);
       });
+    }
+  }, {
+    key: "event_updatePassword",
+    value: function event_updatePassword() {
+      var updatePwdBtn = $('#updatePwdBtn');
+      var btnHtml, data, result;
+      updatePwdBtn.on('click', /*#__PURE__*/function () {
+        var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+          return regeneratorRuntime.wrap(function _callee$(_context) {
+            while (1) {
+              switch (_context.prev = _context.next) {
+                case 0:
+                  e.preventDefault();
+                  btnHtml = _GlobalView.default.showPreloadInButton(updatePwdBtn);
+                  data = _mePageModel.default.getDataForUpdatePassword();
+
+                  if (data) {
+                    _context.next = 6;
+                    break;
+                  }
+
+                  updatePwdBtn.html(btnHtml);
+                  return _context.abrupt("return");
+
+                case 6:
+                  updatePwdBtn.attr('disabled', 'true');
+                  _context.next = 9;
+                  return _mePageModel.default.sendUpdatePasswordReq(data);
+
+                case 9:
+                  result = _context.sent;
+
+                  if (result === true) {
+                    _mePageView.default.showMsg('Succeed! Reloading now', 1); // return setTimeout(() => {
+                    //   location.reload();
+                    // }, 1500);
+
+                  }
+
+                  _mePageView.default.showMsg(result, 2);
+
+                  updatePwdBtn.html(btnHtml);
+                  updatePwdBtn.attr('disabled', false);
+                  return _context.abrupt("return");
+
+                case 15:
+                case "end":
+                  return _context.stop();
+              }
+            }
+          }, _callee);
+        }));
+
+        return function (_x) {
+          return _ref.apply(this, arguments);
+        };
+      }());
     }
   }, {
     key: "event_disableConfirmDeleteBtn",
@@ -26912,11 +27047,11 @@ var MePageController = /*#__PURE__*/function () {
     key: "event_clickDeleteAccBtn",
     value: function event_clickDeleteAccBtn() {
       $('#confirmDeleteAccBtn, #confirmCancelDeleteAccBtn').on('click', /*#__PURE__*/function () {
-        var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(e) {
+        var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(e) {
           var isForCancelDelete, btn, passwordInput, originalBtn, result;
-          return regeneratorRuntime.wrap(function _callee$(_context) {
+          return regeneratorRuntime.wrap(function _callee2$(_context2) {
             while (1) {
-              switch (_context.prev = _context.next) {
+              switch (_context2.prev = _context2.next) {
                 case 0:
                   isForCancelDelete = e.target.className.includes('cancelBtn');
                   btn = $(e.target); // 1) get input
@@ -26925,19 +27060,19 @@ var MePageController = /*#__PURE__*/function () {
 
                   originalBtn = _GlobalView.default.showPreloadInButton(btn); // 3) Send request
 
-                  _context.next = 6;
+                  _context2.next = 6;
                   return _mePageModel.default.sendDeleteAccountRequest(userLoggedIn._id, passwordInput, isForCancelDelete);
 
                 case 6:
-                  result = _context.sent;
+                  result = _context2.sent;
                   console.log('result:', result); // 4 reload page if successful
 
                   if (!(result === true)) {
-                    _context.next = 10;
+                    _context2.next = 10;
                     break;
                   }
 
-                  return _context.abrupt("return", _mePageView.default.showDeleteRequestResult(true));
+                  return _context2.abrupt("return", _mePageView.default.showDeleteRequestResult(true));
 
                 case 10:
                   _mePageView.default.showDeleteRequestResult(false, result.msg);
@@ -26946,44 +27081,44 @@ var MePageController = /*#__PURE__*/function () {
 
                 case 12:
                 case "end":
-                  return _context.stop();
+                  return _context2.stop();
               }
             }
-          }, _callee, this);
+          }, _callee2, this);
         }));
 
-        return function (_x) {
-          return _ref.apply(this, arguments);
+        return function (_x2) {
+          return _ref2.apply(this, arguments);
         };
       }());
     }
   }, {
     key: "event_renderDeleteCountDownTimer",
     value: function event_renderDeleteCountDownTimer() {
-      $( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2() {
+      $( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3() {
         var countDownDiv;
-        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        return regeneratorRuntime.wrap(function _callee3$(_context3) {
           while (1) {
-            switch (_context2.prev = _context2.next) {
+            switch (_context3.prev = _context3.next) {
               case 0:
                 countDownDiv = $('.accountDeleteCountDown');
 
                 if (!(countDownDiv.length === 0)) {
-                  _context2.next = 3;
+                  _context3.next = 3;
                   break;
                 }
 
-                return _context2.abrupt("return");
+                return _context3.abrupt("return");
 
               case 3:
                 _mePageView.default.renderCountDownTimer();
 
               case 4:
               case "end":
-                return _context2.stop();
+                return _context3.stop();
             }
           }
-        }, _callee2);
+        }, _callee3);
       })));
     } // jump to cancel delete btn
 

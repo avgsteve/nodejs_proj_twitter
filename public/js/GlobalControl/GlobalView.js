@@ -1,6 +1,7 @@
 import NotificationModel from '../notification/NotificationModel';
 import GlobalViewModel from './GlobalViewModel';
 const globalViewModel = new GlobalViewModel();
+let alertTimer;
 export default class GlobalView {
 
   static showPreloaderInElement(
@@ -118,9 +119,14 @@ export default class GlobalView {
     } = {}
   ) {
 
-    if (
-      typeof styleOption !== 'number' || parseInt(styleOption) > 3
-    )
+    // In case there's multiple call of this alert function, clear any existing alert first;
+    if ($('.globalAlert').length !== 0) {
+      $('.globalAlert').remove();
+      clearTimeout(alertTimer);
+    }
+
+
+    if (typeof styleOption !== 'number' || parseInt(styleOption) > 3)
       styleOption = 0; // default
 
     let alertStyle = [
@@ -157,16 +163,18 @@ export default class GlobalView {
 
 
 
-    if (!closeManually)
-      setTimeout(
+    if (!closeManually) {
+      alertTimer = setTimeout(
         () => {
           // $('.globalAlert').css('display', 'none');
           $('.globalAlert')
             // .removeClass('slide-in')
             .addClass('slide-out');
         }
-        , timeToDisappear || 1200
+        , timeToDisappear || 1500
       );
+    }
+
   }
 
   static async refreshMessagesBadge(data) {

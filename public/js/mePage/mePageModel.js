@@ -1,5 +1,5 @@
 import GlobalView from '../GlobalControl/GlobalView';
-
+import MePageView from './mePageView'
 export default class MePageModel {
   constructor() {
 
@@ -58,4 +58,56 @@ export default class MePageModel {
     return inputField.val();
 
   }
+
+  static getDataForUpdatePassword() {
+    let currentPassword = $('#myCurrentPassword').val();
+    let newPassword = $('#myNewPassword').val();
+    let confirmPassword = $('#myNewPasswordConfirm').val();
+
+    if (!newPassword || !confirmPassword || !currentPassword) {
+      MePageView.showMsg('Please fill all field');
+      return null;
+    }
+    if (newPassword !== confirmPassword) {
+      MePageView.showMsg(`Passwords don't match`);
+      return null;
+
+    }
+    return { currentPassword, newPassword, confirmPassword };
+
+  }
+
+  static sendUpdatePasswordReq(data) {
+
+    return new Promise((res, rej) => {
+      $.ajax({
+        url: 'api/me/updatePassword',
+        type: "PUT",
+        data: data,
+        success: function (responseData, textStatus, xhr) {
+          console.log('xhr: ', xhr);
+          console.log('status: ', textStatus);
+          console.log('responseData: ', responseData);
+
+          if (xhr.status === 200) {
+            return res(true);
+          }
+
+          if (xhr.status !== 200) {
+            return res(responseData.errorMessage);
+          }
+
+        }
+      }).fail(
+        function (responseData, textStatus, xhr) {
+          console.log('reject data: ', responseData);
+          return res(responseData.responseJSON.errors[0].msg);
+        }
+      );
+
+    }
+    );
+  }
+
+
 }

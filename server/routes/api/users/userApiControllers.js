@@ -230,15 +230,18 @@ function checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPasswo
 	return true;
 }
 
-//
 exports.changePassword = async (req, res) => {
-	const { currentPassword, newPassword, confirmPassword } = req.body;
+	const { userName, currentPassword, newPassword, confirmPassword } = req.body;
 
 	let checkResult =
 		checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPassword, res });
 	if (!checkResult) return;
 
 	let userDoc = await User.findOne({ _id: res.locals.user._id });
+
+	// ↓↓↓ For testing only. Every user need to login before changing password
+	// let userDoc = await User.findOne({ userName: userName });
+
 
 	if (!userDoc)
 		return send400ResWithError(`User document is not found`, res);
@@ -249,7 +252,9 @@ exports.changePassword = async (req, res) => {
 			`Current password is incorrect`, res
 		);
 
-	res.send(await userDoc.updatePassword(newPassword));
+	let updatedUserDoc = await userDoc.updatePassword(newPassword);
+
+	res.send(200);
 
 };
 

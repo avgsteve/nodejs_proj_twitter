@@ -88,6 +88,9 @@ exports.getPostById = async (req, res, next) => {
 // Create Post for reply or a plain post
 exports.createPost = async (req, res, next) => {
 
+	let postImageData = null;
+	console.log('data for new post: ', req.body);
+
 	console.log(`
   User: ${res.locals.user.userName} 
   Added ${req.body.isReplyToPost !== undefined ?
@@ -99,11 +102,22 @@ exports.createPost = async (req, res, next) => {
 		return res.sendStatus(400);
 	}
 
+	// 2) Sanitize post_image data
+	if (req.body.post_image) {
+		postImageData = {};
+		postImageData.url = req.body.post_image.url;
+		postImageData.title = req.body.post_image.title;
+	}
+
+	console.log('postImageData: ', postImageData);
+
+
 	let postCreatorId = res.locals.user._id;
 
 	let dataForNewPost = {
 		content: req.body.post_content,
 		postedBy: postCreatorId,
+		image: postImageData || null,
 		pinned: false
 	};
 

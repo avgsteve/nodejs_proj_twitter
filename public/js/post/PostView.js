@@ -137,7 +137,7 @@ export default class PostView {
     });
   }
 
-  updateUiBeforeNewPostIsCreated(buttonClicked) {
+  updateUiForeNewPost(buttonClicked) {
     let originalBtnHtml =
       GlobalView.showPreloadInButton(buttonClicked);
     buttonClicked.prop("disabled", true);

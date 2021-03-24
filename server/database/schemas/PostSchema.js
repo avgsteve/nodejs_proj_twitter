@@ -9,6 +9,10 @@ const PostSchema = new Schema({
     contentBeforeDeleted: {
         type: String,
     },
+    image: {
+        url: String,
+        title: String
+    },
     postedBy: {
         type: Schema.Types.ObjectId, ref: 'User'
     },

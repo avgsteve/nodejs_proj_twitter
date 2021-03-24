@@ -296,7 +296,7 @@ button span {
 }
 
 .postImagePreviewContainer #postPhotoPreview {
-    width: 100%;
+    max-height: 15rem;
 }
 
 .textareaContainer #postPhotoPreview {
@@ -312,8 +312,24 @@ button span {
     margin: 2rem 0;
 }
 
+.postModal_photoLink .postModal_photoLinkBtns {
+    margin: 0 0 1rem 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+}
+
+.postModal_photoLinkBtns .btnContainer .urlBtn {
+    background-color: antiquewhite;
+    padding: 0.2rem 0.5rem;
+}
+
+.urlBtn:not(:last-of-type) {
+    margin: 1rem;
+}
+
 .postModal_photoLink label {
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 500;
 }
 
@@ -330,6 +346,38 @@ button span {
     display: flex;
     flex-direction: column;
     flex: 1;
+}
+
+.postImageContainer {
+    max-width: 30rem;
+    /* set bg color for development */
+    /* background-color: antiquewhite; */
+    margin: 2rem auto 1rem;
+    display: flex;
+}
+
+/* Keep left when screen is bigger than mobile 
+as headings are justified to left side
+*/
+.postImageContainer .postImage {
+    /* width: 100%; */
+    max-height: 12rem;
+}
+
+@media only screen and (max-width: 440px) {
+
+    .postImageContainer {
+        margin: 1rem auto 1rem;
+    }
+
+
+    /* Keep center when screen is too small */
+    .postImageContainer .postImage {
+        width: unset;
+        max-height: 12rem;
+        min-height: 11rem;
+        margin: 0 auto;
+    }
 }
 
 .username,

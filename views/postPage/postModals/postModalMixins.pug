@@ -92,9 +92,18 @@ mixin addImageToPostModal
 
                     //- input#postPhoto(type="file", name="photoFile")
                     form.postModal_photoLink
-                        .form-group
-                            label(for="postPhotoLink") Or enter a link to photo
+                        .form-group 
+                            .postModal_photoLinkBtns
+                                label(for="postPhotoLink") Enter a link to photo
+                                .btnContainer
+                                    span.urlBtn.clear Clear link 
+                                    span.urlBtn.paste Paste link
                             input#postPhotoLink.form-control(type="text" placeholder="Enter file link")
+
+                        .form-group
+                            .postModal_photoLinkBtns
+                                label(for="postPhotoTitle") Optional: Photo title
+                            input#postPhotoTitle.form-control(type="text" placeholder="Title" value="")
       
                     .postImagePreviewContainer
                         img#postPhotoPreview

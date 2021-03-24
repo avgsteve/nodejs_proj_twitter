@@ -42,7 +42,7 @@ export default class PostController {
       this.event_clickLikeButton,
       this.event_clickRetweetButton,
       this.event_previewPhotoInModal,
-      this.event_addPhotoUrlInModalToPost
+      this.event_addPhotoDataFromModalToPost
     ];
   }
 
@@ -118,7 +118,9 @@ export default class PostController {
     $(() => {
       let btn = $('#addPhotoLinkToPostBtn').attr('disabled', true);
       let imgUrlInput = $('input#postPhotoLink');
-      let imageUrl;
+      let imgTitleInput = $('input#postPhotoTitle');
+
+      let imageUrl, imageTitle;
       let imgPreviewContainer = $('#addImageToPostModal .postImagePreviewContainer');
       let imgPreview = $('#addImageToPostModal #postPhotoPreview');
 
@@ -142,18 +144,32 @@ export default class PostController {
   }
 
 
-  event_addPhotoUrlInModalToPost() {
+  event_addPhotoDataFromModalToPost() {
     $(() => {
       let btn = $('#addPhotoLinkToPostBtn');
-      let imageUrl;
+      let imageUrlInModal, imageTitleInModal
       let imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
-      let imgPreview = $('.textareaContainer #postPhotoPreview');
-      let imageUrlInput = $('input.imageUrl');
+      let imgPreviewForNewPost = $('.textareaContainer #postPhotoPreview');
+
+      // hidden input field for new post
+      let imageUrlInputForNewPost = $('input.imageUrl');
+      let imageTitleInputForNewPost = $('input.imageTitle');
 
       btn.on('click', function (e) {
-        imageUrl = $('input#postPhotoLink').val();
-        imgPreview.attr('src', imageUrl).addClass('active');
-        imageUrlInput.val(imageUrl);
+
+        // get url and title from modal
+        imageUrlInModal = $('input#postPhotoLink').val();
+        imageTitleInModal = $('input#postPhotoTitle').val().trim();
+
+        // Show image in new post block
+        imgPreviewForNewPost.addClass('active')
+          .attr('src', imageUrlInModal)
+          .attr('title', imageTitleInModal);
+
+
+        // Write data in the hidden input field for new post
+        imageUrlInputForNewPost.val(imageUrlInModal);
+        imageTitleInputForNewPost.val(imageTitleInModal);
       });
     });
   }
@@ -317,43 +333,47 @@ export default class PostController {
 
       // 1) decide post action depending on which submit button clicked
       let newPostIsReply = buttonClicked.parents("#replyModal").length === 1;
+      let hasImage = $('input.imageUrl').val().trim().length !== 0 ? true : false;
 
       // 2) get content from input (depending on which submit button clicked)
-      let inputField = postModel.locateInputField(newPostIsReply);
+      let postInput = postModel.locateInputField(newPostIsReply);
       let dataOfNewPost = {
-        post_content: inputField.val()
+        post_content: postInput.val(),
+        post_image: hasImage === true ? {
+          url: $('input.imageUrl').val(),
+          title: $('input.imageTitle').val()
+        } : "",
       };
 
-      // 3) Update UI: Show preloader and disable button
-      let originalBtnHtml = postView.updateUiBeforeNewPostIsCreated(buttonClicked);
 
-      // 4) If it is a "REPLY, process dataOfNewPost to be submit as REPLY ":
+      // 3) Update UI: Show preloader and disable button
+      let originalBtnHtml = postView.updateUiForeNewPost(buttonClicked);
+
+      // 4) Add postId to .isReplyToPost property as need to add postId to reply post data
       if (newPostIsReply)
         dataOfNewPost.isReplyToPost =
           postModel.getPostIdFromReplyBtn(buttonClicked);
 
-      // 5) send new post,
+
+      // 5) Get created post for updating UI
       let createdPost = await postModel.createNewPost(dataOfNewPost);
 
-      // 6) Convert returned data to html and output & Update UI again
+      // 6) Updating UI for different result
       if (createdPost !== null) {
 
-        //
         let htmlForNewPost = PostHTMLCreator.convertPostToHtml(createdPost);
         $(".postsContainer").prepend(htmlForNewPost);
 
+        // When replying to a post , need to emit socket event so server can send notice to the creator of the original post
         if (newPostIsReply)
           socket.emitNoticeViaSocketToUser(
             createdPost.isReplyToPost.postedBy._id);
-
-        // Clear Input and restore submit button
-        postView.updateUiAfterNewPostIsCreated(
-          inputField,
-          buttonClicked,
-          originalBtnHtml);
-
-        return;
+        
       }
+
+      // Clear Input and restore submit button
+      postView.updateUiAfterNewPostIsCreated(
+        postInput, buttonClicked, originalBtnHtml);
     });
   };
 

@@ -77,6 +77,7 @@ export default class PostModel {
   }
 
   createNewPost(dataOfNewPost) {
+
     return new Promise((res, rej) => {
 
       $.ajax({

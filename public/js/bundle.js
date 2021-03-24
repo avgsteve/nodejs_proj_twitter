@@ -19124,8 +19124,8 @@ var PostHTMLCreator = /*#__PURE__*/function () {
   }, {
     key: "getPostImage",
     value: function getPostImage(postData) {
-      if (!postData.image) return "";
-      return "\n      <div class=\"postImageContainer\">\n        <img src=".concat(postData.image, " alt=\"img\">\n      </div>\n    ");
+      if (!postData.image || !postData.image.url) return "";
+      return " \n      <div class=\"postImageContainer\">\n        <img class='postImage' src=".concat(postData.image.url, " title=").concat(postData.image.title, " alt=\"img\">\n      </div>\n    ");
     }
   }]);
 
@@ -19165,7 +19165,7 @@ _defineProperty(PostHTMLCreator, "convertPostToHtml", function (postDataToConver
   } // Markup for one single post: 
 
 
-  return "\n          <div\n              class='post ".concat(largeFont ? "largeFont" : "", "' \n              data-id='").concat(postDataToConvert._id, "'>\n\n              <!-- == Tag showing if this post a is RETWEET   == -->\n              <div class='postActionContainer'>\n                  ").concat(PostHTMLCreator.getRetweetText(isA_RetweetPost, userNameOfRetweeter), "\n              </div>\n\n              <!-- == Main content == -->\n              <div class='chatRoomMainContainer'>\n\n                  <!-- ==  User Profile Picture  == -->\n                  <div class='profileImageContainer'>\n                      <img src='").concat(postCreator.profilePic, "'>\n                  </div>\n\n                  <!-- ==  Post container(flex column)  == -->\n                  <div class='postContentContainer'>\n\n                      <!-- ==  Pinned post tag (if it's pinned)  == -->\n                      <div class='pinnedPostText optional-header'>\n                          ").concat(PostHTMLCreator.createPostHeaderButtons(PostHTMLCreator.buttonTypes.pinnedPostTextOnTop, postDataToConvert, userLoggedIn), "\n                      </div>\n\n                      <!-- ==  Metadata of post == -->\n                      <div class='header postHeader'>                        \n                          <a\n                            href='/profile/").concat(postCreator.userName, "'\n                            class='userName' \n                            title='Click to view author page: @").concat(userFullName(postCreator), "' >\n                              ").concat(userFullName(postCreator), "\n                          </a>\n                          <span class='username'>   @").concat(postCreator.userName, "  </span>\n                          <span class='date'>\n                            ").concat(PostHTMLCreator.timestampWithTimeDifference(new Date(), new Date(postDataToConvert.createdAt)), "\n                          </span>\n\n                          <!-- ==  Post Buttons == -->\n                          ").concat(PostHTMLCreator.createPostHeaderButtons(PostHTMLCreator.buttonTypes.postHeaderButtons, postDataToConvert, userLoggedIn), "\n                      </div>\n\n                      ").concat(tag_replyingToPost, "\n\n                      <!-- ==  Post Body == -->\n                      <div class='postBody'>\n                          ").concat(PostHTMLCreator.getPostImage(postDataToConvert), "\n                          <span>").concat(postDataToConvert.content, "</span>\n                      </div>\n\n                      <!-- ==  Post footer for Buttons == -->\n                      <div class='postFooter'>\n\n                          <!-- ==  Reply button (trigger #replyModal in  mixins.pug) == -->\n                          <div class='postButtonContainer'>\n                              <button data-toggle='modal' data-target='#replyModal'>\n                                  <i class='far fa-comment'></i>\n                              </button>\n                          </div>\n\n                          <!-- ==  Content will be shown only when it's a RETWEET == -->\n                          <div class='postButtonContainer green'>\n                              <button class='retweetButton ").concat(postHasBeenRetweeted ? "active" : "", "'>\n                                  <i class='fas fa-retweet'></i>\n                                  <span>").concat(postDataToConvert.retweetUsers.length || "", "</span>\n                              </button>\n                          </div>\n\n                          <!-- ==  Like Button == -->\n                          <div class='postButtonContainer red'>\n\n                              <!-- ==\n                                .likeButton's click event listener is in likeButtonEventListener.js\n                              == -->\n                              <button class='likeButton ").concat(postHasBeenLiked ? "active" : "", "'>\n                                  <i class='far fa-heart'></i>\n                                  <span class='likesCount'>").concat(postDataToConvert.likes.length || "", "</span>\n                              </button>\n                          </div>\n                      </div>\n\n                  </div>\n\n\n              </div>\n\n          </div>\n");
+  return "\n          <div\n              class='post ".concat(largeFont ? "largeFont" : "", "' \n              data-id='").concat(postDataToConvert._id, "'>\n\n              <!-- == Tag showing if this post a is RETWEET   == -->\n              <div class='postActionContainer'>\n                  ").concat(PostHTMLCreator.getRetweetText(isA_RetweetPost, userNameOfRetweeter), "\n              </div>\n\n              <!-- == Main content == -->\n              <div class='chatRoomMainContainer'>\n\n                  <!-- ==  User Profile Picture  == -->\n                  <div class='profileImageContainer'>\n                      <img src='").concat(postCreator.profilePic, "'>\n                  </div>\n\n                  <!-- ==  Post container(flex column)  == -->\n                  <div class='postContentContainer'>\n\n                      <!-- ==  Pinned post tag (if it's pinned)  == -->\n                      <div class='pinnedPostText optional-header'>\n                          ").concat(PostHTMLCreator.createPostHeaderButtons(PostHTMLCreator.buttonTypes.pinnedPostTextOnTop, postDataToConvert, userLoggedIn), "\n                      </div>\n\n                      <!-- ==  Metadata of post == -->\n                      <div class='header postHeader'>                        \n                          <a\n                            href='/profile/").concat(postCreator.userName, "'\n                            class='userName' \n                            title='Click to view author page: @").concat(userFullName(postCreator), "' >\n                              ").concat(userFullName(postCreator), "\n                          </a>\n                          <span class='username'>   @").concat(postCreator.userName, "  </span>\n                          <span class='date'>\n                            ").concat(PostHTMLCreator.timestampWithTimeDifference(new Date(), new Date(postDataToConvert.createdAt)), "\n                          </span>\n\n                          <!-- ==  Post Buttons == -->\n                          ").concat(PostHTMLCreator.createPostHeaderButtons(PostHTMLCreator.buttonTypes.postHeaderButtons, postDataToConvert, userLoggedIn), "\n                      </div>\n\n                      ").concat(tag_replyingToPost, "\n\n                      <!-- ==  Post Body == -->\n                      <div class='postBody'>\n                          <span>").concat(postDataToConvert.content, "</span>\n                          ").concat(PostHTMLCreator.getPostImage(postDataToConvert), "\n                      </div>\n\n                      <!-- ==  Post footer for Buttons == -->\n                      <div class='postFooter'>\n\n                          <!-- ==  Reply button (trigger #replyModal in  mixins.pug) == -->\n                          <div class='postButtonContainer'>\n                              <button data-toggle='modal' data-target='#replyModal'>\n                                  <i class='far fa-comment'></i>\n                              </button>\n                          </div>\n\n                          <!-- ==  Content will be shown only when it's a RETWEET == -->\n                          <div class='postButtonContainer green'>\n                              <button class='retweetButton ").concat(postHasBeenRetweeted ? "active" : "", "'>\n                                  <i class='fas fa-retweet'></i>\n                                  <span>").concat(postDataToConvert.retweetUsers.length || "", "</span>\n                              </button>\n                          </div>\n\n                          <!-- ==  Like Button == -->\n                          <div class='postButtonContainer red'>\n\n                              <!-- ==\n                                .likeButton's click event listener is in likeButtonEventListener.js\n                              == -->\n                              <button class='likeButton ").concat(postHasBeenLiked ? "active" : "", "'>\n                                  <i class='far fa-heart'></i>\n                                  <span class='likesCount'>").concat(postDataToConvert.likes.length || "", "</span>\n                              </button>\n                          </div>\n                      </div>\n\n                  </div>\n\n\n              </div>\n\n          </div>\n");
 });
 
 function variablesFromPostData(postDataToConvert, userLoggedIn) {
@@ -19558,8 +19558,8 @@ var PostView = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "updateUiBeforeNewPostIsCreated",
-    value: function updateUiBeforeNewPostIsCreated(buttonClicked) {
+    key: "updateUiForeNewPost",
+    value: function updateUiForeNewPost(buttonClicked) {
       var originalBtnHtml = _GlobalView.default.showPreloadInButton(buttonClicked);
 
       buttonClicked.prop("disabled", true);
@@ -19734,44 +19734,47 @@ var PostController = /*#__PURE__*/function () {
     _defineProperty(this, "event_submitPost", function () {
       $("#submitPostButton, #submitReplyButton").on('click', /*#__PURE__*/function () {
         var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(event) {
-          var buttonClicked, newPostIsReply, inputField, dataOfNewPost, originalBtnHtml, createdPost, htmlForNewPost;
+          var buttonClicked, newPostIsReply, hasImage, postInput, dataOfNewPost, originalBtnHtml, createdPost, htmlForNewPost;
           return regeneratorRuntime.wrap(function _callee2$(_context2) {
             while (1) {
               switch (_context2.prev = _context2.next) {
                 case 0:
                   buttonClicked = $(event.target); // 1) decide post action depending on which submit button clicked
 
-                  newPostIsReply = buttonClicked.parents("#replyModal").length === 1; // 2) get content from input (depending on which submit button clicked)
+                  newPostIsReply = buttonClicked.parents("#replyModal").length === 1;
+                  hasImage = $('input.imageUrl').val().trim().length !== 0 ? true : false; // 2) get content from input (depending on which submit button clicked)
 
-                  inputField = postModel.locateInputField(newPostIsReply);
+                  postInput = postModel.locateInputField(newPostIsReply);
                   dataOfNewPost = {
-                    post_content: inputField.val()
+                    post_content: postInput.val(),
+                    post_image: hasImage === true ? {
+                      url: $('input.imageUrl').val(),
+                      title: $('input.imageTitle').val()
+                    } : ""
                   }; // 3) Update UI: Show preloader and disable button
 
-                  originalBtnHtml = postView.updateUiBeforeNewPostIsCreated(buttonClicked); // 4) If it is a "REPLY, process dataOfNewPost to be submit as REPLY ":
+                  originalBtnHtml = postView.updateUiForeNewPost(buttonClicked); // 4) Add postId to .isReplyToPost property as need to add postId to reply post data
 
-                  if (newPostIsReply) dataOfNewPost.isReplyToPost = postModel.getPostIdFromReplyBtn(buttonClicked); // 5) send new post,
+                  if (newPostIsReply) dataOfNewPost.isReplyToPost = postModel.getPostIdFromReplyBtn(buttonClicked); // 5) Get created post for updating UI
 
-                  _context2.next = 8;
+                  _context2.next = 9;
                   return postModel.createNewPost(dataOfNewPost);
 
-                case 8:
+                case 9:
                   createdPost = _context2.sent;
 
-                  if (!(createdPost !== null)) {
-                    _context2.next = 15;
-                    break;
-                  }
+                  // 6) Updating UI for different result
+                  if (createdPost !== null) {
+                    htmlForNewPost = _PostHTMLCreator.default.convertPostToHtml(createdPost);
+                    $(".postsContainer").prepend(htmlForNewPost); // When replying to a post , need to emit socket event so server can send notice to the creator of the original post
 
-                  //
-                  htmlForNewPost = _PostHTMLCreator.default.convertPostToHtml(createdPost);
-                  $(".postsContainer").prepend(htmlForNewPost);
-                  if (newPostIsReply) socket.emitNoticeViaSocketToUser(createdPost.isReplyToPost.postedBy._id); // Clear Input and restore submit button
+                    if (newPostIsReply) socket.emitNoticeViaSocketToUser(createdPost.isReplyToPost.postedBy._id);
+                  } // Clear Input and restore submit button
 
-                  postView.updateUiAfterNewPostIsCreated(inputField, buttonClicked, originalBtnHtml);
-                  return _context2.abrupt("return");
 
-                case 15:
+                  postView.updateUiAfterNewPostIsCreated(postInput, buttonClicked, originalBtnHtml);
+
+                case 12:
                 case "end":
                   return _context2.stop();
               }
@@ -19808,7 +19811,7 @@ var PostController = /*#__PURE__*/function () {
   }, {
     key: "getEventListeners",
     value: function getEventListeners() {
-      return [this.event_clickOnPost, this.event_deletePost, this.event_pinPostEvent, this.event_unpinPost, this.event_disableSubmitBtnInTextArea, this.event_openReplyPostModal, this.event_submitPost, this.event_clickLikeButton, this.event_clickRetweetButton, this.event_previewPhotoInModal, this.event_addPhotoUrlInModalToPost];
+      return [this.event_clickOnPost, this.event_deletePost, this.event_pinPostEvent, this.event_unpinPost, this.event_disableSubmitBtnInTextArea, this.event_openReplyPostModal, this.event_submitPost, this.event_clickLikeButton, this.event_clickRetweetButton, this.event_previewPhotoInModal, this.event_addPhotoDataFromModalToPost];
     }
   }, {
     key: "renderAllPostInPage",
@@ -19917,7 +19920,8 @@ var PostController = /*#__PURE__*/function () {
       $(function () {
         var btn = $('#addPhotoLinkToPostBtn').attr('disabled', true);
         var imgUrlInput = $('input#postPhotoLink');
-        var imageUrl;
+        var imgTitleInput = $('input#postPhotoTitle');
+        var imageUrl, imageTitle;
         var imgPreviewContainer = $('#addImageToPostModal .postImagePreviewContainer');
         var imgPreview = $('#addImageToPostModal #postPhotoPreview');
         imgUrlInput.on('change keyup keydown', function (e) {
@@ -19934,18 +19938,25 @@ var PostController = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "event_addPhotoUrlInModalToPost",
-    value: function event_addPhotoUrlInModalToPost() {
+    key: "event_addPhotoDataFromModalToPost",
+    value: function event_addPhotoDataFromModalToPost() {
       $(function () {
         var btn = $('#addPhotoLinkToPostBtn');
-        var imageUrl;
+        var imageUrlInModal, imageTitleInModal;
         var imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
-        var imgPreview = $('.textareaContainer #postPhotoPreview');
-        var imageUrlInput = $('input.imageUrl');
+        var imgPreviewForNewPost = $('.textareaContainer #postPhotoPreview'); // hidden input field for new post
+
+        var imageUrlInputForNewPost = $('input.imageUrl');
+        var imageTitleInputForNewPost = $('input.imageTitle');
         btn.on('click', function (e) {
-          imageUrl = $('input#postPhotoLink').val();
-          imgPreview.attr('src', imageUrl).addClass('active');
-          imageUrlInput.val(imageUrl);
+          // get url and title from modal
+          imageUrlInModal = $('input#postPhotoLink').val();
+          imageTitleInModal = $('input#postPhotoTitle').val().trim(); // Show image in new post block
+
+          imgPreviewForNewPost.addClass('active').attr('src', imageUrlInModal).attr('title', imageTitleInModal); // Write data in the hidden input field for new post
+
+          imageUrlInputForNewPost.val(imageUrlInModal);
+          imageTitleInputForNewPost.val(imageTitleInModal);
         });
       });
     }

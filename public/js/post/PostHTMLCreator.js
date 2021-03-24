@@ -91,8 +91,8 @@ export default class PostHTMLCreator {
 
                       <!-- ==  Post Body == -->
                       <div class='postBody'>
-                          ${this.getPostImage(postDataToConvert)}
                           <span>${postDataToConvert.content}</span>
+                          ${this.getPostImage(postDataToConvert)}
                       </div>
 
                       <!-- ==  Post footer for Buttons == -->
@@ -249,10 +249,10 @@ export default class PostHTMLCreator {
   }
 
   static getPostImage(postData) {
-    if (!postData.image) return "";
-    return `
+    if (!postData.image || !postData.image.url) return "";
+    return ` 
       <div class="postImageContainer">
-        <img src=${postData.image} alt="img">
+        <img class='postImage' src=${postData.image.url} title=${postData.image.title} alt="img">
       </div>
     `;
   }

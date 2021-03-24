@@ -293,21 +293,44 @@ button span {
     display: flex;
     justify-content: center;
     justify-items: center;
+    /* To offset the line-height from body. Otherwise will be blank space with 1.5rem height in page*/
+    line-height: 0;
 }
 
 .postImagePreviewContainer .postPhotoPreview {
     max-height: 15rem;
 }
 
+/* For new post in home page */
+.postImagePreviewContainer .imageWrapperForNewPost {
+    position: relative;
+    max-height: fit-content;
+}
+
+span.closePreviewImageBtn {
+    display: none;
+}
+
+span.closePreviewImageBtn {
+    position: absolute;
+    right: -0.6rem;
+    top: -0.5rem;
+    color: #7fc0d169;
+    font-size: 1.7rem;
+    transition: all 0.3s;
+    cursor: pointer;
+}
+
+span.closePreviewImageBtn:hover {
+    color: #18434ecc;
+    font-size: 2.1rem;
+}
+
 .textareaContainer .postPhotoPreview {
-    width: 50%;
-}
-
-.textareaContainer .postPhotoPreview.active {
+    display: none;
     margin: 0rem auto 1.5rem;
+    max-height: 10rem;
 }
-
-
 .postModal_photoLink {
     margin: 2rem 0;
 }

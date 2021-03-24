@@ -19811,7 +19811,7 @@ var PostController = /*#__PURE__*/function () {
   }, {
     key: "getEventListeners",
     value: function getEventListeners() {
-      return [this.event_clickOnPost, this.event_deletePost, this.event_pinPostEvent, this.event_unpinPost, this.event_disableSubmitBtnInTextArea, this.event_openReplyPostModal, this.event_submitPost, this.event_clickLikeButton, this.event_clickRetweetButton, this.event_previewPhotoInModal, this.event_addPhotoDataToPostInputField, this.event_clearOrPasteUrlInPhotoModal];
+      return [this.event_clickOnPost, this.event_deletePost, this.event_pinPostEvent, this.event_unpinPost, this.event_disableSubmitBtnInTextArea, this.event_openReplyPostModal, this.event_submitPost, this.event_clickLikeButton, this.event_clickRetweetButton, this.event_previewPhotoInModal, this.event_addPhotoDataToPostInputField, this.event_clearOrPasteUrlInPhotoModal, this.event_clearPhotoPreviewInNewPost];
     }
   }, {
     key: "renderAllPostInPage",
@@ -19941,38 +19941,49 @@ var PostController = /*#__PURE__*/function () {
     key: "event_addPhotoDataToPostInputField",
     value: function event_addPhotoDataToPostInputField() {
       $(function () {
-        var btn = $('#addPhotoLinkToPostBtn');
+        var addPhotoBtn = $('#addPhotoLinkToPostBtn');
         var imageUrlInModal, imageTitleInModal;
         var imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
-        var imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview'); // hidden input field for new post
+        var imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview');
+        var previewCloseBtn = $('.closePreviewImageBtn'); // hidden input field for new post
 
         var imageUrlInputForNewPost = $('input.imageUrl');
         var imageTitleInputForNewPost = $('input.imageTitle'); // Let modal closes and show image as preview in input field
 
-        btn.on('click', function (e) {
+        addPhotoBtn.on('click', function (e) {
           // get url and title from modal
           imageUrlInModal = $('input#postPhotoLink').val();
           imageTitleInModal = $('input#postPhotoTitle').val().trim(); // Show image in new post block
 
-          imgPreviewForNewPost.addClass('active').attr('src', imageUrlInModal).attr('title', imageTitleInModal); // Write data in the hidden input field for new post
+          imgPreviewForNewPost.attr('src', imageUrlInModal).attr('title', imageTitleInModal).show(); // Write data in the hidden input field for new post
 
           imageUrlInputForNewPost.val(imageUrlInModal);
-          imageTitleInputForNewPost.val(imageTitleInModal);
-          $('#addImageToPostModal').modal('hide');
+          imageTitleInputForNewPost.val(imageTitleInModal); // Show 'close preview button' as it's hidden when no image in post field
+
+          previewCloseBtn.show();
+          $('#addImageToPostModal').modal('hide'); // If url is empty, image will be blank so need to hide the previewCloseBtn, too.
+
+          if (!imageUrlInModal) {
+            previewCloseBtn.hide();
+            imgPreviewForNewPost.hide();
+          }
         });
       });
     }
   }, {
     key: "event_clearOrPasteUrlInPhotoModal",
     value: function event_clearOrPasteUrlInPhotoModal() {
-      var previewContainerInModal = $('#addImageToPostModal .postImagePreviewContainer');
-      $('.urlBtn.clear').on('click', function (e) {
-        e.preventDefault();
+      var previewContainerInModal = $('#addImageToPostModal .postImagePreviewContainer'); // Clear current image tag inside .postImagePreviewContainer
+
+      $('.urlBtn.clearLink').on('click', function (e) {
+        e.preventDefault(); // Need to remove img tag as the 'src' attr can't be reset
+
         previewContainerInModal.html('');
-        $('#postPhotoLink').val('');
-        previewContainerInModal.html("\n      <img class='postPhotoPreview'>\n      ");
+        $('input#postPhotoLink').val(''); // Then add a new img tag
+
+        previewContainerInModal.html("\n        <img class='postPhotoPreview'>\n      ");
       });
-      $('.urlBtn.paste').on('click', /*#__PURE__*/function () {
+      $('.urlBtn.pasteLink').on('click', /*#__PURE__*/function () {
         var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
           var copiedData;
           return regeneratorRuntime.wrap(function _callee5$(_context5) {
@@ -20003,6 +20014,19 @@ var PostController = /*#__PURE__*/function () {
           return _ref5.apply(this, arguments);
         };
       }());
+    }
+  }, {
+    key: "event_clearPhotoPreviewInNewPost",
+    value: function event_clearPhotoPreviewInNewPost() {
+      var closeIcon = $('.closePreviewImageBtn');
+      var imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview');
+      var imgField = $('input.newPostImgData'); // Clear current image tag inside .postImagePreviewContainer
+
+      closeIcon.on('click', function () {
+        closeIcon.hide();
+        imgPreviewForNewPost.hide();
+        imgField.val('');
+      });
     }
   }, {
     key: "event_deletePost",

@@ -5,9 +5,13 @@ mixin createPostForm(userLoggedIn)
         .textareaContainer
             textarea#postTextarea(placeholder="What's happening?")
             .postImagePreviewContainer
-                img.postPhotoPreview
-                input.imageUrl(type='hidden' value='')
-                input.imageTitle(type='hidden' value='')
+                .imageWrapperForNewPost
+                    span.closePreviewImageBtn(title='click to remove image')
+                        i.far.fa-times-circle
+                    a(href="#" data-toggle="modal" data-target="#addImageToPostModal")
+                        img.postPhotoPreview
+                input.newPostImgData.imageUrl(type='hidden' value='')
+                input.newPostImgData.imageTitle(type='hidden' value='')
             .buttonsContainer
                 button#submitPostButton(disabled="") Post
                 button#addPhotoToPostButton(title="Click to add photo" data-toggle="modal" data-target="#addImageToPostModal")

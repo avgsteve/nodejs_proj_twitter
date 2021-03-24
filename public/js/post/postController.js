@@ -43,7 +43,8 @@ export default class PostController {
       this.event_clickRetweetButton,
       this.event_previewPhotoInModal,
       this.event_addPhotoDataToPostInputField,
-      this.event_clearOrPasteUrlInPhotoModal
+      this.event_clearOrPasteUrlInPhotoModal,
+      this.event_clearPhotoPreviewInNewPost
     ];
   }
 
@@ -147,32 +148,41 @@ export default class PostController {
 
   event_addPhotoDataToPostInputField() {
     $(() => {
-      let btn = $('#addPhotoLinkToPostBtn');
+      let addPhotoBtn = $('#addPhotoLinkToPostBtn');
       let imageUrlInModal, imageTitleInModal
       let imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
       let imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview');
-
+      let previewCloseBtn = $('.closePreviewImageBtn');
       // hidden input field for new post
       let imageUrlInputForNewPost = $('input.imageUrl');
       let imageTitleInputForNewPost = $('input.imageTitle');
 
       // Let modal closes and show image as preview in input field
-      btn.on('click', function (e) {
+      addPhotoBtn.on('click', function (e) {
 
         // get url and title from modal
         imageUrlInModal = $('input#postPhotoLink').val();
         imageTitleInModal = $('input#postPhotoTitle').val().trim();
 
         // Show image in new post block
-        imgPreviewForNewPost.addClass('active')
+        imgPreviewForNewPost
           .attr('src', imageUrlInModal)
-          .attr('title', imageTitleInModal);
+          .attr('title', imageTitleInModal)
+          .show();
 
         // Write data in the hidden input field for new post
         imageUrlInputForNewPost.val(imageUrlInModal);
         imageTitleInputForNewPost.val(imageTitleInModal);
 
+        // Show 'close preview button' as it's hidden when no image in post field
+        previewCloseBtn.show();
         $('#addImageToPostModal').modal('hide');
+
+        // If url is empty, image will be blank so need to hide the previewCloseBtn, too.
+        if (!imageUrlInModal) {
+          previewCloseBtn.hide();
+          imgPreviewForNewPost.hide();
+        }
       });
     });
   }
@@ -181,19 +191,22 @@ export default class PostController {
 
     let previewContainerInModal = $('#addImageToPostModal .postImagePreviewContainer');
 
-
-    $('.urlBtn.clear').on('click', (e) => {
+    // Clear current image tag inside .postImagePreviewContainer
+    $('.urlBtn.clearLink').on('click', (e) => {
       e.preventDefault();
-      previewContainerInModal.html('');
 
-      $('#postPhotoLink').val('');
+      // Need to remove img tag as the 'src' attr can't be reset
+      previewContainerInModal.html('');
+      $('input#postPhotoLink').val('');
+      
+      // Then add a new img tag
       previewContainerInModal.html(`
-      <img class='postPhotoPreview'>
+        <img class='postPhotoPreview'>
       `);
     });
 
 
-    $('.urlBtn.paste').on('click', async (e) => {
+    $('.urlBtn.pasteLink').on('click', async (e) => {
       e.preventDefault();
       previewContainerInModal.html('');
 
@@ -205,6 +218,22 @@ export default class PostController {
       let copiedData = await getClipboardContents();
       $('#postPhotoLink').val(copiedData);
       $('#addImageToPostModal .postPhotoPreview').attr('src', copiedData);
+    });
+
+  }
+
+  event_clearPhotoPreviewInNewPost() {
+
+    let closeIcon = $('.closePreviewImageBtn');
+    let imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview');
+    let imgField = $('input.newPostImgData');
+
+    // Clear current image tag inside .postImagePreviewContainer
+    closeIcon.on('click', () => {
+      closeIcon.hide();
+      imgPreviewForNewPost.hide();
+      imgField.val('');
+
     });
 
   }

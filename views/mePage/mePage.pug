@@ -1,20 +1,14 @@
 extends ./../layouts/main-layout.pug
 
 block content
+
     .functionTabsContainer
-      .btn-group(role="group" aria-label="Basic example")
+      .btn-group(role="group" aria-label="account_page_tab_buttons")
         button.active.btn(type="button" data-target='detail') Detail
         button.btn(type="button" data-target='password') Password
         button.btn(type="button" data-target='theme') Theme
+        button.btn(type="button" data-target='Control') Account
 
-        <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" class="btn dropdown-toggle" type="button"  data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-target='accountSetting'> Account            
-          </button>
-          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            //- <a class="dropdown-item" href="#">Dropdown link</a>
-            <button class="dropdown-item" href="#" data-target='deleteMyAccount'>Delete Account</button>
-          </div>
-        </div>
 
     if userLoggedIn.toBeDeleted === true
       <!-- Rendered by mePage.pug -->
@@ -24,6 +18,7 @@ block content
 
     .functionsContainer
 
+        //- User Detail
         .function_item.functionsItem_detail.row.active
 
             .userImageContainer
@@ -88,7 +83,7 @@ block content
                   .col-sm-10
                     button.btn.btn-primary.submitUpdatedMeInfo(type='submit') Update
 
-
+        //- User Password
         .function_item.functionsItem_password.col.col-12
             form.updatePasswordForm
                 .form-group.row.col.col-12
@@ -109,31 +104,30 @@ block content
 
                 button.btn.btn-primary#updatePwdBtn Update My Password
 
-
+        //- User Theme
         .function_item.functionsItem_theme.col.col-12
             form
                 button.btn.btn-secondary(disabled) Under development
 
-
+        //- User Account Setting
         .function_item.functionsItem_accountSetting.col.col-12
             h4 Account setting
 
+        //- Delete Account Button
         <!-- Rendered by mePage.pug -->
-
         if userLoggedIn.role === 'user' && userLoggedIn.toBeDeleted === true
-            .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
+            .function_item.functionsItem_Control.col-lg-8.col-md-10.col
                 button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#cancelDeleteModal") Cancel Delete 
 
         else if userLoggedIn.role === 'user'
-            .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
+            .function_item.functionsItem_Control.col-lg-8.col-md-10.col
                 button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="#deleteAccConfirmModal") Delete My Account 
 
         else
-            .function_item.functionsItem_deleteMyAccount.col-lg-8.col-md-10.col
+            .function_item.functionsItem_Control.col-lg-8.col-md-10.col
                 button.btn.btn-primary.deleteMyAccountBtn(type='button' data-toggle="modal" data-target="" title="only normal user can delete his/her" disabled) Delete Account
 
-
-
+        //- Modal for confirming delete Action
         .modal#deleteAccConfirmModal.fade.deleteAccount(tabindex='-1' role='dialog' aria-labelledby="deleteAccModeLabel" aria-hidden="true")
           .modal-dialog
             .modal-content

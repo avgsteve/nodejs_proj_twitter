@@ -42,7 +42,8 @@ export default class PostController {
       this.event_clickLikeButton,
       this.event_clickRetweetButton,
       this.event_previewPhotoInModal,
-      this.event_addPhotoDataFromModalToPost
+      this.event_addPhotoDataToPostInputField,
+      this.event_clearOrPasteUrlInPhotoModal
     ];
   }
 
@@ -122,10 +123,10 @@ export default class PostController {
 
       let imageUrl, imageTitle;
       let imgPreviewContainer = $('#addImageToPostModal .postImagePreviewContainer');
-      let imgPreview = $('#addImageToPostModal #postPhotoPreview');
 
-      imgUrlInput.on('change keyup keydown', function (e) {
-        console.log('change preview image url');
+      $(document).on('change keyup keydown', imgUrlInput, function (e) {
+        // Get .postPhotoPreview element every time after event is triggered because other function could remove this element and creat again. Ref: event_clearOrPasteUrlInPhotoModal
+        let imgPreview = $('#addImageToPostModal .postPhotoPreview');
 
         imageUrl = imgUrlInput.val().trim();
         imgPreview.attr('src', imageUrl);
@@ -144,17 +145,18 @@ export default class PostController {
   }
 
 
-  event_addPhotoDataFromModalToPost() {
+  event_addPhotoDataToPostInputField() {
     $(() => {
       let btn = $('#addPhotoLinkToPostBtn');
       let imageUrlInModal, imageTitleInModal
       let imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
-      let imgPreviewForNewPost = $('.textareaContainer #postPhotoPreview');
+      let imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview');
 
       // hidden input field for new post
       let imageUrlInputForNewPost = $('input.imageUrl');
       let imageTitleInputForNewPost = $('input.imageTitle');
 
+      // Let modal closes and show image as preview in input field
       btn.on('click', function (e) {
 
         // get url and title from modal
@@ -166,12 +168,45 @@ export default class PostController {
           .attr('src', imageUrlInModal)
           .attr('title', imageTitleInModal);
 
-
         // Write data in the hidden input field for new post
         imageUrlInputForNewPost.val(imageUrlInModal);
         imageTitleInputForNewPost.val(imageTitleInModal);
+
+        $('#addImageToPostModal').modal('hide');
       });
     });
+  }
+
+  event_clearOrPasteUrlInPhotoModal() {
+
+    let previewContainerInModal = $('#addImageToPostModal .postImagePreviewContainer');
+
+
+    $('.urlBtn.clear').on('click', (e) => {
+      e.preventDefault();
+      previewContainerInModal.html('');
+
+      $('#postPhotoLink').val('');
+      previewContainerInModal.html(`
+      <img class='postPhotoPreview'>
+      `);
+    });
+
+
+    $('.urlBtn.paste').on('click', async (e) => {
+      e.preventDefault();
+      previewContainerInModal.html('');
+
+      $('#postPhotoLink').val('');
+      previewContainerInModal.html(`
+      <img class='postPhotoPreview'>
+      `);
+
+      let copiedData = await getClipboardContents();
+      $('#postPhotoLink').val(copiedData);
+      $('#addImageToPostModal .postPhotoPreview').attr('src', copiedData);
+    });
+
   }
 
 
@@ -477,4 +512,33 @@ function ifIsReplyPost(postData) {
   if (postData.isReplyToPost !== undefined && postData.isReplyToPost._id !== undefined
   ) return true;
   return false;
+}
+
+function getClipboardContents() {
+  return new Promise(async (res, rej) => {
+    try {
+      // const clipboardItems = await navigator.clipboard.read();
+
+      // for (const clipboardItem of clipboardItems) {
+      //   for (const type of clipboardItem.types) {
+      //     const blob = await clipboardItem.getType(type);
+      //   }
+      // }
+
+      let data;
+
+      navigator.clipboard.readText().then(
+        clipText => {
+          data = clipText;
+          res(data);
+        });
+
+    } catch (err) {
+      rej(null);
+      console.error(err.name, err.message);
+    }
+
+  }
+  );
+
 }

@@ -19811,7 +19811,7 @@ var PostController = /*#__PURE__*/function () {
   }, {
     key: "getEventListeners",
     value: function getEventListeners() {
-      return [this.event_clickOnPost, this.event_deletePost, this.event_pinPostEvent, this.event_unpinPost, this.event_disableSubmitBtnInTextArea, this.event_openReplyPostModal, this.event_submitPost, this.event_clickLikeButton, this.event_clickRetweetButton, this.event_previewPhotoInModal, this.event_addPhotoDataFromModalToPost];
+      return [this.event_clickOnPost, this.event_deletePost, this.event_pinPostEvent, this.event_unpinPost, this.event_disableSubmitBtnInTextArea, this.event_openReplyPostModal, this.event_submitPost, this.event_clickLikeButton, this.event_clickRetweetButton, this.event_previewPhotoInModal, this.event_addPhotoDataToPostInputField, this.event_clearOrPasteUrlInPhotoModal];
     }
   }, {
     key: "renderAllPostInPage",
@@ -19923,9 +19923,9 @@ var PostController = /*#__PURE__*/function () {
         var imgTitleInput = $('input#postPhotoTitle');
         var imageUrl, imageTitle;
         var imgPreviewContainer = $('#addImageToPostModal .postImagePreviewContainer');
-        var imgPreview = $('#addImageToPostModal #postPhotoPreview');
-        imgUrlInput.on('change keyup keydown', function (e) {
-          console.log('change preview image url');
+        $(document).on('change keyup keydown', imgUrlInput, function (e) {
+          // Get .postPhotoPreview element every time after event is triggered because other function could remove this element and creat again. Ref: event_clearOrPasteUrlInPhotoModal
+          var imgPreview = $('#addImageToPostModal .postPhotoPreview');
           imageUrl = imgUrlInput.val().trim();
           imgPreview.attr('src', imageUrl); // disable btn when input is empty (or invalid. TODO: will consider this later)
 
@@ -19938,16 +19938,17 @@ var PostController = /*#__PURE__*/function () {
       });
     }
   }, {
-    key: "event_addPhotoDataFromModalToPost",
-    value: function event_addPhotoDataFromModalToPost() {
+    key: "event_addPhotoDataToPostInputField",
+    value: function event_addPhotoDataToPostInputField() {
       $(function () {
         var btn = $('#addPhotoLinkToPostBtn');
         var imageUrlInModal, imageTitleInModal;
         var imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
-        var imgPreviewForNewPost = $('.textareaContainer #postPhotoPreview'); // hidden input field for new post
+        var imgPreviewForNewPost = $('.textareaContainer .postPhotoPreview'); // hidden input field for new post
 
         var imageUrlInputForNewPost = $('input.imageUrl');
-        var imageTitleInputForNewPost = $('input.imageTitle');
+        var imageTitleInputForNewPost = $('input.imageTitle'); // Let modal closes and show image as preview in input field
+
         btn.on('click', function (e) {
           // get url and title from modal
           imageUrlInModal = $('input#postPhotoLink').val();
@@ -19957,8 +19958,51 @@ var PostController = /*#__PURE__*/function () {
 
           imageUrlInputForNewPost.val(imageUrlInModal);
           imageTitleInputForNewPost.val(imageTitleInModal);
+          $('#addImageToPostModal').modal('hide');
         });
       });
+    }
+  }, {
+    key: "event_clearOrPasteUrlInPhotoModal",
+    value: function event_clearOrPasteUrlInPhotoModal() {
+      var previewContainerInModal = $('#addImageToPostModal .postImagePreviewContainer');
+      $('.urlBtn.clear').on('click', function (e) {
+        e.preventDefault();
+        previewContainerInModal.html('');
+        $('#postPhotoLink').val('');
+        previewContainerInModal.html("\n      <img class='postPhotoPreview'>\n      ");
+      });
+      $('.urlBtn.paste').on('click', /*#__PURE__*/function () {
+        var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(e) {
+          var copiedData;
+          return regeneratorRuntime.wrap(function _callee5$(_context5) {
+            while (1) {
+              switch (_context5.prev = _context5.next) {
+                case 0:
+                  e.preventDefault();
+                  previewContainerInModal.html('');
+                  $('#postPhotoLink').val('');
+                  previewContainerInModal.html("\n      <img class='postPhotoPreview'>\n      ");
+                  _context5.next = 6;
+                  return getClipboardContents();
+
+                case 6:
+                  copiedData = _context5.sent;
+                  $('#postPhotoLink').val(copiedData);
+                  $('#addImageToPostModal .postPhotoPreview').attr('src', copiedData);
+
+                case 9:
+                case "end":
+                  return _context5.stop();
+              }
+            }
+          }, _callee5);
+        }));
+
+        return function (_x3) {
+          return _ref5.apply(this, arguments);
+        };
+      }());
     }
   }, {
     key: "event_deletePost",
@@ -19972,29 +20016,29 @@ var PostController = /*#__PURE__*/function () {
         $("#confirmDeleteInPostModal").data("id", postId);
       });
       $("#confirmDeleteInPostModal").on('click', /*#__PURE__*/function () {
-        var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee5(event) {
+        var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(event) {
           var postId, modalBody, isSuccessful;
-          return regeneratorRuntime.wrap(function _callee5$(_context5) {
+          return regeneratorRuntime.wrap(function _callee6$(_context6) {
             while (1) {
-              switch (_context5.prev = _context5.next) {
+              switch (_context6.prev = _context6.next) {
                 case 0:
                   postId = $(event.target).data("id");
                   console.log('post id to delete:', postId);
                   modalBody = $('#deletePostModal .modal-body');
                   postView.showPreloaderInElement(modalBody);
-                  _context5.next = 6;
+                  _context6.next = 6;
                   return postModel.sendDeletePostRequest(postId);
 
                 case 6:
-                  isSuccessful = _context5.sent;
+                  isSuccessful = _context6.sent;
 
                   if (!isSuccessful) {
-                    _context5.next = 10;
+                    _context6.next = 10;
                     break;
                   }
 
                   postView.showFinishMessage(modalBody, 'Success! Reloading page now...');
-                  return _context5.abrupt("return", setTimeout(function () {
+                  return _context6.abrupt("return", setTimeout(function () {
                     return location.reload();
                   }, 500));
 
@@ -20003,14 +20047,14 @@ var PostController = /*#__PURE__*/function () {
 
                 case 11:
                 case "end":
-                  return _context5.stop();
+                  return _context6.stop();
               }
             }
-          }, _callee5);
+          }, _callee6);
         }));
 
-        return function (_x3) {
-          return _ref5.apply(this, arguments);
+        return function (_x4) {
+          return _ref6.apply(this, arguments);
         };
       }());
     }
@@ -20026,78 +20070,13 @@ var PostController = /*#__PURE__*/function () {
       }); // 2) 透過確認文章置頂的 modal -> 送出置頂 request
 
       $("#pinPostButton").on('click', /*#__PURE__*/function () {
-        var _ref6 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee6(event) {
-          var postId, modalBody, originalBtnHtml, isSuccessful;
-          return regeneratorRuntime.wrap(function _callee6$(_context6) {
-            while (1) {
-              switch (_context6.prev = _context6.next) {
-                case 0:
-                  // 1) Get data
-                  postId = $(event.target).data("id");
-
-                  if (!(postId === undefined)) {
-                    _context6.next = 3;
-                    break;
-                  }
-
-                  return _context6.abrupt("return", console.warn('no post id found in'));
-
-                case 3:
-                  modalBody = $('#confirmPinModal .modal-body'); // 2) Update UI
-
-                  originalBtnHtml = _GlobalView.default.showPreloadInButton($("#pinPostButton")); // 3) Send data
-
-                  _context6.next = 7;
-                  return postModel.sendPinPostRequest(postId);
-
-                case 7:
-                  isSuccessful = _context6.sent;
-
-                  if (!isSuccessful) {
-                    _context6.next = 11;
-                    break;
-                  }
-
-                  postView.showFinishMessage(modalBody, 'Success! Reloading page now...');
-                  return _context6.abrupt("return", setTimeout(function () {
-                    return location.reload();
-                  }, 500));
-
-                case 11:
-                  // 5) Update UI if any error occurred
-                  postView.showFinishMessage(modalBody, 'Fail to pin post. Please try again');
-                  $("#pinPostButton").html(originalBtnHtml);
-
-                case 13:
-                case "end":
-                  return _context6.stop();
-              }
-            }
-          }, _callee6);
-        }));
-
-        return function (_x4) {
-          return _ref6.apply(this, arguments);
-        };
-      }());
-    }
-  }, {
-    key: "event_unpinPost",
-    value: function event_unpinPost() {
-      $("#confirmUnpinModal").on("show.bs.modal", function (event) {
-        var button = $(event.relatedTarget);
-        var postId = postModel.getPostIdFromElement(button); // 1-2) 將文章 id 寫入 pinPostButton 的 data attribute
-
-        $("#unpinPostButton").data("id", postId);
-      });
-      $("#unpinPostButton").on('click', /*#__PURE__*/function () {
         var _ref7 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee7(event) {
-          var postId, originalBtnHtml, modalBody, isSuccessful;
+          var postId, modalBody, originalBtnHtml, isSuccessful;
           return regeneratorRuntime.wrap(function _callee7$(_context7) {
             while (1) {
               switch (_context7.prev = _context7.next) {
                 case 0:
-                  // 1) Get post id from button
+                  // 1) Get data
                   postId = $(event.target).data("id");
 
                   if (!(postId === undefined)) {
@@ -20108,18 +20087,18 @@ var PostController = /*#__PURE__*/function () {
                   return _context7.abrupt("return", console.warn('no post id found in'));
 
                 case 3:
-                  // 2) Update UI
-                  originalBtnHtml = _GlobalView.default.showPreloadInButton($("#unpinPostButton"));
-                  modalBody = $('#confirmUnpinModal .modal-body');
-                  postView.showPreloaderInElement(modalBody);
-                  _context7.next = 8;
-                  return postModel.sendUnpinPostRequest(postId);
+                  modalBody = $('#confirmPinModal .modal-body'); // 2) Update UI
 
-                case 8:
+                  originalBtnHtml = _GlobalView.default.showPreloadInButton($("#pinPostButton")); // 3) Send data
+
+                  _context7.next = 7;
+                  return postModel.sendPinPostRequest(postId);
+
+                case 7:
                   isSuccessful = _context7.sent;
 
                   if (!isSuccessful) {
-                    _context7.next = 12;
+                    _context7.next = 11;
                     break;
                   }
 
@@ -20128,11 +20107,12 @@ var PostController = /*#__PURE__*/function () {
                     return location.reload();
                   }, 500));
 
-                case 12:
-                  postView.showFinishMessage(modalBody, 'Fail to unpin post. Please try again');
-                  $("#unpinPostButton").html(originalBtnHtml);
+                case 11:
+                  // 5) Update UI if any error occurred
+                  postView.showFinishMessage(modalBody, 'Fail to pin post. Please try again');
+                  $("#pinPostButton").html(originalBtnHtml);
 
-                case 14:
+                case 13:
                 case "end":
                   return _context7.stop();
               }
@@ -20146,34 +20126,98 @@ var PostController = /*#__PURE__*/function () {
       }());
     }
   }, {
-    key: "event_clickLikeButton",
-    value: function event_clickLikeButton() {
-      $(document).on("click", ".likeButton ", /*#__PURE__*/function () {
+    key: "event_unpinPost",
+    value: function event_unpinPost() {
+      $("#confirmUnpinModal").on("show.bs.modal", function (event) {
+        var button = $(event.relatedTarget);
+        var postId = postModel.getPostIdFromElement(button); // 1-2) 將文章 id 寫入 pinPostButton 的 data attribute
+
+        $("#unpinPostButton").data("id", postId);
+      });
+      $("#unpinPostButton").on('click', /*#__PURE__*/function () {
         var _ref8 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee8(event) {
-          var likeBtn, postId, originalBtnHtml, updated_likedPost;
+          var postId, originalBtnHtml, modalBody, isSuccessful;
           return regeneratorRuntime.wrap(function _callee8$(_context8) {
             while (1) {
               switch (_context8.prev = _context8.next) {
+                case 0:
+                  // 1) Get post id from button
+                  postId = $(event.target).data("id");
+
+                  if (!(postId === undefined)) {
+                    _context8.next = 3;
+                    break;
+                  }
+
+                  return _context8.abrupt("return", console.warn('no post id found in'));
+
+                case 3:
+                  // 2) Update UI
+                  originalBtnHtml = _GlobalView.default.showPreloadInButton($("#unpinPostButton"));
+                  modalBody = $('#confirmUnpinModal .modal-body');
+                  postView.showPreloaderInElement(modalBody);
+                  _context8.next = 8;
+                  return postModel.sendUnpinPostRequest(postId);
+
+                case 8:
+                  isSuccessful = _context8.sent;
+
+                  if (!isSuccessful) {
+                    _context8.next = 12;
+                    break;
+                  }
+
+                  postView.showFinishMessage(modalBody, 'Success! Reloading page now...');
+                  return _context8.abrupt("return", setTimeout(function () {
+                    return location.reload();
+                  }, 500));
+
+                case 12:
+                  postView.showFinishMessage(modalBody, 'Fail to unpin post. Please try again');
+                  $("#unpinPostButton").html(originalBtnHtml);
+
+                case 14:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8);
+        }));
+
+        return function (_x6) {
+          return _ref8.apply(this, arguments);
+        };
+      }());
+    }
+  }, {
+    key: "event_clickLikeButton",
+    value: function event_clickLikeButton() {
+      $(document).on("click", ".likeButton ", /*#__PURE__*/function () {
+        var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(event) {
+          var likeBtn, postId, originalBtnHtml, updated_likedPost;
+          return regeneratorRuntime.wrap(function _callee9$(_context9) {
+            while (1) {
+              switch (_context9.prev = _context9.next) {
                 case 0:
                   // get retweet button and postId
                   likeBtn = $(event.target);
                   postId = postModel.getPostIdFromElement(likeBtn);
 
                   if (!(postId === undefined)) {
-                    _context8.next = 4;
+                    _context9.next = 4;
                     break;
                   }
 
-                  return _context8.abrupt("return", console.error("Can't find post id"));
+                  return _context9.abrupt("return", console.error("Can't find post id"));
 
                 case 4:
                   ;
                   originalBtnHtml = _GlobalView.default.showPreloadInButton(likeBtn);
-                  _context8.next = 8;
+                  _context9.next = 8;
                   return postModel.sendLikePostRequest(postId);
 
                 case 8:
-                  updated_likedPost = _context8.sent;
+                  updated_likedPost = _context9.sent;
                   postView.likedPostData = updated_likedPost;
                   postView.clickedLikeBtn = likeBtn;
                   postView.originalBtnHtml = originalBtnHtml; // restore btn html and update to latest tweets number
@@ -20191,14 +20235,14 @@ var PostController = /*#__PURE__*/function () {
 
                 case 14:
                 case "end":
-                  return _context8.stop();
+                  return _context9.stop();
               }
             }
-          }, _callee8);
+          }, _callee9);
         }));
 
-        return function (_x6) {
-          return _ref8.apply(this, arguments);
+        return function (_x7) {
+          return _ref9.apply(this, arguments);
         };
       }());
     }
@@ -20206,30 +20250,30 @@ var PostController = /*#__PURE__*/function () {
     key: "event_clickRetweetButton",
     value: function event_clickRetweetButton() {
       $(document).on("click", ".retweetButton", /*#__PURE__*/function () {
-        var _ref9 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee9(event) {
+        var _ref10 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee10(event) {
           var retweetBtn, postId, originalBtnHtml, updated_retweetedPost;
-          return regeneratorRuntime.wrap(function _callee9$(_context9) {
+          return regeneratorRuntime.wrap(function _callee10$(_context10) {
             while (1) {
-              switch (_context9.prev = _context9.next) {
+              switch (_context10.prev = _context10.next) {
                 case 0:
                   // get retweet button and postId
                   retweetBtn = $(event.target);
                   postId = postModel.getPostIdFromElement(retweetBtn);
 
                   if (!(postId === undefined)) {
-                    _context9.next = 4;
+                    _context10.next = 4;
                     break;
                   }
 
-                  return _context9.abrupt("return");
+                  return _context10.abrupt("return");
 
                 case 4:
                   originalBtnHtml = _GlobalView.default.showPreloadInButton(retweetBtn);
-                  _context9.next = 7;
+                  _context10.next = 7;
                   return postModel.createRetweetToPost(postId);
 
                 case 7:
-                  updated_retweetedPost = _context9.sent;
+                  updated_retweetedPost = _context10.sent;
 
                   // restore btn html and update to latest tweets number
                   if (updated_retweetedPost) {
@@ -20248,14 +20292,14 @@ var PostController = /*#__PURE__*/function () {
 
                 case 10:
                 case "end":
-                  return _context9.stop();
+                  return _context10.stop();
               }
             }
-          }, _callee9);
+          }, _callee10);
         }));
 
-        return function (_x7) {
-          return _ref9.apply(this, arguments);
+        return function (_x8) {
+          return _ref10.apply(this, arguments);
         };
       }());
     }
@@ -20293,6 +20337,44 @@ function ifIsReplyPost(postData) {
   if (!postData) throw Error("postData is null or undefined.");
   if (postData.isReplyToPost !== undefined && postData.isReplyToPost._id !== undefined) return true;
   return false;
+}
+
+function getClipboardContents() {
+  return new Promise( /*#__PURE__*/function () {
+    var _ref11 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee11(res, rej) {
+      var data;
+      return regeneratorRuntime.wrap(function _callee11$(_context11) {
+        while (1) {
+          switch (_context11.prev = _context11.next) {
+            case 0:
+              try {
+                // const clipboardItems = await navigator.clipboard.read();
+                // for (const clipboardItem of clipboardItems) {
+                //   for (const type of clipboardItem.types) {
+                //     const blob = await clipboardItem.getType(type);
+                //   }
+                // }
+                navigator.clipboard.readText().then(function (clipText) {
+                  data = clipText;
+                  res(data);
+                });
+              } catch (err) {
+                rej(null);
+                console.error(err.name, err.message);
+              }
+
+            case 1:
+            case "end":
+              return _context11.stop();
+          }
+        }
+      }, _callee11);
+    }));
+
+    return function (_x9, _x10) {
+      return _ref11.apply(this, arguments);
+    };
+  }());
 }
 },{"./../clientSideSocket.io/SocketIoController":"clientSideSocket.io/SocketIoController.js","./../GlobalControl/GlobalView":"GlobalControl/GlobalView.js","./PostHTMLCreator":"post/PostHTMLCreator.js","./PostModel":"post/PostModel.js","./PostView":"post/PostView.js"}],"user/outputUsers.js":[function(require,module,exports) {
 "use strict";

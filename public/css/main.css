@@ -295,15 +295,15 @@ button span {
     justify-items: center;
 }
 
-.postImagePreviewContainer #postPhotoPreview {
+.postImagePreviewContainer .postPhotoPreview {
     max-height: 15rem;
 }
 
-.textareaContainer #postPhotoPreview {
+.textareaContainer .postPhotoPreview {
     width: 50%;
 }
 
-.textareaContainer #postPhotoPreview.active {
+.textareaContainer .postPhotoPreview.active {
     margin: 0rem auto 1.5rem;
 }
 
@@ -317,6 +317,7 @@ button span {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
+    justify-content: center;
 }
 
 .postModal_photoLinkBtns .btnContainer .urlBtn {

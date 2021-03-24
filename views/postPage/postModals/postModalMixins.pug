@@ -96,8 +96,8 @@ mixin addImageToPostModal
                             .postModal_photoLinkBtns
                                 label(for="postPhotoLink") Enter a link to photo
                                 .btnContainer
-                                    span.urlBtn.clear Clear link 
-                                    span.urlBtn.paste Paste link
+                                    button.btn.btn-outline-secondary.urlBtn.clear Clear link 
+                                    button.btn.btn-outline-secondary.urlBtn.paste Paste link
                             input#postPhotoLink.form-control(type="text" placeholder="Enter file link")
 
                         .form-group
@@ -106,7 +106,7 @@ mixin addImageToPostModal
                             input#postPhotoTitle.form-control(type="text" placeholder="Title" value="")
       
                     .postImagePreviewContainer
-                        img#postPhotoPreview
+                        img.postPhotoPreview
 
                 .modal-footer
                     button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel

@@ -22,6 +22,8 @@ exports.fetchStatsData = async () => {
   }
 };
 
+// Use local file: statsData.json as cache for statistic data for front-end API
+// as the client will require statistic data every time the login page loads
 exports.writeJsonDataToFile = (data) => {
 
   let dataToWrite = JSON.stringify(data);
@@ -82,12 +84,7 @@ async function getItemCountsFromDocField(MongooseModel, fieldName) {
         }
       }
     ])
-      .then(result => {
-
-        console.log('result of counts of array field', result);
-
-        return result[0].total;
-      })
+      .then(result => { return result[0].total; })
       .catch(e => {
         console.log(e);
       });

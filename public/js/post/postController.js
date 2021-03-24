@@ -1,3 +1,5 @@
+/// <reference path="./../../../node_modules/@types/jquery/index.d.ts" />
+
 
 import SocketIoController from './../clientSideSocket.io/SocketIoController';
 import GlobalView from './../GlobalControl/GlobalView';
@@ -39,6 +41,8 @@ export default class PostController {
       this.event_submitPost,
       this.event_clickLikeButton,
       this.event_clickRetweetButton,
+      this.event_previewPhotoInModal,
+      this.event_addPhotoUrlInModalToPost
     ];
   }
 
@@ -95,6 +99,7 @@ export default class PostController {
     );
   };
 
+
   // 按下 .post 元素後 之後將使用者轉向 /post/postId 頁面
   event_clickOnPost() {
 
@@ -108,6 +113,51 @@ export default class PostController {
       }
     });
   }
+
+  event_previewPhotoInModal() {
+    $(() => {
+      let btn = $('#addPhotoLinkToPostBtn').attr('disabled', true);
+      let imgUrlInput = $('input#postPhotoLink');
+      let imageUrl;
+      let imgPreviewContainer = $('#addImageToPostModal .postImagePreviewContainer');
+      let imgPreview = $('#addImageToPostModal #postPhotoPreview');
+
+      imgUrlInput.on('change keyup keydown', function (e) {
+        console.log('change preview image url');
+
+        imageUrl = imgUrlInput.val().trim();
+        imgPreview.attr('src', imageUrl);
+
+        // disable btn when input is empty (or invalid. TODO: will consider this later)
+        if (!imageUrl) {
+          btn.attr('disabled', true);
+        } else {
+          btn.attr('disabled', false);
+        }
+
+      });
+
+
+    });
+  }
+
+
+  event_addPhotoUrlInModalToPost() {
+    $(() => {
+      let btn = $('#addPhotoLinkToPostBtn');
+      let imageUrl;
+      let imgPreviewContainer = $('.textareaContainer .postImagePreviewContainer');
+      let imgPreview = $('.textareaContainer #postPhotoPreview');
+      let imageUrlInput = $('input.imageUrl');
+
+      btn.on('click', function (e) {
+        imageUrl = $('input#postPhotoLink').val();
+        imgPreview.attr('src', imageUrl).addClass('active');
+        imageUrlInput.val(imageUrl);
+      });
+    });
+  }
+
 
   event_deletePost() {
     // 開啟刪除文章確認的 modal:  createPostHTML

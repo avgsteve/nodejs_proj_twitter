@@ -91,6 +91,7 @@ export default class PostHTMLCreator {
 
                       <!-- ==  Post Body == -->
                       <div class='postBody'>
+                          ${this.getPostImage(postDataToConvert)}
                           <span>${postDataToConvert.content}</span>
                       </div>
 
@@ -246,6 +247,16 @@ export default class PostHTMLCreator {
       </span>
     `;
   }
+
+  static getPostImage(postData) {
+    if (!postData.image) return "";
+    return `
+      <div class="postImageContainer">
+        <img src=${postData.image} alt="img">
+      </div>
+    `;
+  }
+
 }
 
 function variablesFromPostData(postDataToConvert, userLoggedIn) {

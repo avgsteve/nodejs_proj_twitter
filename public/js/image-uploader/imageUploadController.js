@@ -22,9 +22,10 @@ export default class ImageUploader {
       this._edit__ProfileImage,
       this._uploadProfileImage,
       this._edit__ProfileCover,
-      this._uploadProfileCover
+      this._uploadProfileCover,
     ];
   }
+
 
   _edit__ProfileImage() {
 

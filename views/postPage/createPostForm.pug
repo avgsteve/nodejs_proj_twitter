@@ -4,5 +4,10 @@ mixin createPostForm(userLoggedIn)
             img(src=userLoggedIn.profilePic, alt="User's profile picture")
         .textareaContainer
             textarea#postTextarea(placeholder="What's happening?")
+            .postImagePreviewContainer
+                img#postPhotoPreview
+                input.imageUrl(type='hidden' value='')
             .buttonsContainer
                 button#submitPostButton(disabled="") Post
+                button#addPhotoToPostButton(title="Click to add photo" data-toggle="modal" data-target="#addImageToPostModal")
+                    i.bi.bi-card-image

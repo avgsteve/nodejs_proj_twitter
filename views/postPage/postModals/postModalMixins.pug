@@ -77,3 +77,29 @@ mixin createUnpinPostModal()
                 .modal-footer
                     button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
                     button#unpinPostButton.btn.btn-primary(type='button') Yes
+
+mixin addImageToPostModal
+    //- click event: public/js/post//postController -> _unpinPostEvent
+    #addImageToPostModal.modal.fade(tabindex='-1', role='dialog', aria-labelledby='addImageToPostModalLabel', aria-hidden='true')
+        .modal-dialog(role='document')
+
+            .modal-content
+                .modal-header
+                    h5#addImageToPostModalLabel.modal-title Add Photo To Post
+                    button.close(type='button', data-dismiss='modal', aria-label='Close')
+                    span(aria-hidden='true') &times;
+                .modal-body
+
+                    //- input#postPhoto(type="file", name="photoFile")
+                    form.postModal_photoLink
+                        .form-group
+                            label(for="postPhotoLink") Or enter a link to photo
+                            input#postPhotoLink.form-control(type="text" placeholder="Enter file link")
+      
+                    .postImagePreviewContainer
+                        img#postPhotoPreview
+
+                .modal-footer
+                    button.btn.btn-secondary(type='button', data-dismiss='modal') Cancel
+                    button#addPhotoLinkToPostBtn.btn.btn-primary(type='button') Done
+

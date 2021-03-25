@@ -51,6 +51,10 @@ export default class PostController {
   renderAllPostInPage() {
     $(async () => {
 
+      console.log('renderAllPostInPage called');
+
+
+
       // Check: No need to render all post in a post page with post id
       if (currentPagePath.match(/posts/g)
         && currentPagePath.split('/')[2] !== undefined)
@@ -58,7 +62,7 @@ export default class PostController {
 
       const $postContainer = postModel.getContainerWithClass('postsContainer');
 
-      // update UI
+      // update UI with random prompt
       GlobalView.showPreloaderInElement($postContainer, 'random', 1);
 
       // get posts data to be rendered in page
@@ -79,8 +83,9 @@ export default class PostController {
 
   }
 
-  renderPostIdPage() {
+  renderPostPageWithPostId() {
     $(async () => {
+
 
       // Check if container and post id exist
       const $postContainer = postModel.getContainerWithClass("postsContainer");

@@ -56,6 +56,10 @@ exports.registerFieldsToCheck =
 
 exports.getUsersByQuery = async (req, res, next) => {
 	let searchObj = req.query;
+
+	if (req.query.searchTerm === undefined)
+		res.status(400).send(new CustomError(`Must call this api with "searchTerm" param and value to search for user`, 400))
+
 	console.log('GET@/api/users 的 req.query:', req.query);
 	if (req.query.searchTerm !== undefined) {
 		searchObj = {

@@ -6,6 +6,8 @@ class SearchPageModel {
 
   static searchUserOrPostByType(searchTerm, searchType) {
 
+    console.log('searchTerm: ', searchTerm);
+
     let url = searchType === "users" ?
       "/api/users" : "/api/posts";
 

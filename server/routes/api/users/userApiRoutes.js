@@ -11,7 +11,13 @@ const authController = require('./../auth/authController')
 router.use(authController.restrictToSignedInUser);
 // === 限制下列↓↓↓路徑只能讓登入的使用者使用 (logged in user only) ===
 
-// Private route: root/api/users/
+// Private route: root/api/users/all
+// Method: GET
+// Get all users data (super-admin only)
+router.get("/"
+    , userApiController.getUsersByQuery);
+
+// Private route: root/api/users/all
 // Method: GET
 // Get all users data (super-admin only)
 router.get("/all",

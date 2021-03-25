@@ -53,9 +53,11 @@ $(async () => {
   // === Posts Page (page with post Id) ===
   if (
     currentPagePath.match(/posts/g) &&
-    currentPagePath.split('/')[2] !== undefined
+    currentPagePath.split('/')[2] !== undefined && // means url has post id
+    !currentPagePath.match(/search/g) // Need to exclude search page as postController is in used too
   ) {
-    postController.renderPostIdPage();
+
+    postController.renderPostPageWithPostId();
     postController.initPostEventListener();
   }
 

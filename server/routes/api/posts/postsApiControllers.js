@@ -7,8 +7,7 @@ const mongoose = require('mongoose');
 const populateUserOption = "_id userName firstName lastName profilePic";
 
 
-exports.getAllPosts = async (req, res, next) => {
-
+exports.getAllPosts = async (req, res, next) => {   
 
 	let queryOptions = HelperFunction.searchOptionsFilter(req, res);
 

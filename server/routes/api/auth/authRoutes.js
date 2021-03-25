@@ -87,7 +87,7 @@ router.post("/requestPasswordResetToken",
   userApiController.requestPasswordResetToken
 );
 
-router.post("/setPasswordWithToken",
+router.post("/setPasswordWithToken/:token",
   [
     body('token').notEmpty().trim().withMessage('token is required'),
     body('newPassword').trim()

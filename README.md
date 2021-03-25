@@ -30,6 +30,7 @@
 3. Functions:
     1. User and account control
        1. ✔️ Account activation
+      ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
        2. ✔️ Password reset with e-mail 
        3. ✔️ Identifying user with Cookie & JWT 
        4. ✔️ Account role control 

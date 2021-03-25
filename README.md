@@ -37,7 +37,7 @@
     7. ✔️ Code bundling & compression (front-end JavaScript files) 
     8. ✔️ Some UI/UX tweaks: loading effect, responsive design, animation etc,. 
     
-    (note: ✔️ mark mean the extra feature & function I've added as extra to the original code)
+    (note: ✔️ mark means the extra feature & function I've added to the original code from Udemy course)
 
 4. To Do:
    1. Image uploading on S3 storage
@@ -62,13 +62,15 @@
 
       1. [HTML(templates)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/views)
       2. User login, register, activation, password reset
-      3. Post create and render (MVC pattern)
-      4. Chat Page (chat list, user search)
-      5. Search page (for post and user)
-      6. User profile : following and followers
-      7. Notification
+      3. ✅ Post create and render
+      4. ✅ Chat Page (chat list, user search)
+      5. ✅ Search page (for post and user)
+      6. ✅ User profile : following and followers
+      7. ✅ Notification
       8. Socket.io event emitter and receiver (for event handling)
-      9. Image cropper
+      9. Image cropper   
+      ####  ✅ means MVC pattern
+
 
 6. Reference:
 

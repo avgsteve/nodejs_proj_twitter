@@ -106,8 +106,8 @@ $(async () => {
     }
   }
 
-  // === Me Page ===
-  if (currentPagePath.match(/me/g)) {
+  // === Me Page: User Detail page ===
+  if (window.location.pathname.split('/')[1] === 'me') {
     let ePageController = new MePageController();
   }
 

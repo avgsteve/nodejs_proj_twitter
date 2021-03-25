@@ -1,9 +1,12 @@
 # SNS (Social Network Service) Project
 ## Link: [http://128.199.143.55:3003/login](http://128.199.143.55:3003/login)
 
+### Test Accounts: 
+    user name: test2 to test10 
+    password: same as user name
 
 #### Important: 
-  - 🔴 Please note that this project is for the purpose of study and coding demo
+  - 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
 
 
 1. Skill Stacks for this project:
@@ -13,7 +16,7 @@
      4. MongoDB
      5. ✔️ Ubuntu & PM2 (for web hosting)
     
-     (Note: Might try nginx & docker if I have spare time...)
+     (Note: Might try nginx & docker if I have spare time later...)
 
 2. Features:
      1. Socket.IO
@@ -25,7 +28,7 @@
    
 3. Functions:
     1. User and account control
-       1. ✔️ Account activation 
+       1. ✔️ Account activation
        2. ✔️ Password reset with e-mail 
        3. ✔️ Identifying user with Cookie & JWT 
        4. ✔️ Account role control 

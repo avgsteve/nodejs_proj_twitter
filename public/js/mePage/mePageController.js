@@ -13,6 +13,7 @@ export default class MePageController {
     if (!currentPagePath.match(/me/g))
       return console.warn(
         `must run NotificationController in notification page!`);
+
     this.eventListeners();
   }
 

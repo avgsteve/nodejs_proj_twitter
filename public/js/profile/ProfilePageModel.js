@@ -57,7 +57,7 @@ export default class ProfilePageModel {
       postedBy: profileId,
       pinned: true
     }, results => {
-      console.log('getPinnedPost:', results);
+      // console.log('getPinnedPost:', results);
       return results; // the pinned post is stored an array
     });
   }
@@ -81,7 +81,7 @@ export default class ProfilePageModel {
 
     let concatenatedPostsHtml = "";
     postsData.forEach(post => {
-      console.log('post data: ', post);
+      // console.log('post data: ', post);
       let postHtml = PostHTMLCreator.convertPostToHtml(post);
       concatenatedPostsHtml += postHtml;
     });

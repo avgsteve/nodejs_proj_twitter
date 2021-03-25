@@ -6633,11 +6633,12 @@ var SocketIoController = /*#__PURE__*/function () {
   function SocketIoController(option) {
     _classCallCheck(this, SocketIoController);
 
-    if (option.singletonPattern !== true) throw new Error('Please use static method: build_singleton_instance() to create instance');
+    // As we can use socket.io instance as global and unique data media, so no need to create different instances across application. Also to reduce change of having bugs
+    if (option.singletonPattern !== true) throw new Error('Please use static method: build_singleton_instance() to create singleton instance');
     if (!io) throw new Error("Please include/use socket.io CDN script to make sure global variable 'io' is assigned with socket.io object");
-    this._socketIsConnected = false; // this._socket = io("http://localhost:3003");
+    this._socketIsConnected = false; // this._socket = io("http://localhost:3003"); // <-- original code
+    // console.log('option.serverAddress for socket.io: ', option.serverAddress); // <-- localhost:3003
 
-    console.log('option.serverAddress for socket.io: ', option.serverAddress);
     this._socket = io(option.serverAddress);
     this.establishSocketConnectionWithServer(); // console.log('socket.io instance created!');
   }
@@ -6685,15 +6686,12 @@ var SocketIoController = /*#__PURE__*/function () {
   }], [{
     key: "build_singleton_instance",
     value: function build_singleton_instance() {
-      // console.log('SocketIoController.build_singleton_instance is called!');
-      // return created instance if there's any
+      // return created instance so there won't reduplicated and difference socket.io instance
       if (this._createdInstance !== null) return this._createdInstance;
-      console.log('currentProtocol:', currentProtocol); // need hostName to connect to server-side socket.io
-
-      console.log('current host for socket.io:', currentHost);
       var instance = new SocketIoController({
         singletonPattern: true,
-        serverAddress: "".concat(currentHost)
+        serverAddress: "".concat(currentHost) // host address might change when hosting on different cloud host
+
       }); // assign instance to Class private field for using singleton pattern
 
       this._createdInstance = instance;
@@ -6705,9 +6703,7 @@ var SocketIoController = /*#__PURE__*/function () {
   }, {
     key: "getCreatedInstance",
     value: function getCreatedInstance() {
-      // console.log('SocketIoController.getCreatedInstance is called!');
-      if (!this._createdInstance) this.build_singleton_instance(); // console.log('current created instance: ', this._createdInstanceCounter);
-
+      if (!this._createdInstance) this.build_singleton_instance();
       return this._createdInstance;
     }
   }]);
@@ -20960,7 +20956,7 @@ var ProfilePageModel = /*#__PURE__*/function () {
                   postedBy: profileId,
                   pinned: true
                 }, function (results) {
-                  console.log('getPinnedPost:', results);
+                  // console.log('getPinnedPost:', results);
                   return results; // the pinned post is stored an array
                 }));
 
@@ -21027,8 +21023,7 @@ var ProfilePageModel = /*#__PURE__*/function () {
       if (postsData.length === 0) return "";
       var concatenatedPostsHtml = "";
       postsData.forEach(function (post) {
-        console.log('post data: ', post);
-
+        // console.log('post data: ', post);
         var postHtml = _PostHTMLCreator.default.convertPostToHtml(post);
 
         concatenatedPostsHtml += postHtml;
@@ -27674,10 +27669,10 @@ $( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function
             if (!currentPagePath.match(/follow/g)) {
               profileContentController.renderProfilePage();
             }
-          } // === Me Page ===
+          } // === Me Page: User Detail page ===
 
 
-          if (currentPagePath.match(/me/g)) {
+          if (window.location.pathname.split('/')[1] === 'me') {
             ePageController = new _mePageController.default();
           }
 

@@ -12,9 +12,10 @@ class SocketIoController {
 
 	constructor(option) {
 
+		// As we can use socket.io instance as global and unique data media, so no need to create different instances across application. Also to reduce change of having bugs
 		if (option.singletonPattern !== true)
 			throw new Error(
-				'Please use static method: build_singleton_instance() to create instance'
+				'Please use static method: build_singleton_instance() to create singleton instance'
 			);
 
 		if (!io)
@@ -23,8 +24,10 @@ class SocketIoController {
 			);
 
 		this._socketIsConnected = false;
-		// this._socket = io("http://localhost:3003");
-		console.log('option.serverAddress for socket.io: ', option.serverAddress);
+
+		// this._socket = io("http://localhost:3003"); // <-- original code
+		// console.log('option.serverAddress for socket.io: ', option.serverAddress); // <-- localhost:3003
+
 		this._socket = io(option.serverAddress);
 
 		this.establishSocketConnectionWithServer();
@@ -34,21 +37,13 @@ class SocketIoController {
 
 	static build_singleton_instance() {
 
-		// console.log('SocketIoController.build_singleton_instance is called!');
-
-		// return created instance if there's any
+		// return created instance so there won't reduplicated and difference socket.io instance
 		if (this._createdInstance !== null) return this._createdInstance;
-
-		console.log('currentProtocol:', currentProtocol);
-
-		// need hostName to connect to server-side socket.io
-
-		console.log('current host for socket.io:', currentHost);
 
 		let instance = new SocketIoController(
 			{
 				singletonPattern: true,				
-				serverAddress: `${currentHost}`
+				serverAddress: `${currentHost}` // host address might change when hosting on different cloud host
 			}
 		);
 
@@ -61,12 +56,8 @@ class SocketIoController {
 
 	static getCreatedInstance() {
 
-		// console.log('SocketIoController.getCreatedInstance is called!');
-
 		if (!this._createdInstance)
 			this.build_singleton_instance();
-
-		// console.log('current created instance: ', this._createdInstanceCounter);
 
 		return this._createdInstance;
 	}

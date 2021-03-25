@@ -31,7 +31,10 @@
     1. User and account control
        1. ✔️ Account activation
       ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
+       
        2. ✔️ Password reset with e-mail 
+      ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/reset_password.gif)
+
        3. ✔️ Identifying user with Cookie & JWT 
        4. ✔️ Account role control 
     2. Message Sending as chat room
@@ -43,6 +46,8 @@
     8. ✔️ Some UI/UX tweaks: loading effect, responsive design, animation etc,. 
     
     (note: ✔️ mark means the extra feature & function I've added to the original code from Udemy course)
+
+
 
 ## 4. To Do:
    1. Image uploading on S3 storage

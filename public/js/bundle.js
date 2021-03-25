@@ -21818,7 +21818,8 @@ var ChatListController = /*#__PURE__*/function () {
 
               case 5:
                 chatList = _context3.sent;
-                instance = new ChatListController(chatList);
+                instance = new ChatListController(chatList); // Used to check if created instance is created by singleton patter
+
                 this._createdSingletonInstance = instance;
                 this._createdInstanceCounter++;
 

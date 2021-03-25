@@ -48,11 +48,14 @@ block content
                 </div>
 
                 button#registerBtn(type="submit", value="") Register
-                button.clearRegisterInput(type="submit" title='清除所有欄位' value="" onclick="event.preventDefault();") Clear all fields
+                button.clearRegisterInput(type="submit" title='clear all fields' value="" onclick="event.preventDefault();") Clear all fields
 
             </form>
 
         a(href="/login") Already have an account? Login here.
+        br
+        a(href="https://www.fakemail.net/" , target='_blank' rel="noreferrer noopener") You can use fake email to register
+        p p.s. You can delete account anytime!
     
     script.
         let passwordField = document.getElementById("password")

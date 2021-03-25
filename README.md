@@ -1,12 +1,12 @@
 # SNS (Social Network Service) Project
+#### Important: 
+  - 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
 ## Link: [http://128.199.143.55:3003/login](http://128.199.143.55:3003/login)
-
 ### Test Accounts: 
     user name: test2 to test10 
     password: same as user name
 
-#### Important: 
-  - 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
+   or use [FakeMail](https://www.fakemail.net/) to register
 
 
 1. Skill Stacks for this project:
@@ -58,7 +58,7 @@
            2. [Handlers for different backend error](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/routeNotFoundHandler.js)
            3. [Customized Error Class for global error handling and outputting](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/customError.js)
      2. [MongoDB (noSQL data) schema](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/database/schemas)
-     3. Cron Jobs setup
+     3. [Cron Jobs setup](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/scheduledJobs)
 
 
   - Frontend
@@ -66,12 +66,13 @@
       1. [HTML(templates)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/views)
       2. User login, register, activation, password reset
       3. ✅ Post create and render
-      4. ✅ Chat Page (chat list, user search)
-      5. ✅ Search page (for post and user)
-      6. ✅ User profile : following and followers
-      7. ✅ Notification
-      8. Socket.io event emitter and receiver (for event handling)
-      9. Image cropper   
+         1. [Chat Room List](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/chatList)
+         2. [Chat Room and Message](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/chatRoom)
+      4. ✅ [Search page (for post and user)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/search)
+      5. ✅ [User profile : following and followers](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/profile)
+      6. ✅ [Notification](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/notification)
+      7. [Socket.io event emitter and receiver(for event handling)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/clientSideSocket.io)
+      8. [Image cropper](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/image-uploader)   
       ####  ✅ means MVC pattern
 
 

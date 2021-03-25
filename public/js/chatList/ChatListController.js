@@ -41,6 +41,7 @@ class ChatListController {
     let chatList = await ChatListModel.loadChatList();
     let instance = new ChatListController(chatList);
 
+    // Used to check if created instance is created by singleton patter
     this._createdSingletonInstance = instance;
     this._createdInstanceCounter++;
   }

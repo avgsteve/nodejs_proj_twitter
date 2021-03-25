@@ -8,47 +8,42 @@ require('dotenv').config();
 
 exports.login = async (req, res) => {
   let { account, password } = req.body;
-  console.log('login data:', req.body);
-  if (!account || !password) {
-    console.log('Login data error. req.body: ', req.body);
+
+  if (!account || !password) {    
+    return sendLoginError("User name or password can't be empty", req, res);
   }
 
-  if (account && password) {
 
-    try {
+  try {
 
-      let userExisted = await User.findOne({
-        $or: [
-          { userName: account },
-          { email: account }
-        ]
-      }).select('hashed_password isActivated _id');
+    let userExisted = await User.findOne({
+      $or: [
+        { userName: account },
+        { email: account }
+      ]
+    }).select('hashed_password isActivated _id');
 
-      // 找不到帳號 (帳號不存在)
-      if (!userExisted) {
-        return sendLoginError(`incorrect account or password;`, req, res);
-      }
-
-      // console.log('userExisted: \n', userExisted);
-
-      if (!userExisted.isActivated)
-        return sendLoginError(`Please activate account first!`, req, res);
-
-      if ((await userExisted.verifyPassword(password)) === true) {
-        userExisted.hashed_password = '---encrypted---';
-        return cookieHelper.sendResponseWithToken(userExisted, 200, req, res);
-      }
-      // 密碼 or 帳號錯誤
-      return sendLoginError(`incorrect account or password`, req, res);
-
-    } catch (error) {
-      console.log('登入錯誤: ', error);
-      return sendLoginError("error while logging in", req, res);
+    // 找不到帳號 (帳號不存在)
+    if (!userExisted) {
+      return sendLoginError(`incorrect account or password;`, req, res);
     }
-  }
 
-  // 如果 account或 password其中一個是空的
-  return sendLoginError("User name or password can't be empty", req, res);
+    // console.log('userExisted: \n', userExisted);
+
+    if (!userExisted.isActivated)
+      return sendLoginError(`Please activate account first!`, req, res);
+
+    if ((await userExisted.verifyPassword(password)) === true) {
+      userExisted.hashed_password = '---encrypted---';
+      return cookieHelper.sendResponseWithToken(userExisted, 200, req, res);
+    }
+    // 密碼 or 帳號錯誤
+    return sendLoginError(`incorrect account or password`, req, res);
+
+  } catch (error) {
+    console.log('登入錯誤: ', error);
+    return sendLoginError("error while logging in", req, res);
+  }
 
 };
 

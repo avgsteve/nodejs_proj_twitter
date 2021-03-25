@@ -33,6 +33,7 @@ class ChatListController {
     if (this._createdSingletonInstance !== null)
       return this._createdSingletonInstance;
 
+    // Let controller show preloader so won't be blank page with nothing
     ChatListView.showPreloaderInElement(
       $containerForList, 'Please wait for loading chat data', 1
     );

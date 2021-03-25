@@ -1,4 +1,5 @@
 import ChatRoomView from './ChatRoomView';
+
 // Create new Class instance in ChatRoomController constructor function
 let chatRoomView;
 
@@ -23,6 +24,8 @@ let socket = SocketIoController.getCreatedInstance();
 class ChatRoomController {
 
 	constructor() {
+
+		// Check if current page is for chat room
 		let chatIdFromUrl = window.location.pathname.split('/')[3];
 		if (!chatIdFromUrl)
 			throw Error(`ChatId is not found in url path. Please check the url is correct`);
@@ -35,7 +38,7 @@ class ChatRoomController {
 		this.typingInTextareaEvent();
 		this.sendMessageWithClickEvent();
 
-		// create instance of other two Classes after this constructor is called
+		// Create instance of other two Classes after this constructor is called to make sure chatRoom controller's function doesn't interfere with other controller
 		chatRoomView = new ChatRoomView();
 		chatRoomModel = new ChatRoomModel()
 		socketEventHandlers = new ChatRoomSocketEvent();

@@ -70,8 +70,6 @@ $(async () => {
 
   // === Chat (Message) list page ===
   if (currentPagePath.match(/message/g)) {
-    // ex: http://localhost:3003/messages/ 等於 ["","message",""
-    // console.log('目前在對話清單頁面');
     let chatListController = await ChatListController.async_build_instance();
   }
 

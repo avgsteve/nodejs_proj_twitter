@@ -71,6 +71,7 @@ app.use(authController.checkIfUserIsLoggedIn);
 const pagePath = "./routes/frontendPages";
 app.use("/posts", require(`${pagePath}/post/postPageRoutes`));
 app.use("/profile", require(`${pagePath}/profile/profilePageRoutes`));
+app.use("/photo", require(`${pagePath}/photo/photoPageRoutes`));
 app.use("/uploads", require(`${pagePath}/upload/uploadPageRoutes`));
 app.use("/search", require(`${pagePath}/search/searchPageRoutes`));
 app.use("/messages", require(`${pagePath}/message/messagesPageRoutes`));

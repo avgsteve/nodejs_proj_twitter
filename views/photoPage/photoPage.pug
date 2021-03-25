@@ -1,0 +1,9 @@
+extends ./../layouts/main-layout.pug
+
+block content    
+    include ./../layouts/mixin/underDevelopmentPage
+    //- if 
+    +underDevelopmentPage()
+
+block scripts
+    script(src="/js/underDevelopmentPage/UnderDevelopmentPageController.js")

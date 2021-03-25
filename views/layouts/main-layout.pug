@@ -27,21 +27,23 @@ html(lang="en")
                 nav.col-2.nav-col.mobil-nav-align-center.active
                     .fixed-nav
                         .scrollable
-                            a.blue(href="/")
+                            a.blue(title='Click icons to enter page')
                                 i.fas.fa-dove
-                            a(href="/")
+                            a(href="/" title='Back To Home')
                                 i.fas.fa-home
-                            a(href="/search")
+                            a(href="/search" title='Search posts and users')
                                 i.fas.fa-search
-                            a(href="/notifications")
+                            a(href="/notifications" title='My notifications')
                                 i.fas.fa-bell
                                 span#notificationBadge
-                            a(href="/messages/list")
+                            a(href="/messages/list" title='Sending messages')
                                 i.fas.fa-envelope
                                 span#messagesBadge
-                            a(href="/profile")
+                            a(href="/photo" title='My Photo Uploads/Collections')
+                                i.bi.bi-images                                
+                            a(href="/profile" title='My Public Profile')
                                 i.fas.fa-user
-                            a(href="/me")
+                            a(href="/me" title='My User file detail Profile')
                                 i.bi.bi-gear-fill                                
                             a(href="/admin" title='admin area')
                                 i.fas.fa-file-signature

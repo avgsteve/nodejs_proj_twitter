@@ -19822,41 +19822,43 @@ var PostController = /*#__PURE__*/function () {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
+                console.log('renderAllPostInPage called'); // Check: No need to render all post in a post page with post id
+
                 if (!(currentPagePath.match(/posts/g) && currentPagePath.split('/')[2] !== undefined)) {
-                  _context3.next = 2;
+                  _context3.next = 3;
                   break;
                 }
 
                 return _context3.abrupt("return", console.warn('current page is not for the posts wall'));
 
-              case 2:
-                $postContainer = postModel.getContainerWithClass('postsContainer'); // update UI
+              case 3:
+                $postContainer = postModel.getContainerWithClass('postsContainer'); // update UI with random prompt
 
                 _GlobalView.default.showPreloaderInElement($postContainer, 'random', 1); // get posts data to be rendered in page
 
 
-                _context3.next = 6;
+                _context3.next = 7;
                 return postModel.getAllPostsWithOption({
                   postsFromFollowingOnly: true
                 });
 
-              case 6:
+              case 7:
                 allPostsData = _context3.sent;
 
                 if (Array.isArray(allPostsData)) {
-                  _context3.next = 9;
+                  _context3.next = 10;
                   break;
                 }
 
                 throw Error("Need html data (object) stored in array");
 
-              case 9:
+              case 10:
                 postsHtmlArray = allPostsData.map(function (postData) {
                   return _PostHTMLCreator.default.convertPostToHtml(postData);
                 });
                 postView.outputPostHTMLInContainer(postsHtmlArray, $postContainer);
 
-              case 11:
+              case 12:
               case "end":
                 return _context3.stop();
             }
@@ -19865,8 +19867,8 @@ var PostController = /*#__PURE__*/function () {
       })));
     }
   }, {
-    key: "renderPostIdPage",
-    value: function renderPostIdPage() {
+    key: "renderPostPageWithPostId",
+    value: function renderPostPageWithPostId() {
       $( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee4() {
         var $postContainer, postIdFromURL, postDataById;
         return regeneratorRuntime.wrap(function _callee4$(_context4) {
@@ -20444,6 +20446,7 @@ var SearchPageModel = /*#__PURE__*/function () {
   _createClass(SearchPageModel, null, [{
     key: "searchUserOrPostByType",
     value: function searchUserOrPostByType(searchTerm, searchType) {
+      console.log('searchTerm: ', searchTerm);
       var url = searchType === "users" ? "/api/users" : "/api/posts";
       return new Promise(function (res, rej) {
         $.get(url, {
@@ -27161,20 +27164,25 @@ var MePageController = /*#__PURE__*/function () {
                 case 9:
                   result = _context.sent;
 
-                  if (result === true) {
-                    _mePageView.default.showMsg('Succeed! Reloading now', 1); // return setTimeout(() => {
-                    //   location.reload();
-                    // }, 1500);
-
+                  if (!(result === true)) {
+                    _context.next = 13;
+                    break;
                   }
 
+                  _mePageView.default.showMsg('Succeed! Reloading now', 1);
+
+                  return _context.abrupt("return", setTimeout(function () {
+                    location.reload();
+                  }, 1500));
+
+                case 13:
                   _mePageView.default.showMsg(result, 2);
 
                   updatePwdBtn.html(btnHtml);
                   updatePwdBtn.attr('disabled', false);
                   return _context.abrupt("return");
 
-                case 15:
+                case 17:
                 case "end":
                   return _context.stop();
               }
@@ -27615,10 +27623,12 @@ $( /*#__PURE__*/_asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function
           } // === Posts Page (page with post Id) ===
 
 
-          if (currentPagePath.match(/posts/g) && currentPagePath.split('/')[2] !== undefined) {
-            postController.renderPostIdPage();
-            postController.initPostEventListener();
-          } // === Notifications Page ===
+          if (currentPagePath.match(/posts/g) && currentPagePath.split('/')[2] !== undefined && // means url has post id
+          !currentPagePath.match(/search/g) // Need to exclude search page as postController is in used too
+          ) {
+              postController.renderPostPageWithPostId();
+              postController.initPostEventListener();
+            } // === Notifications Page ===
 
 
           if (currentPagePath.match(/notifications/g)) {

@@ -24,14 +24,12 @@ router.get("/", meApiControllers.getCurrentLoggedInUser);
 
 router.put("/updatePassword",
   [
-    body('newPassword').notEmpty().trim()
-      .withMessage('new password and confirm password are required'),
-    body('confirmPassword').notEmpty().trim()
+    body('currentPassword').notEmpty().trim()
       .withMessage('new password and confirm password are required'),
     body('newPassword').trim().isLength({ min: 5, max: 20 })
       .withMessage('new password must be between 5 to 20 characters long'),
-    body('confirmPassword').trim().isLength({ min: 5, max: 20 })
-      .withMessage('confirm password must be between 5 to 20 characters long')
+    body('confirmPassword').notEmpty().trim()
+      .withMessage('new password and confirm password are required'),
   ],
   checkReqBodyErrors,
   userApiController.changePassword

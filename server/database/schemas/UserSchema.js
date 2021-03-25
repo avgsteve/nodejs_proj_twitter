@@ -36,7 +36,7 @@ const UserSchema = new Schema({
     },
     role: {
         type: String,
-        enum: ['user', 'test_user', 'admin', 'test-admin', 'super-admin'],
+        enum: ['user', 'test-user', 'admin', 'test-admin', 'super-admin'],
         default: 'user'
     },
     profilePic: { type: String, default: "/images/profilePic.jpeg" },

@@ -235,16 +235,13 @@ function checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPasswo
 }
 
 exports.changePassword = async (req, res) => {
-	const { userName, currentPassword, newPassword, confirmPassword } = req.body;
+	const { currentPassword, newPassword, confirmPassword } = req.body;
 
 	let checkResult =
 		checkPasswordBeforeUpdate({ currentPassword, newPassword, confirmPassword, res });
 	if (!checkResult) return;
 
 	let userDoc = await User.findOne({ _id: res.locals.user._id });
-
-	// ↓↓↓ For testing only. Every user need to login before changing password
-	// let userDoc = await User.findOne({ userName: userName });
 
 
 	if (!userDoc)

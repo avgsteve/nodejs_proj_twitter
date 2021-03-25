@@ -244,6 +244,7 @@ button span {
 
 .profileImageContainer img {
     width: 100%;
+    min-width: 38px;
     border-radius: 50%;
     background-color: white;
 }
@@ -380,34 +381,46 @@ span.closePreviewImageBtn:hover {
 }
 
 .postImageContainer {
-    max-width: 30rem;
-    /* set bg color for development */
-    /* background-color: antiquewhite; */
-    margin: 2rem auto 1rem;
+    margin: 1rem auto 1rem;
     display: flex;
 }
 
-/* Keep left when screen is bigger than mobile 
-as headings are justified to left side
-*/
+/* Keep center when screen is too small */
 .postImageContainer .postImage {
-    /* width: 100%; */
-    max-height: 12rem;
+    max-width: unset;
+    max-height: 10rem;
 }
 
-@media only screen and (max-width: 440px) {
+@media only screen and (min-width: 331px) and (max-width: 440px) {
+    .postImageContainer {
+        max-width: 30rem;
+        /* set bg color for development */
+        /* background-color: antiquewhite; */
+        margin: 1rem 1rem 1rem 0;
+        max-height: 12rem;
+        }
+        /* Keep left when screen is bigger than mobile 
+as headings are justified to left side
+*/
+        .postImageContainer .postImage {
+            /* width: 100%; */
+            max-height: 6.5rem;
+            }
+}
+
+@media only screen and (max-width: 330px) {
+
+    /* Keep left when screen is bigger than mobile 
+as headings are justified to left side
+*/
 
     .postImageContainer {
-        margin: 1rem auto 1rem;
-    }
-
-
-    /* Keep center when screen is too small */
+margin: 0.5rem auto 0.5rem;
+}
     .postImageContainer .postImage {
-        width: unset;
-        max-height: 12rem;
-        min-height: 11rem;
-        margin: 0 auto;
+        /* width: 100%; */
+        max-height: 5.7rem;
+        max-width: unset;
     }
 }
 

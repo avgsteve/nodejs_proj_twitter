@@ -83,10 +83,6 @@ module.exports = class MailSender {
     // const pugFilePath = `${__dirname}/views/email/${pugTemplate}.pug`;
     const pugFilePath = path.join(__dirname, `./../../views/email/${pugTemplate}.pug`);
 
-    console.log('path and file for pug: ', pugFilePath);
-    
-    console.log('data:', data);
-
     const htmlByPug = pug.renderFile(
       // => ref:  https://pugjs./api/reference.html#pugrenderfilepath-optioorgns-callback
 

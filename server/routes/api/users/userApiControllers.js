@@ -346,6 +346,8 @@ exports.setPasswordWithToken = async (req, res) => {
 
 	let { token, newPassword, confirmPassword, captcha } = req.body;
 
+	console.log('req.body: ', req.body);
+
 	// Checking if any previous reset document was created
 	let resetDoc = await UserPasswordReset.findOne({
 		resetToken: token

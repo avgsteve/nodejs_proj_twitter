@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const crypto = require('crypto');
 const Schema = mongoose.Schema;
 const resendTimeWindow = 1000 * 30; // 30 seconds
-const validTimeWindow = 1000 * 60 * 1; // 1 minutes
+const validTimeWindow = 1000 * 60 * 10; // 10 minutes
 
 const UserPwdResetSchema = new Schema({
   userId: {

@@ -12,6 +12,10 @@ const UserActivationSchema = new Schema({
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    required: true
+  },
   isActivated: {
     type: Boolean,
     default: false,
@@ -44,7 +48,7 @@ const UserActivationSchema = new Schema({
 
 UserActivationSchema.statics = {
 
-  createNewDoc: async function (userId, userName) {
+  createNewDoc: async function (userId, userName, email) {
 
     try {
 
@@ -61,7 +65,8 @@ UserActivationSchema.statics = {
       
       let newActivationDoc = await UserActivation.create({
         userId: userId,
-        userName: userName
+        userName: userName,
+        email: email
       });
       await newActivationDoc.generateActivationCode();
       return newActivationDoc;

@@ -22,7 +22,7 @@ $(document).on('click', '#registerBtn', async (e) => {
       () => {
         location.assign('/activationSent');
       },
-      1500);
+      2000);
   } 
   
   console.log('registration error:', signupResult);

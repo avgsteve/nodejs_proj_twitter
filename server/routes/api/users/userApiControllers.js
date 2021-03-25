@@ -112,7 +112,8 @@ exports.register = async (req, res) => {
 						async (newUser) => {
 
 							// Add activation doc _id to user's doc
-							let activationDoc = await UserActivation.createNewDoc(newUser._id, newUser.userName);
+							let activationDoc = await UserActivation.createNewDoc(
+								newUser._id, newUser.userName, newUser.email);
 							newUser.activation = activationDoc._id;
 							await newUser.save();
 
@@ -162,7 +163,10 @@ exports.activateUser = async (req, res) => {
 
 			let activationDoc = await UserActivation.findOne(
 				{
-					userName: userName,
+					$or: [
+						{ userName: userName },
+						{ email: userName }
+					]
 				});
 
 			console.log('activationDoc: ', activationDoc);

@@ -21810,6 +21810,7 @@ var ChatListController = /*#__PURE__*/function () {
                 return _context3.abrupt("return", this._createdSingletonInstance);
 
               case 2:
+                // Let controller show preloader so won't be blank page with nothing
                 _ChatListView.default.showPreloaderInElement($containerForList, 'Please wait for loading chat data', 1); // Use chat list data fetched with ajax to create instance with singleton pattern
 
 
@@ -22488,6 +22489,7 @@ var ChatRoomController = /*#__PURE__*/function () {
   function ChatRoomController() {
     _classCallCheck(this, ChatRoomController);
 
+    // Check if current page is for chat room
     var chatIdFromUrl = window.location.pathname.split('/')[3];
     if (!chatIdFromUrl) throw Error("ChatId is not found in url path. Please check the url is correct");
     this._chatId = chatIdFromUrl; // event listeners & handlers
@@ -22495,7 +22497,7 @@ var ChatRoomController = /*#__PURE__*/function () {
     this.updateChatRoomTitleEvent();
     this.renderChatRoomPage();
     this.typingInTextareaEvent();
-    this.sendMessageWithClickEvent(); // create instance of other two Classes after this constructor is called
+    this.sendMessageWithClickEvent(); // Create instance of other two Classes after this constructor is called to make sure chatRoom controller's function doesn't interfere with other controller
 
     chatRoomView = new _ChatRoomView.default();
     chatRoomModel = new _ChatRoomModel.default();

@@ -1,13 +1,8 @@
 
 exports.rootPage = function (req, res, next) {
 
-  console.log('req.originalUrl: ', req.originalUrl);
-  console.log('req.originalUrl.length: ', req.originalUrl.length);
-
   if (req.originalUrl[0] === '/' && req.originalUrl.length > 1)
     return next(); // means url is not for root path page (home page)
-
-  console.log('??');
 
   const userData = res.locals.user;
   if (!res.locals.user) return res.redirect('/login');

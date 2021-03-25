@@ -11,7 +11,7 @@ function routeNotFoundHandler(req, res, next) {
   // 如果是關於 API 的的路徑錯誤
   if (fullUrl.match(/api/g)) {
 
-    err = new CustomError(`The api path: '${req.originalUrl}' is not found on server. Please check again`, 404);
+    customErrorObj = new CustomError(`The api path: '${req.originalUrl}' is not found on server. Please check again`, 404);
 
     if (process.env.NODE_ENV === 'development')
       // 送出 json 格式錯誤訊息

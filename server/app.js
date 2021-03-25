@@ -36,7 +36,6 @@ app.use(session({
     secret: "bbq chips",
     resave: true,
     saveUninitialized: false,
-
 }));
 
 // app.use(

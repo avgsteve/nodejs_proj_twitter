@@ -30,15 +30,13 @@ $(document).on('click',
 
       console.log('result:', result);
 
-      // return;
       if (result === true) {
         helper.showWholePagePreloader("", false); // turn off
         helper.showActivationSucceed('Success!');
         helper.showRequestSucceed(true); // 
-        return;
-        // return setTimeout(() => {
-        //   window.location.assign(`${isForgotPwdPage ? "/resetTokenSent" : "/login"}`);
-        // }, 1500);
+        return setTimeout(() => {
+          window.location.assign(`${isForgotPwdPage ? "/resetTokenSent" : "/login"}`);
+        }, 1500);
       }
 
     } catch (error) {

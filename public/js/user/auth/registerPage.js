@@ -17,7 +17,7 @@ $(document).on('click', '#registerBtn', async (e) => {
   const signupResult = await registerHelper.signupNewUser();
 
   if (signupResult === true) {
-    // registerHelper.showRegisterSucceed();
+    registerHelper.showRegisterSucceed();
     return setTimeout(
       () => {
         location.assign('/activationSent');

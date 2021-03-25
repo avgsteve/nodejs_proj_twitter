@@ -21,6 +21,7 @@
 2. Features:
      1. Socket.IO
         Real-time, bidirectional and event-based communication
+        ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/realtime_chat_message.gif)
      2. Photo cropping & uploading
      3. ✔️ Sending e-mail notification for user's account activation & password resetting
      4. ✔️ Scheduled Jobs for fetching statistic data from database regularly

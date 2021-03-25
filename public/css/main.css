@@ -388,7 +388,23 @@ span.closePreviewImageBtn:hover {
 /* Keep center when screen is too small */
 .postImageContainer .postImage {
     max-width: unset;
-    max-height: 10rem;
+    max-height: 17rem;
+    }
+
+    @media only screen and (min-width:780px) {
+
+        .postImageContainer .postImage {
+            max-width: 11.5rem;
+        }
+    }
+
+    /* Keep center when screen is too small */
+    @media only screen and (min-width:441px) {
+
+        .postImageContainer .postImage {
+            max-width: unset;
+            margin: 0 auto;
+        }
 }
 
 @media only screen and (min-width: 331px) and (max-width: 440px) {
@@ -435,7 +451,7 @@ margin: 0.5rem auto 0.5rem;
 
 .postFooter {
     display: flex;
-    align-items: center;
+    justify-content: space-around;
 }
 
 .postFooter .postButtonContainer {

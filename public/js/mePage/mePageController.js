@@ -58,9 +58,9 @@ export default class MePageController {
 
       if (result === true) {
         MePageView.showMsg('Succeed! Reloading now', 1);
-        // return setTimeout(() => {
-        //   location.reload();
-        // }, 1500);
+        return setTimeout(() => {
+          location.reload();
+        }, 1500);
       }
 
       MePageView.showMsg(result, 2);

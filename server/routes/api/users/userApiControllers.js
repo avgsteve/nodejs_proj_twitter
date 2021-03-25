@@ -253,7 +253,7 @@ exports.changePassword = async (req, res) => {
 	// Current password must be correct
 	if (!(await userDoc.verifyPassword(currentPassword)))
 		return send400ResWithError(
-			`Current password is incorrect`, res
+			`Password is incorrect`, res
 		);
 
 	let updatedUserDoc = await userDoc.updatePassword(newPassword);

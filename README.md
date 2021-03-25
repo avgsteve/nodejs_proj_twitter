@@ -9,7 +9,7 @@
    or use [FakeMail](https://www.fakemail.net/) to register
 
 
-1. Skill Stacks for this project:
+## 1. Skill Stacks for this project:
      1. JavaScript + jQuery
      2. HTML, CSS and Bootstrap
      3. Node.js
@@ -18,7 +18,7 @@
     
      (Note: Might try nginx & docker if I have spare time later...)
 
-2. Features:
+## 2. Features:
      1. Socket.IO
         Real-time, bidirectional and event-based communication
         ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/realtime_chat_message.gif)
@@ -27,7 +27,7 @@
      4. ✔️ Scheduled Jobs for fetching statistic data from database regularly
      5. ✔️ MVC design pattern for front-end functions
    
-3. Functions:
+## 3. Functions:
     1. User and account control
        1. ✔️ Account activation
       ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
@@ -44,13 +44,14 @@
     
     (note: ✔️ mark means the extra feature & function I've added to the original code from Udemy course)
 
-4. To Do:
+## 4. To Do:
    1. Image uploading on S3 storage
    2. Admin page
 
-5. Links to code:
+## 5. Links to code:
 
     #### (Please see readMe file in each page for more detail)
+
   - Backend
     
      1. Server Setup
@@ -78,6 +79,6 @@
       ####  ✅ means MVC pattern
 
 
-6. Reference:
+## 6. Reference:
 
   1. Udemy Course: [Create a Twitter Clone with Node.js, Socket.IO and MongoDB by Reece Kenney ](https://www.udemy.com/course/create-a-twitter-clone-with-nodejs-socketio-and-mongodb/learn/lecture/23305854?start=15#overview)

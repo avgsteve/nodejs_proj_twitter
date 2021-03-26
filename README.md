@@ -1,39 +1,52 @@
-# SNS (Social Network Service) Project
+# SNS (Social Network Service) Project: Twitter Clone
+
+#### ___Please see features, functions detail and code in sections below___
+
+***
 #### Important: 
   - 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
-## Link: [http://128.199.143.55:3003/login](http://128.199.143.55:3003/login)
+  - 🟢 Any question and suggestions are welcomed! Please feel free to use ["Issue"](https://github.com/avgsteve/nodejs_proj_twitter/issues) sections to do so.
+## Link for demo: [http://128.199.143.55:3003/login](http://128.199.143.55:3003/login)
 ### Test Accounts: 
     user name: test2 to test10 
     password: same as user name
 
-   or use [FakeMail](https://www.fakemail.net/) to register
+   or use [FakeMail](https://www.fakemail.net/) to register <br>
 
+<br>   
 
+***
 ## 1. Skill Stacks for this project:
      1. JavaScript + jQuery
      2. HTML, CSS and Bootstrap
      3. Node.js
      4. MongoDB
      5. ✔️ Ubuntu & PM2 (for web hosting)
-    
-     (Note: Might try nginx & docker if I have spare time later...)
+<br>
 
+***
 ## 2. Features:
      1. Socket.IO
         Real-time, bidirectional and event-based communication
-        ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/realtime_chat_message.gif)
+   ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/realtime_chat_message.gif)
+
+
      2. Photo cropping & uploading
      3. ✔️ Sending e-mail notification for user's account activation & password resetting
      4. ✔️ Scheduled Jobs for fetching statistic data from database regularly
      5. ✔️ MVC design pattern for front-end functions
-   
+
+<br>
+<br>
+
+***   
 ## 3. Functions:
     1. User and account control
        1. ✔️ Account activation
-       ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
+   ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
        
        2. ✔️ Password reset with e-mail 
-       ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/reset_password.gif)
+   ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/reset_password.gif)
 
        3. ✔️ Identifying user with Cookie & JWT 
        4. ✔️ Account role control 
@@ -47,12 +60,19 @@
     
     (note: ✔️ mark means the extra feature & function I've added to the original code from Udemy course)
 
+<br>
+<br>
+
 
 
 ## 4. To Do:
-   1. Image uploading on S3 storage
-   2. Admin page
+   1. Uploaded image resizing (with multer)
+   2. Image uploading on S3 storage
+   3. Admin page
 
+<br><br>
+
+***
 ## 5. Links to code:
 
     #### (Please see readMe file in each page for more detail)
@@ -81,9 +101,11 @@
       6. ✅ [Notification](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/notification)
       7. [Socket.io event emitter and receiver(for event handling)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/clientSideSocket.io)
       8. [Image cropper](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/image-uploader)   
-      ####  ✅ means MVC pattern
+      ####  ✅ means MVC pattern used
 
 
 ## 6. Reference:
 
   1. Udemy Course: [Create a Twitter Clone with Node.js, Socket.IO and MongoDB by Reece Kenney ](https://www.udemy.com/course/create-a-twitter-clone-with-nodejs-socketio-and-mongodb/learn/lecture/23305854?start=15#overview)
+
+

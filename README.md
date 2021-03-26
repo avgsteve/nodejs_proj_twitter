@@ -69,6 +69,7 @@
    1. Uploaded image resizing (with multer)
    2. Image uploading on S3 storage
    3. Admin page
+   4. Captcha for requesting reset token for lost password
 
 <br><br>
 

@@ -5,7 +5,7 @@ const cookieParser = require('cookie-parser');
 const path = require('path');
 const bodyParser = require("body-parser");
 const session = require("express-session");
-const morgan = require('morgan');
+// const morgan = require('morgan');
 
 // ↓↓ Add this for using PM2 on ubuntu
 // ref: https://tinyurl.com/usePM2WithBuntu
@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({
     extended: true
 }));
 
-let publicFolderPath = path.join(__dirname, "./../public");
+// let publicFolderPath = path.join(__dirname, "./../public");
 
 // console.log({ publicFolderPath });
 

@@ -6,7 +6,7 @@
 #### Important: 
   - 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
   - 🟢 Any question and suggestions are welcomed! Please feel free to use ["Issue"](https://github.com/avgsteve/nodejs_proj_twitter/issues) sections to do so.
-## Link for demo: [http://128.199.143.55:3003/login](http://128.199.143.55:3003/login)
+## Link for demo: [http://143.198.192.74:3003/login](http://128.199.143.55:3003/login)
 ### Test Accounts: 
     user name: test2 to test10 
     password: same as user name

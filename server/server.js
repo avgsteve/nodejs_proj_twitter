@@ -1,8 +1,8 @@
 require('dotenv').config();
 require("./database/connectionToMongoDB.js");//
 const app = require('./app.js');
-const port = process.env.SERVER_PORT_DEV;
-const chalk = require('chalk')
+const port = process.env.SERVER_PORT_DEV || process.env.PORT; // process.env.PORT for heroku
+const chalk = require('chalk');
 
 require('./scheduledJobs/cronJobs')();
 
@@ -16,7 +16,7 @@ console.log(
 const server = app.listen(
   port, () => {
     console.log(
-    "Server listening on port: " + chalk.yellow(`${port}`)
+      "Server listening on port: " + chalk.yellow(`${port}`)
     );
   }
 );

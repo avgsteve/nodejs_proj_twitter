@@ -1,7 +1,7 @@
 require('dotenv').config();
 require("./database/connectionToMongoDB.js");//
 const app = require('./app.js');
-const port = process.env.SERVER_PORT_DEV || process.env.PORT; // process.env.PORT for heroku
+const port = process.env.PORT || process.env.SERVER_PORT_DEV || 3003; // process.env.PORT for heroku
 const chalk = require('chalk');
 
 require('./scheduledJobs/cronJobs')();

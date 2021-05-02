@@ -10,7 +10,9 @@
     "test:ci": "jest",
     "watch:js": "parcel watch --hmr-port 5500 ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js --public-url /js",
     "watch:js-no-hmr": "parcel watch  --no-hmr ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js --public-url /js",
-    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js --public-url /js "
+    "build:js": "parcel build ./public/js/index.js --out-dir ./public/js/ --out-file bundle.js --public-url /js ",
+    "eslintInit": "eslint --init",
+    "lint": "eslint src/*.js"
   },
   "jest": {
     "preset": "ts-jest",
@@ -63,6 +65,11 @@
     "@types/jest": "^26.0.20",
     "@types/mongodb-memory-server": "^2.3.0",
     "@types/supertest": "^2.0.10",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "eslint": "^7.25.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
     "jest": "^26.6.3",
     "mongodb-memory-server": "^6.5.0",
     "parcel-bundler": "^1.12.4",

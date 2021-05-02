@@ -1,35 +1,45 @@
 # SNS (Social Network Service) Project: Twitter Clone
 
-#### ___Please see features, functions detail and code in sections below___
+#### **_Please see features, functions detail and code in sections below_**
 
-***
-#### Important: 
-  - 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
-  - 🟢 Any question and suggestions are welcomed! Please feel free to use ["Issue"](https://github.com/avgsteve/nodejs_proj_twitter/issues) sections to do so.
-## Link for demo: [http://143.198.192.74:3003/login](http://143.198.192.74:3003/login)
-### Test Accounts: 
-    user name: test2 to test10 
+---
+
+#### Important:
+
+- 🔴 Please note that this project is for the purpose of STUDY and CODE DEMO
+- 🟢 Any question and suggestions are welcomed! Please feel free to use ["Issue"](https://github.com/avgsteve/nodejs_proj_twitter/issues) sections to do so.
+
+## Link for demo: [https://twitter-clone-proj.herokuapp.com/login](https://twitter-clone-proj.herokuapp.com/login)
+
+### Test Accounts:
+
+    user name: test2 to test10
     password: same as user name
 
-   or use [FakeMail](https://www.fakemail.net/) to register <br>
+or use [FakeMail](https://www.fakemail.net/) to register <br>
 
-<br>   
+<br>
 
-***
+---
+
 ## 1. Skill Stacks for this project:
+
      1. JavaScript + jQuery
      2. HTML, CSS and Bootstrap
      3. Node.js
      4. MongoDB
      5. ✔️ Ubuntu & PM2 (for web hosting)
+
 <br>
 
-***
+---
+
 ## 2. Features:
+
      1. Socket.IO
         Real-time, bidirectional and event-based communication
-   ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/realtime_chat_message.gif)
 
+![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/realtime_chat_message.gif)
 
      2. Photo cropping & uploading
      3. ✔️ Sending e-mail notification for user's account activation & password resetting
@@ -39,74 +49,74 @@
 <br>
 <br>
 
-***   
+---
+
 ## 3. Functions:
+
     1. User and account control
        1. ✔️ Account activation
-   ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
-       
-       2. ✔️ Password reset with e-mail 
-   ![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/reset_password.gif)
 
-       3. ✔️ Identifying user with Cookie & JWT 
-       4. ✔️ Account role control 
+![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/regsiter_and_activate_user.gif)
+  
+ 2. ✔️ Password reset with e-mail
+![Demo](https://my-profile-site-storage.sgp1.cdn.digitaloceanspaces.com/img/project/twitter/demo/reset_password.gif)
+
+       3. ✔️ Identifying user with Cookie & JWT
+       4. ✔️ Account role control
     2. Message Sending as chat room
     3. Real-time chat message and notification
     4. Post of text content, ✔️ photo and "like" , "retweet" and "reply" functions
     5. Post and User search
-    6. ✔️ Code Testing with Jest (for API endpoints) 
-    7. ✔️ Code bundling & compression (front-end JavaScript files) 
-    8. ✔️ Some UI/UX tweaks: loading effect, responsive design, animation etc,. 
-    
+    6. ✔️ Code Testing with Jest (for API endpoints)
+    7. ✔️ Code bundling & compression (front-end JavaScript files)
+    8. ✔️ Some UI/UX tweaks: loading effect, responsive design, animation etc,.
+
     (note: ✔️ mark means the extra feature & function I've added to the original code from Udemy course)
 
 <br>
 <br>
 
-
-
 ## 4. To Do:
-   1. Uploaded image resizing (with multer)
-   2. Image uploading on S3 storage
-   3. Admin page
-   4. Captcha for requesting reset token for lost password
+
+1.  Uploaded image resizing (with multer)
+2.  Image uploading on S3 storage
+3.  Admin page
+4.  Captcha for requesting reset token for lost password
 
 <br><br>
 
-***
+---
+
 ## 5. Links to code:
 
     #### (Please see readMe file in each page for more detail)
 
-  - Backend
-    
-     1. Server Setup
-        1. [API and front page routes](https://github.com/avgsteve/nodejs_proj_twitter/blob/b14866b5aae262329a8e9818302e2a4273ab6145/server/app.js#L72)
-        2. [Error Handling](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/routes/errorHandlers)
-           1. [Request validation(express-validator)](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/checkReqValidationErrors.js)
-           2. [Handlers for different backend error](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/routeNotFoundHandler.js)
-           3. [Customized Error Class for global error handling and outputting](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/customError.js)
-     2. [MongoDB (noSQL data) schema](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/database/schemas)
-     3. [Cron Jobs setup](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/scheduledJobs)
+- Backend
 
+  1.  Server Setup
+      1. [API and front page routes](https://github.com/avgsteve/nodejs_proj_twitter/blob/b14866b5aae262329a8e9818302e2a4273ab6145/server/app.js#L72)
+      2. [Error Handling](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/routes/errorHandlers)
+         1. [Request validation(express-validator)](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/checkReqValidationErrors.js)
+         2. [Handlers for different backend error](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/routeNotFoundHandler.js)
+         3. [Customized Error Class for global error handling and outputting](https://github.com/avgsteve/nodejs_proj_twitter/blob/main/server/routes/errorHandlers/customError.js)
+  2.  [MongoDB (noSQL data) schema](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/database/schemas)
+  3.  [Cron Jobs setup](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/server/scheduledJobs)
 
-  - Frontend
+* Frontend
 
-      1. [HTML(templates)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/views)
-      2. User login, register, activation, password reset
-      3. ✅ Post create and render
-         1. [Chat Room List](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/chatList)
-         2. [Chat Room and Message](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/chatRoom)
-      4. ✅ [Search page (for post and user)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/search)
-      5. ✅ [User profile : following and followers](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/profile)
-      6. ✅ [Notification](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/notification)
-      7. [Socket.io event emitter and receiver(for event handling)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/clientSideSocket.io)
-      8. [Image cropper](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/image-uploader)   
-      ####  ✅ means MVC pattern used
+  1. [HTML(templates)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/views)
+  2. User login, register, activation, password reset
+  3. ✅ Post create and render
+     1. [Chat Room List](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/chatList)
+     2. [Chat Room and Message](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/chatRoom)
+  4. ✅ [Search page (for post and user)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/search)
+  5. ✅ [User profile : following and followers](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/profile)
+  6. ✅ [Notification](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/notification)
+  7. [Socket.io event emitter and receiver(for event handling)](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/clientSideSocket.io)
+  8. [Image cropper](https://github.com/avgsteve/nodejs_proj_twitter/tree/main/public/js/image-uploader)
 
+  #### ✅ means MVC pattern used
 
 ## 6. Reference:
 
-  1. Udemy Course: [Create a Twitter Clone with Node.js, Socket.IO and MongoDB by Reece Kenney ](https://www.udemy.com/course/create-a-twitter-clone-with-nodejs-socketio-and-mongodb/learn/lecture/23305854?start=15#overview)
-
-
+1. Udemy Course: [Create a Twitter Clone with Node.js, Socket.IO and MongoDB by Reece Kenney ](https://www.udemy.com/course/create-a-twitter-clone-with-nodejs-socketio-and-mongodb/learn/lecture/23305854?start=15#overview)
